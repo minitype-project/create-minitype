@@ -1,0 +1,26 @@
+{
+  "name": "create-minitype",
+  "version": "0.1.0",
+  "description": "Create a minitype document project",
+  "author": "Yuto Wada",
+  "type": "module",
+  "bin": {
+    "create-minitype": "./dist/index.esm.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsx build.ts",
+    "dev": "tsx src/index.ts",
+    "lint": "biome lint ./src --write",
+    "format": "biome format ./src --write"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.6",
+    "@types/node": "^25.4.0",
+    "esbuild": "^0.25.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.0.0"
+  }
+}
