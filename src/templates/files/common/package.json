@@ -1,0 +1,17 @@
+{
+  "name": "{{projectName}}",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsx index.ts",
+    "watch": "tsx watch index.ts"
+  },
+  "dependencies": {
+    "minitype": "{{minitypePath}}"
+  },
+  "devDependencies": {
+    "@types/pdfkit": "^0.17.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.0.0"
+  }
+}

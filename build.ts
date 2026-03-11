@@ -22,5 +22,6 @@ await build({
 // 実行可能にする
 chmodSync("dist/index.esm.js", 0o755);
 
-// テンプレートファイルをコピー
+// テンプレートファイルおよびフォントをコピー
 cpSync("./src/templates/files", "./dist/files", { recursive: true });
+cpSync("./fonts", "./dist/fonts", { recursive: true });
