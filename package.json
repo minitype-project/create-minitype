@@ -11,7 +11,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsx build.ts",
+    "build": "tsx build.ts && tsc --emitDeclarationOnly ",
     "dev": "tsx src/index.ts",
     "check": "biome check ./src --write"
   },

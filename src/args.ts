@@ -5,8 +5,6 @@ export interface ParsedArgs {
   projectName?: string;
   /** 使用するテンプレート名． */
   template?: string;
-  /** minitype のインストールパス． */
-  minitypePath?: string;
   /** 確認なしで実行するか． */
   yes: boolean;
   /** ヘルプを表示するか． */
@@ -24,7 +22,6 @@ export const parseArgs = (): ParsedArgs => {
       help: { type: "boolean", short: "h" },
       yes: { type: "boolean", short: "y" },
       template: { type: "string", short: "t" },
-      "minitype-path": { type: "string" },
       "list-templates": { type: "boolean" },
       json: { type: "boolean" },
     },
@@ -35,7 +32,6 @@ export const parseArgs = (): ParsedArgs => {
   return {
     projectName: positionals[0],
     template: values.template,
-    minitypePath: values["minitype-path"],
     yes: (values.yes ?? false) || jsonOutput,
     help: values.help ?? false,
     listTemplates: values["list-templates"] ?? false,
