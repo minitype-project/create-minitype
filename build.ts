@@ -1,4 +1,4 @@
-import { chmodSync } from "node:fs";
+import { chmodSync, cpSync } from "node:fs";
 import { build } from "esbuild";
 
 const entry = "./src/index.ts";
@@ -21,3 +21,6 @@ await build({
 
 // 実行可能にする
 chmodSync("dist/index.esm.js", 0o755);
+
+// テンプレートファイルをコピー
+cpSync("./src/templates/files", "./dist/files", { recursive: true });
