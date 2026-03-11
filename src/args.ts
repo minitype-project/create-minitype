@@ -1,49 +1,44 @@
+import { parseArgs as nodeParseArgs } from "node:util";
+
 export interface ParsedArgs {
+  /** プロジェクト名． */
   projectName?: string;
+  /** 使用するテンプレート名． */
   template?: string;
+  /** minitype のインストールパス． */
   minitypePath?: string;
-  author?: string;
+  /** 確認なしで実行するか． */
   yes: boolean;
+  /** ヘルプを表示するか． */
   help: boolean;
+  /** 利用可能なテンプレート一覧を表示するか． */
   listTemplates: boolean;
+  /** JSON 形式で出力するか． */
   jsonOutput: boolean;
 }
 
-export function parseArgs(argv: string[] = process.argv.slice(2)): ParsedArgs {
-  const result: ParsedArgs = {
-    yes: false,
-    help: false,
-    listTemplates: false,
-    jsonOutput: false,
+export const parseArgs = (): ParsedArgs => {
+  const { values, positionals } = nodeParseArgs({
+    args: process.argv.slice(2),
+    options: {
+      help: { type: "boolean", short: "h" },
+      yes: { type: "boolean", short: "y" },
+      template: { type: "string", short: "t" },
+      "minitype-path": { type: "string" },
+      "list-templates": { type: "boolean" },
+      json: { type: "boolean" },
+    },
+    allowPositionals: true,
+  });
+  const jsonOutput = values.json ?? false;
+
+  return {
+    projectName: positionals[0],
+    template: values.template,
+    minitypePath: values["minitype-path"],
+    yes: (values.yes ?? false) || jsonOutput,
+    help: values.help ?? false,
+    listTemplates: values["list-templates"] ?? false,
+    jsonOutput,
   };
-
-  let i = 0;
-  while (i < argv.length) {
-    const arg = argv[i];
-
-    if (arg === "--help" || arg === "-h") {
-      result.help = true;
-    } else if (arg === "--yes" || arg === "-y") {
-      result.yes = true;
-    } else if (arg === "--list-templates") {
-      result.listTemplates = true;
-    } else if (arg === "--json") {
-      result.jsonOutput = true;
-      result.yes = true;
-    } else if (arg === "--template" || arg === "-t") {
-      result.template = argv[++i];
-    } else if (arg === "--minitype-path") {
-      result.minitypePath = argv[++i];
-    } else if (arg === "--author" || arg === "-a") {
-      result.author = argv[++i];
-    } else if (!arg.startsWith("--")) {
-      // Positional argument: project name
-      if (!result.projectName) {
-        result.projectName = arg;
-      }
-    }
-    i++;
-  }
-
-  return result;
-}
+};
