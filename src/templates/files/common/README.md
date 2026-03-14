@@ -25,12 +25,13 @@ npm run build
 `document.ts` の `body` 配列を編集します．以下のブロック要素を使用することができます．
 
 ```ts
-import { h1, h2, h3, p, li1, li2, code, figure, easytable, math, caption, newpage } from "minitype";
+import { h1, h2, h3, h4, p, li1, li2, li3, ol1, ol2, ol3, code, figure, easytable, math, caption, newpage } from "minitype";
 
 // 見出し
-h1("大見出し")
-h2("中見出し")
-h3("小見出し")
+h1("タイトル")
+h2("大見出し")
+h3("中見出し")
+h4("小見出し")
 
 // 段落
 p("本文のテキストです．")
@@ -38,9 +39,18 @@ p("本文のテキストです．")
 // 箇条書き
 li1("レベル1の項目")
 li2("レベル2の項目")
+li3("レベル3の項目")
+
+// 順序付きリスト（番号は自動挿入）
+ol1("レベル1の項目")
+ol2("レベル2の項目")
+ol3("レベル3の項目")
 
 // コードブロック
-code("const x = 42;", "typescript")
+code(`const sum = (array) => array.reduce(
+  (prev, curr) => prev + curr,
+  0
+);`, "typescript")
 
 // 画像，キャプション
 figure("image.png", { width: ratio(0.8), align: "center" })
@@ -83,18 +93,19 @@ footnote("note1", "脚注の内容")
 
 ```ts
 const style = {
-  size: "A4",          // 用紙サイズ: "A4", "A5", "B5", "B4" など
-  padding: physical(25, 25, 25, 25),  // 上右下左の余白（mm）
+  // 用紙サイズ：A判またはB判を指定可能
+  size: "A4",
+  padding: physical(25, 25, 25, 25),  // 上下左右の余白（mm）
   block: {
     paragraph: {
       font: "フォント名",
-      size: Q(13),       // 13級 = 3.25mm
-      lineHeight: H(22), // 22歯 = 5.5mm
-      firstIndent: em(1),// 字下げ
+      size: Q(13),        // 13Q = 3.25 mm
+      lineHeight: H(22),  // 22H = 5.5 mm
+      firstIndent: em(1), // 段落冒頭を 1 字下げ
     },
     headings: [
-      { size: Q(18), font: "フォント名-Bold" },  // h1
-      { size: Q(15), font: "フォント名-Bold" },  // h2
+      { size: Q(18), font: "フォント名" },  // h1
+      { size: Q(15), font: "フォント名" },  // h2
     ],
   },
 };
