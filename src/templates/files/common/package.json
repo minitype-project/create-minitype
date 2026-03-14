@@ -7,7 +7,7 @@
     "watch": "tsx watch index.ts"
   },
   "dependencies": {
-    "minitype": "{{minitypePath}}"
+    "minitype": "file:{{minitypePath}}"
   },
   "devDependencies": {
     "@types/pdfkit": "^0.17.0",
