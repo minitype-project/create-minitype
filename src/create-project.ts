@@ -7,7 +7,7 @@ import type { UserConfig } from "./prompts.js";
 import type { TemplateVars } from "./templates/index.js";
 import { templates } from "./templates/index.js";
 
-const MINITYPE_PATH = "../minitype-test";
+const MINITYPE_PATH = "../../minitype";
 
 interface CreateProjectResult {
   projectName: string;
@@ -108,7 +108,7 @@ Remove it or choose a different project name.`);
     }
 
     for (const file of fs.readdirSync(fontsDir)) {
-      if (path.extname(file) === ".otf") {
+      if ([".otf", ".ttf"].includes(path.extname(file))) {
         fs.copyFileSync(
           path.join(fontsDir, file),
           path.join(targetFontsDir, file),
