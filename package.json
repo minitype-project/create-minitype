@@ -13,14 +13,17 @@
   "scripts": {
     "build": "tsx build.ts && tsc --emitDeclarationOnly ",
     "dev": "tsx src/index.ts",
-    "check": "biome check ./src --write"
+    "check": "biome check ./src --write",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.6",
     "@types/node": "^25.4.0",
     "esbuild": "^0.25.0",
     "tsx": "^4.20.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^2.1.9"
   },
   "dependencies": {
     "picocolors": "^1.1.1",

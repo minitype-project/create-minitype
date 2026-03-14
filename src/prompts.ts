@@ -1,8 +1,10 @@
 import readline from "node:readline";
+import pc from "picocolors";
 
-import { bold, cyan, dim, green, yellow } from "./colors.js";
-import { TEMPLATES } from "./templates/index.js";
 import type { ParsedArgs } from "./args.js";
+import { templates } from "./templates/index.js";
+
+const DEFAULT_PROJECT_NAME = "my-document";
 
 export interface UserConfig {
   projectName: string;
@@ -79,46 +81,15 @@ export async function promptUser(args: ParsedArgs): Promise<UserConfig> {
       console.log(`  ${bold("Project name:")} ${green(projectName)}`);
     }
 
-    // Template
-    let template = args.template;
-    if (!template) {
-      printTemplateList();
-      const answer = await ask(
-        rl,
-        `  ${bold("Template:")} ${dim("(report)")} `,
-      );
-      template = answer || "report";
-    } else {
-      console.log(`  ${bold("Template:")} ${green(template)}`);
-    }
 
-    if (!TEMPLATES[template]) {
-      console.error();
-      console.error(`  Unknown template: ${yellow(template)}`);
-      printTemplateList();
-      rl.close();
-      process.exit(1);
-    }
+/**
+ * 質問を表示して回答を取得する．
+ */
+const ask = (rl: readline.Interface, question: string): Promise<string> => {
+  return new Promise((resolve) => {
+    rl.question(question, (answer) => {
+      resolve(answer.trim());
+    });
+  });
+};
 
-    // Author
-    const author =
-      args.author ??
-      (await ask(rl, `  ${bold("Author:")} ${dim("(optional)")} `));
-
-    // minitype path
-    const defaultPath = "file:../minitype-test";
-    const minitypeAnswer =
-      args.minitypePath ??
-      (await ask(
-        rl,
-        `  ${bold("minitype path:")} ${dim(`(${defaultPath})`)} `,
-      ));
-    const minitypePath = minitypeAnswer || defaultPath;
-
-    console.log();
-
-    return { projectName, template, author, minitypePath };
-  } finally {
-    rl.close();
-  }
-}

@@ -32,12 +32,12 @@ export class ProjectCreator {
     if (fs.existsSync(this.targetDir)) {
       if (!this.jsonOutput) {
         console.error(`Directory already exists: ${this.config.projectName}
-  Remove it or choose a different project name.`);
+Remove it or choose a different project name.`);
       }
       process.exit(1);
     }
 
-    this.createTemplates();
+    await this.createTemplates();
     this.copyFonts();
 
     if (this.jsonOutput) {
@@ -122,19 +122,17 @@ export class ProjectCreator {
    * 成功メッセージを表示する．
    */
   private printSuccess() {
-    console.log(`${pc.bold(`Project created: ${this.config.projectName}`)}
+    console.log(`
+${pc.bold(`Project created: ${this.config.projectName}`)}  
+${this.createdFiles.map((file) => `  ${pc.dim("- ")} ${file}`).join("\n")}
+
+${pc.bold("Next steps:")}
+  ${pc.dim("$")} ${pc.green(`cd ${this.config.projectName}`)}
+  ${pc.dim("$")} ${pc.green("npm install")}
+  ${pc.dim("$")} ${pc.green("npm run build")}
   
-    Files created:
-  ${this.createdFiles.map((file) => `    ${pc.dim("- ")} ${file}`).join("\n")}
-  
-  ${pc.bold("  Next steps:")}
-  
-      ${pc.dim("$")} ${pc.green(`cd ${this.config.projectName}`)}
-      ${pc.dim("$")} ${pc.green("npm install")}
-      ${pc.dim("$")} ${pc.green("npm run build")}
-  
-    - You can edit ${pc.cyan("document.ts")} for the content or
-      edit ${pc.cyan("index.ts")} for the style.
-    - Output will be saved as ${pc.bold("output.pdf")}`);
+  - You can edit ${pc.cyan("document.ts")} for the content or
+    edit ${pc.cyan("index.ts")} for the style.
+  - Output will be saved as ${pc.cyan("output.pdf")}.`);
   }
 }

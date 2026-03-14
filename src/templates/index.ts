@@ -56,13 +56,17 @@ const commonFiles = (
     minitypePath: vars.minitypePath,
     templateName,
   };
-  return {
-    "package.json": renderFile("common/package.json", renderVars),
-    "tsconfig.json": renderFile("common/tsconfig.json", renderVars),
-    ".gitignore": renderFile("common/.gitignore", renderVars),
-    "CLAUDE.md": renderFile("common/CLAUDE.md", renderVars),
-    "fonts/README.md": renderFile("common/fonts-README.md", renderVars),
-  };
+  const filenames = [
+    ".gitignore",
+    "README.md",
+    "package.json",
+    "tsconfig.json",
+  ];
+  const objs: Record<string, string> = {};
+  for (const filename of filenames) {
+    objs[filename] = renderFile(`common/${filename}`, renderVars);
+  }
+  return objs;
 };
 
 // ------

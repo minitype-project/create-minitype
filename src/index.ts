@@ -1,14 +1,14 @@
 import pc from "picocolors";
 
 import { parseArgs } from "./args.js";
-import { createProject } from "./create-project.js";
+import { ProjectCreator } from "./create-project.js";
 import { promptUser } from "./prompts.js";
 import { templates } from "./templates/index.js";
 
 const options = [
   ["-t, --template <name>", "Template to use (skips prompt)"],
-  ["-y, --yes", "Skip prompts, use defaults"],
-  ["--json", "Output JSON (implies --yes, for agent use)"],
+  ["-y, --yes", "Skip prompts (template must be specified)"],
+  ["-j", "--json", "Output JSON (implies --yes, for agent use)"],
   ["--list-templates", "List available templates"],
   ["-h, --help", "Show this help"],
 ];
@@ -72,14 +72,14 @@ const main = async () => {
     const args = parseArgs();
     if (args.help) {
       showHelp();
-      process.exit(0);
+      return;
     }
     if (args.listTemplates) {
       listTemplates();
-      process.exit(0);
+      return;
     }
     const config = await promptUser(args);
-    await createProject(config, args.jsonOutput);
+    await new ProjectCreator(config, args.jsonOutput).create();
   } catch (e) {
     console.error(String(e));
     process.exit(1);
