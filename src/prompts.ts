@@ -9,6 +9,10 @@ const DEFAULT_PROJECT_NAME = "my-document";
 export interface UserConfig {
   projectName: string;
   template: string;
+/** Markdown から文章を生成するか（report テンプレートのみ）． */
+  markdown: boolean;
+  /** YAML から文章を生成するか（cv，invoice テンプレートのみ）． */
+  yaml: boolean;
 }
 
 export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
@@ -20,7 +24,12 @@ export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
       console.error("Template is must be specified.");
       process.exit(1);
     }
-    return { projectName, template };
+    return {
+projectName,
+template,
+      markdown: args.markdown ?? false,
+      yaml: args.yaml ?? false,
+};
   }
 
   // プロジェクト名

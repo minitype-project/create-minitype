@@ -67,7 +67,10 @@ Remove it or choose a different project name.`);
       projectName: this.config.projectName,
       minitypePath: MINITYPE_PATH,
     };
-    const files = await template.files(vars);
+    const files = await template.files(vars, {
+      markdown: this.config.markdown,
+      yaml: this.config.yaml,
+    });
 
     for (const [filePath, content] of Object.entries(files)) {
       const fullPath = path.join(this.targetDir, filePath);

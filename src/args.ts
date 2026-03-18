@@ -7,12 +7,16 @@ export interface ParsedArgs {
   template?: string;
   /** 確認なしで実行するか． */
   yes: boolean;
+  /** JSON 形式で出力するか． */
+  jsonOutput: boolean;
+  /** Markdown から文章を生成するか（report テンプレートのみ）． */
+  markdown: boolean | undefined;
+  /** YAML から文章を生成するか（cv，invoice テンプレートのみ）． */
+  yaml: boolean | undefined;
   /** ヘルプを表示するか． */
   help: boolean;
   /** 利用可能なテンプレート一覧を表示するか． */
   listTemplates: boolean;
-  /** JSON 形式で出力するか． */
-  jsonOutput: boolean;
 }
 
 export const parseArgs = (): ParsedArgs => {
@@ -21,9 +25,11 @@ export const parseArgs = (): ParsedArgs => {
     options: {
       template: { type: "string", short: "t" },
       yes: { type: "boolean", short: "y", default: false },
+      json: { type: "boolean", short: "j" },
+      markdown: { type: "boolean" },
+      yaml: { type: "boolean" },
       help: { type: "boolean", short: "h" },
       "list-templates": { type: "boolean" },
-      json: { type: "boolean", short: "j" },
     },
     allowPositionals: true,
   });
@@ -32,8 +38,10 @@ export const parseArgs = (): ParsedArgs => {
     projectName: positionals[0],
     template: values.template,
     yes: values.yes ?? false,
+    jsonOutput: values.json ?? false,
+    markdown: values.markdown,
+    yaml: values.yaml,
     help: values.help ?? false,
     listTemplates: values["list-templates"] ?? false,
-    jsonOutput: values.json ?? false,
   };
 };

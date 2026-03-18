@@ -15,6 +15,16 @@ export interface TemplateVars {
 }
 
 /**
+ * テンプレートのオプション．
+ */
+export interface TemplateOptions {
+  /** Markdown から文章を生成するか（report テンプレートのみ）． */
+  markdown?: boolean;
+  /** YAML から文章を生成するか（cv・invoice テンプレートのみ）． */
+  yaml?: boolean;
+}
+
+/**
  * テンプレート．
  */
 export interface Template {
@@ -22,6 +32,7 @@ export interface Template {
   description: string;
   files: (
     vars: TemplateVars,
+    options?: TemplateOptions,
   ) =>
     | Record<string, string | Buffer>
     | Promise<Record<string, string | Buffer>>;
@@ -75,11 +86,21 @@ const commonFiles = (
 const report: Template = {
   displayName: "レポート",
   description: "一般的なレポート，報告書（A4，横組）",
-  files: (vars) => ({
-    ...commonFiles(vars, "report"),
-    "index.ts": renderFile("report/index.ts", vars),
-    "document.ts": renderFile("report/document.ts", vars),
-  }),
+  files: (vars, options) => {
+    if (options?.markdown) {
+      return {
+        ...commonFiles(vars, "report"),
+        "index.ts": renderFile("report/index.ts", vars),
+        "document.ts": renderFile("report/document-markdown.ts", vars),
+        "document.md": renderFile("report/document.md", vars),
+      };
+    }
+    return {
+      ...commonFiles(vars, "report"),
+      "index.ts": renderFile("report/index.ts", vars),
+      "document.ts": renderFile("report/document.ts", vars),
+    };
+  },
 };
 
 const technicalBook: Template = {
@@ -118,21 +139,43 @@ const thesis: Template = {
 const invoice: Template = {
   displayName: "請求書",
   description: "請求書（A4, 横組）",
-  files: (vars) => ({
-    ...commonFiles(vars, "invoice"),
-    "index.ts": renderFile("invoice/index.ts", vars),
-    "document.ts": renderFile("invoice/document.ts", vars),
-  }),
+  files: (vars, options) => {
+    if (options?.yaml) {
+      return {
+        ...commonFiles(vars, "invoice"),
+        "package.json": renderFile("common/package-yaml.json", vars),
+        "index.ts": renderFile("invoice/index.ts", vars),
+        "document.ts": renderFile("invoice/document-yaml.ts", vars),
+        "document.yaml": renderFile("invoice/document.yaml", vars),
+      };
+    }
+    return {
+      ...commonFiles(vars, "invoice"),
+      "index.ts": renderFile("invoice/index.ts", vars),
+      "document.ts": renderFile("invoice/document.ts", vars),
+    };
+  },
 };
 
 const cv: Template = {
   displayName: "履歴書",
   description: "履歴書（A4, 横組）",
-  files: (vars) => ({
-    ...commonFiles(vars, "cv"),
-    "index.ts": renderFile("cv/index.ts", vars),
-    "document.ts": renderFile("cv/document.ts", vars),
-  }),
+  files: (vars, options) => {
+    if (options?.yaml) {
+      return {
+        ...commonFiles(vars, "cv"),
+        "package.json": renderFile("common/package-yaml.json", vars),
+        "index.ts": renderFile("cv/index.ts", vars),
+        "document.ts": renderFile("cv/document-yaml.ts", vars),
+        "document.yaml": renderFile("cv/document.yaml", vars),
+      };
+    }
+    return {
+      ...commonFiles(vars, "cv"),
+      "index.ts": renderFile("cv/index.ts", vars),
+      "document.ts": renderFile("cv/document.ts", vars),
+    };
+  },
 };
 
 export const templates: Record<string, Template> = {

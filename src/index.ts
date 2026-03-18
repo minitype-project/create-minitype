@@ -8,9 +8,11 @@ import { templates } from "./templates/index.js";
 const options = [
   ["-t, --template <name>", "Template to use (skips prompt)"],
   ["-y, --yes", "Skip prompts (template must be specified)"],
-  ["-j", "--json", "Output JSON (implies --yes, for agent use)"],
-  ["--list-templates", "List available templates"],
+  ["-j, --json", "Output JSON (implies --yes, for agent use)"],
+  ["--markdown", "Generate document from Markdown (report only)"],
+  ["--yaml", "Generate document from YAML (cv or invoice only)"],
   ["-h, --help", "Show this help"],
+  ["--list-templates", "List available templates"],
 ];
 
 /**
