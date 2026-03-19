@@ -9,7 +9,7 @@ const DEFAULT_PROJECT_NAME = "my-document";
 export interface UserConfig {
   projectName: string;
   template: string;
-/** Markdown から文章を生成するか（report テンプレートのみ）． */
+  /** Markdown から文章を生成するか（report テンプレートのみ）． */
   markdown: boolean;
   /** YAML から文章を生成するか（cv，invoice テンプレートのみ）． */
   yaml: boolean;
@@ -25,11 +25,11 @@ export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
       process.exit(1);
     }
     return {
-projectName,
-template,
+      projectName,
+      template,
       markdown: args.markdown ?? false,
       yaml: args.yaml ?? false,
-};
+    };
   }
 
   // プロジェクト名
@@ -66,7 +66,45 @@ template,
     template = answer.template;
   }
 
-  return { projectName, template };
+  // Markdown
+  let markdown = false;
+  if (template === "report") {
+    if (args.markdown !== undefined) {
+      markdown = args.markdown;
+      if (markdown) {
+        displayAlreadySpecified("Markdown", "enabled");
+      }
+    } else {
+      const answer = await Enquirer.prompt<{ markdown: boolean }>({
+        type: "confirm",
+        name: "markdown",
+        message: "Use Markdown?",
+        initial: true,
+      }).catch(() => process.exit(0));
+      markdown = answer.markdown;
+    }
+  }
+
+  // YAML
+  let yaml = false;
+  if (template === "cv" || template === "invoice") {
+    if (args.yaml !== undefined) {
+      yaml = args.yaml;
+      if (yaml) {
+        displayAlreadySpecified("YAML", "enabled");
+      }
+    } else {
+      const answer = await Enquirer.prompt<{ yaml: boolean }>({
+        type: "confirm",
+        name: "yaml",
+        message: "Use YAML?",
+        initial: true,
+      }).catch(() => process.exit(0));
+      yaml = answer.yaml;
+    }
+  }
+
+  return { projectName, template, markdown, yaml };
 };
 
 const displayAlreadySpecified = (key: string, value: string) => {

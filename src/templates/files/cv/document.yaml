@@ -1,0 +1,54 @@
+profile:
+  name: 氏名
+  nameEn: Your Name
+  birthDate: YYYY年MM月DD日生
+  email: your.email@example.com
+  github: yourname
+  website: https://example.com
+  summary: >-
+    〜に関する研究開発に携わってきました．特に〜の分野で〜の実績があります．
+
+education:
+  - period: YYYY年3月
+    event: 〇〇大学 〇〇学部 卒業
+  - period: YYYY年4月
+    event: 〇〇大学大学院 〇〇専攻 入学
+  - period: YYYY年3月
+    event: 〇〇大学大学院 〇〇専攻 修了
+
+work:
+  - period: YYYY年4月 〜 現在
+    company: 株式会社〇〇
+    role: エンジニア
+    description: 〜の開発を担当．〜を実現し，〜の効率が〇〇%向上した．
+  - period: YYYY年 〜 YYYY年
+    company: 〇〇（インターン）
+    role: ソフトウェアエンジニアインターン
+    description: 〜の機能開発を担当．
+
+skills:
+  - category: プログラミング言語
+    items:
+    - TypeScript
+    - Python
+    - Rust
+    - Go
+  - category: フレームワーク・ライブラリ
+    items:
+    - React
+    - Node.js
+    - FastAPI
+  - category: ツール・インフラ
+    items:
+    - Git
+    - Docker
+    - AWS
+    - Linux
+  - category: 言語
+    items:
+    - 日本語（母語）
+    - 英語（TOEIC 000点）
+
+publications:
+  - 'Author 1, Author 2, Author 3. Title, Conference, pp.〇〇–〇〇, YYYY.'
+  - '著者1，著者2，著者3．論文タイトル．学会名，pp.〇〇–〇〇，YYYY．'
