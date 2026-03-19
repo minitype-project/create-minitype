@@ -160,20 +160,13 @@ const invoice: Template = {
 const cv: Template = {
   displayName: "履歴書",
   description: "履歴書（A4, 横組）",
-  files: (vars, options) => {
-    if (options?.yaml) {
-      return {
-        ...commonFiles(vars, "cv"),
-        "package.json": renderFile("common/package-yaml.json", vars),
-        "index.ts": renderFile("cv/index.ts", vars),
-        "document.ts": renderFile("cv/document-yaml.ts", vars),
-        "document.yaml": renderFile("cv/document.yaml", vars),
-      };
-    }
+  files: (vars) => {
     return {
       ...commonFiles(vars, "cv"),
+      "package.json": renderFile("common/package-yaml.json", vars),
       "index.ts": renderFile("cv/index.ts", vars),
-      "document.ts": renderFile("cv/document.ts", vars),
+      "document.ts": renderFile("cv/document-yaml.ts", vars),
+      "document.yaml": renderFile("cv/document.yaml", vars),
     };
   },
 };

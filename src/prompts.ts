@@ -11,7 +11,7 @@ export interface UserConfig {
   template: string;
   /** Markdown から文章を生成するか（report テンプレートのみ）． */
   markdown: boolean;
-  /** YAML から文章を生成するか（cv，invoice テンプレートのみ）． */
+  /** YAML から文章を生成するか（invoice テンプレートのみ）． */
   yaml: boolean;
 }
 
@@ -87,7 +87,7 @@ export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
 
   // YAML
   let yaml = false;
-  if (template === "cv" || template === "invoice") {
+  if (template === "invoice") {
     if (args.yaml !== undefined) {
       yaml = args.yaml;
       if (yaml) {
