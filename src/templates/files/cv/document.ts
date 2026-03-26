@@ -1,10 +1,11 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Body, Command } from "minitype";
 import {
   box,
   cmyk,
+  figure,
   flexbox,
   fr,
   H,
@@ -32,6 +33,7 @@ interface Profile {
   email: string;
   github: string;
   website: string;
+  photo?: string;
   summary: string;
 }
 
@@ -122,19 +124,21 @@ export const body: Body = [
     box(
       [
         // 写真
-        box([p("写真", { align: "center" as const, firstIndent: 0 })], {
-          padding: physical(20, 0),
-          background: cmyk(0, 0, 0, 5),
-          border: {
-            type: "physical" as const,
-            ...Object.fromEntries(
-              (["top", "right", "bottom", "left"] as const).map((dir) => [
-                dir,
-                solid(0.2, cmyk(0, 0, 0, 30)),
-              ]),
-            ),
-          },
-        }),
+        profile.photo && existsSync(profile.photo)
+          ? figure(profile.photo, { height: 35, align: "right" })
+          : box([p("写真", { align: "center" as const, firstIndent: 0 })], {
+              padding: physical(20, 0),
+              background: cmyk(0, 0, 0, 5),
+              border: {
+                type: "physical" as const,
+                ...Object.fromEntries(
+                  (["top", "right", "bottom", "left"] as const).map((dir) => [
+                    dir,
+                    solid(0.2, cmyk(0, 0, 0, 30)),
+                  ]),
+                ),
+              },
+            }),
       ],
       { flexBasis: ratio(0.4), padding: physical(0, 0, 0, 10) },
     ),

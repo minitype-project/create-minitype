@@ -90,9 +90,19 @@ const report: Template = {
     if (options?.markdown) {
       return {
         ...commonFiles(vars, "report"),
+        "package.json": renderFile("common/package-yaml.json", vars),
         "index.ts": renderFile("report/index.ts", vars),
         "document.ts": renderFile("report/document-markdown.ts", vars),
         "document.md": renderFile("report/document.md", vars),
+      };
+    }
+    if (options?.yaml) {
+      return {
+        ...commonFiles(vars, "report"),
+        "package.json": renderFile("common/package-yaml.json", vars),
+        "index.ts": renderFile("report/index.ts", vars),
+        "document.ts": renderFile("report/document-yaml.ts", vars),
+        "document.yaml": renderFile("report/document.yaml", vars),
       };
     }
     return {
@@ -160,13 +170,14 @@ const invoice: Template = {
 const cv: Template = {
   displayName: "履歴書",
   description: "履歴書（A4, 横組）",
-  files: (vars) => {
+  files: async (vars) => {
     return {
       ...commonFiles(vars, "cv"),
       "package.json": renderFile("common/package-yaml.json", vars),
       "index.ts": renderFile("cv/index.ts", vars),
       "document.ts": renderFile("cv/document.ts", vars),
       "document.yaml": renderFile("cv/document.yaml", vars),
+      "photo.png": await createPlaceholderPng(300, 400),
     };
   },
 };
