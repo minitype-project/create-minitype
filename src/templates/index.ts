@@ -165,7 +165,7 @@ const cv: Template = {
       ...commonFiles(vars, "cv"),
       "package.json": renderFile("common/package-yaml.json", vars),
       "index.ts": renderFile("cv/index.ts", vars),
-      "document.ts": renderFile("cv/document-yaml.ts", vars),
+      "document.ts": renderFile("cv/document.ts", vars),
       "document.yaml": renderFile("cv/document.yaml", vars),
     };
   },

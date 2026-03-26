@@ -1,16 +1,16 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Body } from "minitype";
+import type { Body, Command } from "minitype";
 import {
   box,
   cmyk,
-  easytable,
   flexbox,
   fr,
   H,
   h1,
   h2,
+  hbox,
   li1,
   p,
   physical,
@@ -53,6 +53,10 @@ interface SkillItem {
 }
 
 interface CvData {
+  settings: {
+    "key-cmyk": [number, number, number, number];
+    "sub-cmyk": [number, number, number, number];
+  };
   profile: Profile;
   education: EducationItem[];
   work: WorkItem[];
@@ -64,9 +68,12 @@ interface CvData {
 // YAML データの読み込み
 // ------
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const { profile, education, work, skills, publications } = parse(
+const { settings, profile, education, work, skills, publications } = parse(
   readFileSync(path.join(__dirname, "document.yaml"), "utf-8"),
 ) as CvData;
+
+const keyColor = cmyk(...settings["key-cmyk"]);
+const subColor = cmyk(...settings["sub-cmyk"]);
 
 // ------
 // レイアウト
@@ -77,9 +84,9 @@ const sectionHeader = (title: string) => {
     padding: physical(2, 0, 2, 4),
     border: {
       type: "physical",
-      left: solid(2, cmyk(100, 0, 0, 0)),
+      left: solid(2, keyColor),
     },
-    background: cmyk(5, 0, 0, 0),
+    background: subColor,
     gapRole: "h2",
   });
 };
@@ -91,6 +98,10 @@ const timelineRow = (period: string, content: string) => {
     }),
     box([p(content)], { flexBasis: fr(1) }),
   ]);
+};
+
+const b = (content: string): Command => {
+  return { type: "command", name: "b", body: [content] };
 };
 
 export const body: Body = [
@@ -133,7 +144,7 @@ export const body: Body = [
   // 概要
   box([p(profile.summary, { firstIndent: 0 })], {
     padding: physical(5, 6),
-    background: cmyk(5, 0, 0, 5),
+    background: subColor,
   }),
   vspace(8),
 
@@ -147,28 +158,10 @@ export const body: Body = [
   ...work.map((item) =>
     box([
       flexbox([
-        box(
-          [
-            p(item.period, {
-              firstIndent: 0,
-              lineHeight: H(16),
-            }),
-          ],
-          { flexBasis: 45 },
-        ),
-        box(
-          [
-            p(`${item.company}  ${item.role}`, {
-              firstIndent: 0,
-              font: "SourceHanSansJP-Bold",
-            }),
-            p(item.description, {
-              firstIndent: 0,
-              lineHeight: H(17),
-            }),
-          ],
-          { flexBasis: fr(1) },
-        ),
+        box([p(item.period)], { flexBasis: 45 }),
+        box([p([[b(`${item.company}  ${item.role}`)], [item.description]])], {
+          flexBasis: fr(1),
+        }),
       ]),
     ]),
   ),
@@ -176,16 +169,13 @@ export const body: Body = [
 
   // スキル
   sectionHeader("スキル"),
-  easytable(
-    skills.map(({ category, items }) => [
-      p(category, { font: "SourceHanSansJP-Bold" }),
-      p(items.join("，")),
+  ...skills.map(({ category, items }) =>
+    box([
+      flexbox([
+        box([p([[b(category)]])], { flexBasis: 35 }),
+        box([p(items.join("，"))], { flexBasis: fr(1) }),
+      ]),
     ]),
-    {
-      columnWidths: [50, fr(1)],
-      horizontalBorders: (_rowIndex: number, _rowCount: number) =>
-        solid(0.3, cmyk(0, 0, 0, 20)),
-    },
   ),
   vspace(8),
 
@@ -194,7 +184,10 @@ export const body: Body = [
     ? [
         sectionHeader("発表・出版物"),
         ...publications.map((pub, i) =>
-          p(`[${i + 1}] ${pub}`, { firstIndent: 0 }),
+          p([[hbox(Q(24), [`[${i + 1}]`]), pub]], {
+            indent: Q(24),
+            firstIndent: Q(-24),
+          }),
         ),
       ]
     : []),

@@ -1,3 +1,7 @@
+settings:
+  key-cmyk: [100, 0, 0, 0]
+  sub-cmyk: [5, 0, 0, 0]
+
 profile:
   name: 氏名
   nameEn: Your Name

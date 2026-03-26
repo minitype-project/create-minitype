@@ -1,5 +1,4 @@
 import { H, minitype, physical, Q } from "minitype";
-
 import { body } from "./document.js";
 
 await minitype(
