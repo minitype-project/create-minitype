@@ -11,8 +11,6 @@ export interface UserConfig {
   template: string;
   /** Markdown から文章を生成するか（report テンプレートのみ）． */
   markdown: boolean;
-  /** YAML から文章を生成するか（invoice テンプレートのみ）． */
-  yaml: boolean;
 }
 
 export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
@@ -28,7 +26,6 @@ export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
       projectName,
       template,
       markdown: args.markdown ?? false,
-      yaml: args.yaml ?? false,
     };
   }
 
@@ -85,26 +82,7 @@ export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
     }
   }
 
-  // YAML
-  let yaml = false;
-  if (template === "invoice") {
-    if (args.yaml !== undefined) {
-      yaml = args.yaml;
-      if (yaml) {
-        displayAlreadySpecified("YAML", "enabled");
-      }
-    } else {
-      const answer = await Enquirer.prompt<{ yaml: boolean }>({
-        type: "confirm",
-        name: "yaml",
-        message: "Use YAML?",
-        initial: true,
-      }).catch(() => process.exit(0));
-      yaml = answer.yaml;
-    }
-  }
-
-  return { projectName, template, markdown, yaml };
+  return { projectName, template, markdown };
 };
 
 const displayAlreadySpecified = (key: string, value: string) => {

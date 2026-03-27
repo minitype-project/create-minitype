@@ -69,7 +69,6 @@ Remove it or choose a different project name.`);
     };
     const files = await template.files(vars, {
       markdown: this.config.markdown,
-      yaml: this.config.yaml,
     });
 
     for (const [filePath, content] of Object.entries(files)) {

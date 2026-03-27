@@ -1,0 +1,32 @@
+invoiceNumber: INV-2024-001
+issueDate: 〇〇〇〇年〇〇月〇〇日
+dueDate: 〇〇〇〇年〇〇月〇〇日
+
+issuer:
+  name: 発行者名
+  company: 株式会社〇〇
+  address: 〒000-0000 東京都〇〇区〇〇
+  phone: 03-0000-0000
+  email: contact@example.com
+  bankInfo: 〇〇銀行 〇〇支店 普通 0000000
+
+recipient:
+  name: 株式会社〇〇 御中
+  address: 〒000-0000 東京都〇〇区〇〇
+
+items:
+  - description: サービス名称A
+    quantity: 1
+    unit: 式
+    unitPrice: 100000
+  - description: サービス名称B
+    quantity: 5
+    unit: 時間
+    unitPrice: 10000
+  - description: その他費用
+    quantity: 1
+    unit: 式
+    unitPrice: 5000
+
+taxRate: 0.1
+notes: お支払いは上記口座へお振込みください．振込手数料はご負担ください．

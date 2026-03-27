@@ -1,4 +1,4 @@
-import { H, minitype, physical, Q } from "minitype";
+import { type Gap, H, minitype, physical, Q } from "minitype";
 import { body } from "./document.js";
 
 await minitype(
@@ -10,37 +10,33 @@ await minitype(
     block: {
       paragraph: {
         font: "SourceHanSansJP-Regular",
-        size: Q(12),
+        size: Q(13),
         lineHeight: H(18),
         firstIndent: 0,
       },
       headings: [
         {
           font: "SourceHanSansJP-Bold",
-          size: Q(32),
-          lineHeight: H(30),
+          size: Q(20),
+          lineHeight: H(28),
         },
         {
           font: "SourceHanSansJP-Bold",
           size: Q(16),
-          lineHeight: H(20),
-          needspace: Q(40),
+          lineHeight: H(24),
         },
       ],
-      list: {
-        indent: 0,
-      },
     },
     command: {
       b: { font: "SourceHanSansJP-Bold" },
     },
     gaps: [
-      ["h2", "fallback", 4],
-      ["list1", "list1", 1],
-      ["paragraph", "h2", 6],
       ["paragraph", "paragraph", 2],
-      ["fallback", "fallback", 4],
-    ],
+      ["fallback", "fallback", 2],
+    ] as Gap[],
   },
-  { fontDir: "fonts" },
+  {
+    fontDir: "fonts",
+    disableDefaultTransformers: true,
+  },
 ).save("output.pdf");

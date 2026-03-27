@@ -11,8 +11,6 @@ export interface ParsedArgs {
   jsonOutput: boolean;
   /** Markdown から文章を生成するか（report テンプレートのみ）． */
   markdown: boolean | undefined;
-  /** YAML から文章を生成するか（cv，invoice テンプレートのみ）． */
-  yaml: boolean | undefined;
   /** ヘルプを表示するか． */
   help: boolean;
   /** 利用可能なテンプレート一覧を表示するか． */
@@ -40,7 +38,6 @@ export const parseArgs = (): ParsedArgs => {
     yes: values.yes ?? false,
     jsonOutput: values.json ?? false,
     markdown: values.markdown,
-    yaml: values.yaml,
     help: values.help ?? false,
     listTemplates: values["list-templates"] ?? false,
   };

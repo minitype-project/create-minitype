@@ -96,15 +96,6 @@ const report: Template = {
         "document.md": renderFile("report/document.md", vars),
       };
     }
-    if (options?.yaml) {
-      return {
-        ...commonFiles(vars, "report"),
-        "package.json": renderFile("common/package-yaml.json", vars),
-        "index.ts": renderFile("report/index.ts", vars),
-        "document.ts": renderFile("report/document-yaml.ts", vars),
-        "document.yaml": renderFile("report/document.yaml", vars),
-      };
-    }
     return {
       ...commonFiles(vars, "report"),
       "index.ts": renderFile("report/index.ts", vars),
@@ -149,20 +140,13 @@ const thesis: Template = {
 const invoice: Template = {
   displayName: "請求書",
   description: "請求書（A4, 横組）",
-  files: (vars, options) => {
-    if (options?.yaml) {
-      return {
-        ...commonFiles(vars, "invoice"),
-        "package.json": renderFile("common/package-yaml.json", vars),
-        "index.ts": renderFile("invoice/index.ts", vars),
-        "document.ts": renderFile("invoice/document-yaml.ts", vars),
-        "document.yaml": renderFile("invoice/document.yaml", vars),
-      };
-    }
+  files: (vars) => {
     return {
       ...commonFiles(vars, "invoice"),
+      "package.json": renderFile("common/package-yaml.json", vars),
       "index.ts": renderFile("invoice/index.ts", vars),
       "document.ts": renderFile("invoice/document.ts", vars),
+      "document.yaml": renderFile("invoice/document.yaml", vars),
     };
   },
 };
