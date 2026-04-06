@@ -12,6 +12,7 @@ const FILES_DIR = fileURLToPath(new URL("./files", import.meta.url));
 export interface TemplateVars {
   projectName: string;
   minitypePath: string;
+  minitypeVitePluginPath: string;
 }
 
 /**
@@ -65,6 +66,7 @@ const commonFiles = (
   const renderVars = {
     projectName: vars.projectName,
     minitypePath: vars.minitypePath,
+    minitypeVitePluginPath: vars.minitypeVitePluginPath,
     templateName,
   };
   const filenames = [
@@ -72,6 +74,7 @@ const commonFiles = (
     "README.md",
     "package.json",
     "tsconfig.json",
+    "vite.config.ts",
   ];
   const objs: Record<string, string> = {};
   for (const filename of filenames) {
@@ -86,7 +89,7 @@ const commonFiles = (
 const report: Template = {
   displayName: "レポート",
   description: "一般的なレポート，報告書（A4，横組）",
-  files: (vars, options) => {
+  files: async (vars, options) => {
     if (options?.markdown) {
       return {
         ...commonFiles(vars, "report"),
@@ -94,6 +97,7 @@ const report: Template = {
         "index.ts": renderFile("report/index.ts", vars),
         "document.ts": renderFile("report/document-markdown.ts", vars),
         "document.md": renderFile("report/document.md", vars),
+        "sample.png": await createPlaceholderPng(400, 300),
       };
     }
     return {

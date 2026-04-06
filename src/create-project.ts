@@ -8,6 +8,7 @@ import type { TemplateVars } from "./templates/index.js";
 import { templates } from "./templates/index.js";
 
 const MINITYPE_PATH = "../../minitype";
+const MINITYPE_VITE_PLUGIN_PATH = "../../vite-plugin";
 
 interface CreateProjectResult {
   projectName: string;
@@ -66,6 +67,7 @@ Remove it or choose a different project name.`);
     const vars: TemplateVars = {
       projectName: this.config.projectName,
       minitypePath: MINITYPE_PATH,
+      minitypeVitePluginPath: MINITYPE_VITE_PLUGIN_PATH,
     };
     const files = await template.files(vars, {
       markdown: this.config.markdown,

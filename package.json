@@ -18,12 +18,14 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.6",
+    "@biomejs/biome": "^2.4.10",
+    "@minitype/vite-plugin": "../vite-plugin",
     "@types/node": "^25.4.0",
     "esbuild": "^0.25.0",
     "minitype": "../minitype",
-    "tsx": "^4.20.0",
-    "typescript": "^5.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.3",
     "vitest": "^2.1.9",
     "yaml": "^2.8.2"
   },
