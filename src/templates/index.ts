@@ -170,6 +170,19 @@ const cv: Template = {
   },
 };
 
+const slide: Template = {
+  displayName: "スライド",
+  description: "プレゼンテーション用スライド（16:9, 横組）",
+  files: async (vars) => {
+    return {
+      ...commonFiles(vars, "slide"),
+      "index.ts": renderFile("slide/index.ts", vars),
+      "document.ts": renderFile("slide/document.ts", vars),
+      "sample.png": await createPlaceholderPng(400, 300),
+    };
+  },
+};
+
 export const templates: Record<string, Template> = {
   report,
   "technical-book": technicalBook,
@@ -177,4 +190,5 @@ export const templates: Record<string, Template> = {
   thesis,
   invoice,
   cv,
+  slide,
 };
