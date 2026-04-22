@@ -22,7 +22,6 @@
     "@minitype/vite-plugin": "../vite-plugin",
     "@types/node": "^25.4.0",
     "esbuild": "^0.25.0",
-    "minitype": "../minitype",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2",
     "vite": "^8.0.3",

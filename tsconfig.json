@@ -10,9 +10,8 @@
     "rootDir": "./",
     "declarationDir": "./dist",
     "strict": true,
-    "baseUrl": "./src",
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["./src/*"]
     },
     "resolveJsonModule": true,
     "esModuleInterop": true,

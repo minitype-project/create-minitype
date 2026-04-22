@@ -1,4 +1,4 @@
-import { type Gap, H, minitype, physical, Q } from "minitype";
+import { type Gap, H, minitype, physical, Q } from "@minitype/minitype";
 import { body } from "./document.js";
 
 await minitype(
@@ -14,18 +14,16 @@ await minitype(
         lineHeight: H(18),
         firstIndent: 0,
       },
-      headings: [
-        {
-          font: "SourceHanSansJP-Bold",
-          size: Q(20),
-          lineHeight: H(28),
-        },
-        {
-          font: "SourceHanSansJP-Bold",
-          size: Q(16),
-          lineHeight: H(24),
-        },
-      ],
+      h1: {
+        font: "SourceHanSansJP-Bold",
+        size: Q(20),
+        lineHeight: H(28),
+      },
+      h2: {
+        font: "SourceHanSansJP-Bold",
+        size: Q(16),
+        lineHeight: H(24),
+      },
     },
     command: {
       b: { font: "SourceHanSansJP-Bold" },
