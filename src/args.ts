@@ -11,6 +11,8 @@ export interface ParsedArgs {
   jsonOutput: boolean;
   /** Markdown から文章を生成するか（report テンプレートのみ）． */
   markdown: boolean | undefined;
+  /** 依存関係をインストールするパッケージマネージャ．`undefined` の場合はインストールを行わない． */
+  packageManager: "npm" | "yarn" | undefined;
   /** ヘルプを表示するか． */
   help: boolean;
   /** 利用可能なテンプレート一覧を表示するか． */
@@ -26,11 +28,18 @@ export const parseArgs = (): ParsedArgs => {
       json: { type: "boolean", short: "j" },
       markdown: { type: "boolean" },
       yaml: { type: "boolean" },
+      pm: { type: "string" },
       help: { type: "boolean", short: "h" },
       "list-templates": { type: "boolean" },
     },
     allowPositionals: true,
   });
+
+  const pm = values.pm;
+  if (pm !== undefined && pm !== "npm" && pm !== "yarn") {
+    console.error(`Invalid package manager: ${pm}. Use "npm" or "yarn".`);
+    process.exit(1);
+  }
 
   return {
     projectName: positionals[0],
@@ -38,6 +47,7 @@ export const parseArgs = (): ParsedArgs => {
     yes: values.yes ?? false,
     jsonOutput: values.json ?? false,
     markdown: values.markdown,
+    packageManager: pm,
     help: values.help ?? false,
     listTemplates: values["list-templates"] ?? false,
   };

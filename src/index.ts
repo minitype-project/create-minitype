@@ -11,6 +11,7 @@ const options = [
   ["-j, --json", "Output JSON (implies --yes, for agent use)"],
   ["--markdown", "Generate document from Markdown (report only)"],
   ["--yaml", "Generate document from YAML (cv or invoice only)"],
+  ["--pm", "Install dependencies with npm or yarn"],
   ["-h, --help", "Show this help"],
   ["--list-templates", "List available templates"],
 ];

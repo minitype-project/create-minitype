@@ -1,3 +1,4 @@
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -40,6 +41,7 @@ Remove it or choose a different project name.`);
 
     await this.createTemplates();
     this.copyFonts();
+    this.installPackages();
 
     if (this.jsonOutput) {
       const result: CreateProjectResult = {
@@ -123,18 +125,49 @@ Remove it or choose a different project name.`);
   }
 
   /**
+   * パッケージをインストールする．
+   */
+  private installPackages() {
+    const pm = this.config.packageManager;
+    if (!pm) {
+      return;
+    }
+    if (!this.jsonOutput) {
+      console.log(`\nInstalling packages with ${pm}...`);
+    }
+
+    const result = spawnSync(pm, ["install"], {
+      cwd: this.targetDir,
+      stdio: this.jsonOutput ? "pipe" : "inherit",
+    });
+
+    if (result.status !== 0) {
+      const message = `Package installation failed (exit code: ${String(result.status)}).`;
+      if (this.jsonOutput) {
+        console.error(message);
+      } else {
+        console.error(`\n${pc.red(message)}`);
+      }
+      process.exit(1);
+    }
+  }
+
+  /**
    * 成功メッセージを表示する．
    */
   private printSuccess() {
+    const pm = this.config.packageManager;
+    const installStep = pm
+      ? ""
+      : `  ${pc.dim("$")} ${pc.green("npm install")}\n`;
     console.log(`
-${pc.bold(`Project created: ${this.config.projectName}`)}  
+${pc.bold(`Project created: ${this.config.projectName}`)}
 ${this.createdFiles.map((file) => `  ${pc.dim("- ")} ${file}`).join("\n")}
 
 ${pc.bold("Next steps:")}
   ${pc.dim("$")} ${pc.green(`cd ${this.config.projectName}`)}
-  ${pc.dim("$")} ${pc.green("npm install")}
-  ${pc.dim("$")} ${pc.green("npm run build")}
-  
+${installStep}  ${pc.dim("$")} ${pc.green(`${pm ?? "npm"} run build`)}
+
   - You can edit ${pc.cyan("document.ts")} for the content or
     edit ${pc.cyan("index.ts")} for the style.
   - Output will be saved as ${pc.cyan("output.pdf")}.`);

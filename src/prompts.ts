@@ -11,6 +11,8 @@ export interface UserConfig {
   template: string;
   /** Markdown から文章を生成するか（report テンプレートのみ）． */
   markdown: boolean;
+  /** 依存関係をインストールするパッケージマネージャ．`undefined` の場合はインストールを行わない． */
+  packageManager: "npm" | "yarn" | undefined;
 }
 
 export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
@@ -26,6 +28,7 @@ export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
       projectName,
       template,
       markdown: args.markdown ?? false,
+      packageManager: args.packageManager,
     };
   }
 
@@ -82,7 +85,33 @@ export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
     }
   }
 
-  return { projectName, template, markdown };
+  // パッケージマネージャ
+  let packageManager = args.packageManager;
+  if (packageManager) {
+    displayAlreadySpecified("Package manager", packageManager);
+  } else {
+    const answer = await Enquirer.prompt<{ packageManager: string }>({
+      type: "select",
+      name: "packageManager",
+      message: "Install packages?",
+      choices: [
+        { name: "none", message: "No" },
+        { name: "npm", message: "npm" },
+        { name: "yarn", message: "yarn" },
+      ],
+    }).catch(() => process.exit(0));
+    packageManager =
+      answer.packageManager !== "none"
+        ? (answer.packageManager as "npm" | "yarn")
+        : undefined;
+  }
+
+  return {
+    projectName,
+    template,
+    markdown,
+    packageManager,
+  };
 };
 
 const displayAlreadySpecified = (key: string, value: string) => {
