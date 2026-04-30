@@ -6,6 +6,7 @@ import {
   box,
   cmyk,
   easytable,
+  fill,
   flexbox,
   fr,
   H,
@@ -148,7 +149,7 @@ export const body: Body = [
     ],
     {
       padding: physical(6, 8),
-      background: cmyk(0, 0, 0, 5),
+      background: [fill(cmyk(0, 0, 0, 5))],
       border: {
         type: "physical",
         bottom: solid(1, cmyk(0, 0, 0, 80)),

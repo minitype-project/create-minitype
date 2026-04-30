@@ -7,6 +7,7 @@ import {
   type Command,
   cmyk,
   figure,
+  fill,
   flexbox,
   fr,
   H,
@@ -89,7 +90,7 @@ const sectionHeader = (title: string) => {
       type: "physical",
       left: solid(2, keyColor),
     },
-    background: subColor,
+    background: [fill(subColor)],
     gapRole: "h2",
   });
 };
@@ -129,7 +130,7 @@ export const body: Body = [
           ? figure(profile.photo, { height: 35, align: "right" })
           : box([p("写真", { align: "center" as const, firstIndent: 0 })], {
               padding: physical(20, 0),
-              background: cmyk(0, 0, 0, 5),
+              background: [fill(cmyk(0, 0, 0, 5))],
               border: {
                 type: "physical" as const,
                 ...Object.fromEntries(
@@ -149,7 +150,7 @@ export const body: Body = [
   // 概要
   box([p(profile.summary, { firstIndent: 0 })], {
     padding: physical(5, 6),
-    background: subColor,
+    background: [fill(subColor)],
   }),
   vspace(8),
 

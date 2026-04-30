@@ -4,6 +4,7 @@ import {
   type DocumentStyle,
   em,
   type Flow,
+  fill,
   type Gap,
   type Group,
   H,
@@ -93,7 +94,7 @@ const titleGroup: Group = {
       blockOffset: 0,
       inlineSize: width,
       zIndex: -1,
-      blocks: [box([vspace(143)], { background: accentColor })],
+      blocks: [box([vspace(143)], { background: [fill(accentColor)] })],
     },
     {
       type: "flow",
@@ -165,7 +166,7 @@ const headline = (text: string, pageIndex: number): Flow => {
           }),
         ],
         {
-          background: accentColor,
+          background: [fill(accentColor)],
           padding: physical(5, 10, 4, 10),
         },
       ),
@@ -214,7 +215,10 @@ await minitype(
     block,
     command: {
       b: { font: "SourceHanSansJP-Bold" },
-      c: { font: "SourceCodePro-Regular", background: cmyk(0, 0, 0, 8) },
+      c: {
+        font: "SourceCodePro-Regular",
+        background: [fill(cmyk(0, 0, 0, 8))],
+      },
     },
     gaps,
   },
