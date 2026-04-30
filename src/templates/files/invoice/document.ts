@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Body } from "minitype";
 import {
+  type Body,
   box,
   cmyk,
   easytable,
@@ -16,7 +16,7 @@ import {
   ratio,
   solid,
   vspace,
-} from "minitype";
+} from "@minitype/minitype";
 import { parse } from "yaml";
 
 // ------

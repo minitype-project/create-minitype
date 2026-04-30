@@ -8,7 +8,7 @@
     "watch": "tsx watch index.ts"
   },
   "dependencies": {
-    "minitype": "file:{{minitypePath}}",
+    "@minitype/minitype": "file:{{minitypePath}}",
     "yaml": "^2.0.0"
   },
   "devDependencies": {

@@ -8,7 +8,7 @@
     "watch": "tsx watch index.ts"
   },
   "dependencies": {
-    "minitype": "file:{{minitypePath}}"
+    "@minitype/minitype": "file:{{minitypePath}}"
   },
   "devDependencies": {
     "@minitype/vite-plugin": "file:{{minitypeVitePluginPath}}",
