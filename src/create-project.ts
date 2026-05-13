@@ -8,8 +8,9 @@ import type { UserConfig } from "./prompts.js";
 import type { TemplateVars } from "./templates/index.js";
 import { templates } from "./templates/index.js";
 
-const MINITYPE_PATH = "../../minitype";
-const MINITYPE_VITE_PLUGIN_PATH = "../../vite-plugin";
+const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
+const MINITYPE_ABS = path.resolve(SCRIPT_DIR, "../../minitype");
+const MINITYPE_VITE_PLUGIN_ABS = path.resolve(SCRIPT_DIR, "../../vite-plugin");
 
 interface CreateProjectResult {
   projectName: string;
@@ -68,8 +69,8 @@ Remove it or choose a different project name.`);
 
     const vars: TemplateVars = {
       projectName: this.config.projectName,
-      minitypePath: MINITYPE_PATH,
-      minitypeVitePluginPath: MINITYPE_VITE_PLUGIN_PATH,
+      minitypePath: path.relative(this.targetDir, MINITYPE_ABS),
+      minitypeVitePluginPath: path.relative(this.targetDir, MINITYPE_VITE_PLUGIN_ABS),
     };
     const files = await template.files(vars, {
       markdown: this.config.markdown,

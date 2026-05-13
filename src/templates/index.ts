@@ -115,6 +115,7 @@ const technicalBook: Template = {
     ...commonFiles(vars, "technical-book"),
     "index.ts": renderFile("technical-book/index.ts", vars),
     "document.ts": renderFile("technical-book/document.ts", vars),
+    "utils.ts": renderFile("technical-book/utils.ts", vars),
     "example.png": await createPlaceholderPng(400, 250),
   }),
 };
@@ -183,6 +184,18 @@ const slide: Template = {
   },
 };
 
+const novel: Template = {
+  displayName: "小説",
+  description: "小説（B5，縦組）",
+  files: (vars) => {
+    return {
+      ...commonFiles(vars, "novel"),
+      "index.ts": renderFile("novel/index.ts", vars),
+      "document.ts": renderFile("novel/document.ts", vars),
+    };
+  },
+};
+
 export const templates: Record<string, Template> = {
   report,
   "technical-book": technicalBook,
@@ -191,4 +204,5 @@ export const templates: Record<string, Template> = {
   invoice,
   cv,
   slide,
+  novel,
 };
