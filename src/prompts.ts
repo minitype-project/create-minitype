@@ -47,6 +47,15 @@ const cliBuiltinOverrides = (args: ParsedArgs): Record<string, boolean> => {
 };
 
 /**
+ * プロンプトのデフォルト値を返す．
+ */
+const getDefaultValue = (prompt: TemplatePrompt): unknown => {
+  return prompt.type === "confirm"
+    ? (prompt.initial ?? false)
+    : (prompt.initial ?? prompt.choices[0].name);
+};
+
+/**
  * `builtinOptions` と `prompts` を統合したプロンプト配列を生成する．
  */
 const buildAllPrompts = (template: Template): TemplatePrompt[] => {
@@ -58,6 +67,30 @@ const buildAllPrompts = (template: Template): TemplatePrompt[] => {
     }),
   );
   return [...builtinPrompts, ...(template.prompts ?? [])];
+};
+
+/**
+ * テンプレートオプションを解決する．
+ * {@link verbose} が `true` の場合，CLI フラグで指定済みのオプションを表示する．
+ */
+const resolveTemplateOptions = async (
+  template: Template,
+  overrides: Record<string, boolean>,
+  resolver: (prompt: TemplatePrompt) => Promise<unknown>,
+  verbose = false,
+): Promise<TemplateOptions> => {
+  const options: TemplateOptions = {};
+  for (const prompt of buildAllPrompts(template)) {
+    if (prompt.id in overrides) {
+      options[prompt.id] = overrides[prompt.id];
+      if (verbose && overrides[prompt.id]) {
+        displayAlreadySpecified(prompt.message, "enabled");
+      }
+    } else {
+      options[prompt.id] = await resolver(prompt);
+    }
+  }
+  return options;
 };
 
 export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
@@ -72,19 +105,12 @@ export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
     if (!selectedTemplate) {
       throw new Error("Template not found.");
     }
-    const overrides = cliBuiltinOverrides(args);
-    const templateOptions: TemplateOptions = {};
 
-    for (const prompt of buildAllPrompts(selectedTemplate)) {
-      if (prompt.id in overrides) {
-        templateOptions[prompt.id] = overrides[prompt.id];
-      } else {
-        templateOptions[prompt.id] =
-          prompt.type === "confirm"
-            ? (prompt.initial ?? false)
-            : (prompt.initial ?? prompt.choices[0].name);
-      }
-    }
+    const templateOptions = await resolveTemplateOptions(
+      selectedTemplate,
+      cliBuiltinOverrides(args),
+      (prompt) => Promise.resolve(getDefaultValue(prompt)),
+    );
 
     return {
       projectName,
@@ -105,7 +131,7 @@ export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
       name: "projectName",
       message: "Project name",
       initial: DEFAULT_PROJECT_NAME,
-    }).catch(() => process.exit(0));
+    });
     projectName = answer.projectName;
   }
 
@@ -124,7 +150,7 @@ export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
         message: key,
         hint: tmpl.description,
       })),
-    }).catch(() => process.exit(0));
+    });
     template = answer.template;
   }
 
@@ -133,19 +159,12 @@ export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
     throw new Error("Template not found.");
   }
   const overrides = cliBuiltinOverrides(args);
-  const templateOptions: TemplateOptions = {};
-
-  // プロンプトを処理
-  for (const prompt of buildAllPrompts(selectedTemplate)) {
-    if (prompt.id in overrides) {
-      templateOptions[prompt.id] = overrides[prompt.id];
-      if (overrides[prompt.id]) {
-        displayAlreadySpecified(prompt.message, "enabled");
-      }
-    } else {
-      templateOptions[prompt.id] = await askTemplatePrompt(prompt);
-    }
-  }
+  const templateOptions = await resolveTemplateOptions(
+    selectedTemplate,
+    overrides,
+    askTemplatePrompt,
+    true,
+  );
 
   // パッケージマネージャ
   let packageManager = args.packageManager;
@@ -161,7 +180,7 @@ export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
         { name: "npm", message: "npm" },
         { name: "yarn", message: "yarn" },
       ],
-    }).catch(() => process.exit(0));
+    });
     packageManager =
       answer.packageManager !== "none"
         ? (answer.packageManager as "npm" | "yarn")
@@ -180,26 +199,22 @@ export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
  * プロンプトを表示してユーザの回答を取得する．
  */
 const askTemplatePrompt = async (prompt: TemplatePrompt): Promise<unknown> => {
-  try {
-    if (prompt.type === "confirm") {
-      const answer = await Enquirer.prompt<Record<string, boolean>>({
-        type: "confirm",
-        name: prompt.id,
-        message: prompt.message,
-        initial: prompt.initial ?? false,
-      });
-      return answer[prompt.id];
-    }
-    const answer = await Enquirer.prompt<Record<string, string>>({
-      type: "select",
+  if (prompt.type === "confirm") {
+    const answer = await Enquirer.prompt<Record<string, boolean>>({
+      type: "confirm",
       name: prompt.id,
       message: prompt.message,
-      choices: prompt.choices,
+      initial: prompt.initial ?? false,
     });
     return answer[prompt.id];
-  } catch {
-    process.exit(0);
   }
+  const answer = await Enquirer.prompt<Record<string, string>>({
+    type: "select",
+    name: prompt.id,
+    message: prompt.message,
+    choices: prompt.choices,
+  });
+  return answer[prompt.id];
 };
 
 const displayAlreadySpecified = (key: string, value: string) => {
