@@ -9,8 +9,10 @@ export interface ParsedArgs {
   yes: boolean;
   /** JSON 形式で出力するか． */
   jsonOutput: boolean;
-  /** Markdown から文章を生成するか（report テンプレートのみ）． */
+  /** Markdown から文章を生成するか． */
   markdown: boolean | undefined;
+  /** YAML から文章を生成するか． */
+  yaml: boolean | undefined;
   /** 依存関係をインストールするパッケージマネージャ．`undefined` の場合はインストールを行わない． */
   packageManager: "npm" | "yarn" | undefined;
   /** ヘルプを表示するか． */
@@ -47,6 +49,7 @@ export const parseArgs = (): ParsedArgs => {
     yes: values.yes ?? false,
     jsonOutput: values.json ?? false,
     markdown: values.markdown,
+    yaml: values.yaml,
     packageManager: pm,
     help: values.help ?? false,
     listTemplates: values["list-templates"] ?? false,

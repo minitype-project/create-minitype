@@ -2,6 +2,12 @@ import Enquirer from "enquirer";
 import pc from "picocolors";
 
 import type { ParsedArgs } from "./args.js";
+import type {
+  Template,
+  TemplateBuiltInOptions,
+  TemplateOptions,
+  TemplatePrompt,
+} from "./templates/index.js";
 import { templates } from "./templates/index.js";
 
 const DEFAULT_PROJECT_NAME = "my-document";
@@ -9,11 +15,50 @@ const DEFAULT_PROJECT_NAME = "my-document";
 export interface UserConfig {
   projectName: string;
   template: string;
-  /** Markdown から文章を生成するか（report テンプレートのみ）． */
-  markdown: boolean;
+  /** テンプレートのオプション． */
+  templateOptions: TemplateOptions;
   /** 依存関係をインストールするパッケージマネージャ．`undefined` の場合はインストールを行わない． */
   packageManager: "npm" | "yarn" | undefined;
 }
+
+/**
+ * 組み込みオプションに対するプロンプト．
+ */
+const BUILTIN_OPTION_CONFIG: Record<
+  keyof TemplateBuiltInOptions,
+  { message: string; initial: boolean }
+> = {
+  markdown: { message: "Use Markdown?", initial: true },
+  yaml: { message: "Use YAML?", initial: false },
+};
+
+/**
+ * CLI フラグから組み込みオプション値を取り出す．
+ */
+const cliBuiltinOverrides = (args: ParsedArgs): Record<string, boolean> => {
+  const overrides: Record<string, boolean> = {};
+  if (args.markdown !== undefined) {
+    overrides.markdown = args.markdown;
+  }
+  if (args.yaml !== undefined) {
+    overrides.yaml = args.yaml;
+  }
+  return overrides;
+};
+
+/**
+ * `builtinOptions` と `prompts` を統合したプロンプト配列を生成する．
+ */
+const buildAllPrompts = (template: Template): TemplatePrompt[] => {
+  const builtinPrompts: TemplatePrompt[] = (template.builtinOptions ?? []).map(
+    (key) => ({
+      id: key,
+      type: "confirm",
+      ...BUILTIN_OPTION_CONFIG[key],
+    }),
+  );
+  return [...builtinPrompts, ...(template.prompts ?? [])];
+};
 
 export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
   // --yes
@@ -21,13 +66,30 @@ export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
     const projectName = args.projectName ?? DEFAULT_PROJECT_NAME;
     const template = args.template;
     if (!template) {
-      console.error("Template is must be specified.");
-      process.exit(1);
+      throw new Error("Template is must be specified.");
     }
+    const selectedTemplate = templates[template];
+    if (!selectedTemplate) {
+      throw new Error("Template not found.");
+    }
+    const overrides = cliBuiltinOverrides(args);
+    const templateOptions: TemplateOptions = {};
+
+    for (const prompt of buildAllPrompts(selectedTemplate)) {
+      if (prompt.id in overrides) {
+        templateOptions[prompt.id] = overrides[prompt.id];
+      } else {
+        templateOptions[prompt.id] =
+          prompt.type === "confirm"
+            ? (prompt.initial ?? false)
+            : (prompt.initial ?? prompt.choices[0].name);
+      }
+    }
+
     return {
       projectName,
       template,
-      markdown: args.markdown ?? false,
+      templateOptions,
       packageManager: args.packageManager,
     };
   }
@@ -66,22 +128,22 @@ export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
     template = answer.template;
   }
 
-  // Markdown
-  let markdown = false;
-  if (template === "report") {
-    if (args.markdown !== undefined) {
-      markdown = args.markdown;
-      if (markdown) {
-        displayAlreadySpecified("Markdown", "enabled");
+  const selectedTemplate = templates[template];
+  if (!selectedTemplate) {
+    throw new Error("Template not found.");
+  }
+  const overrides = cliBuiltinOverrides(args);
+  const templateOptions: TemplateOptions = {};
+
+  // プロンプトを処理
+  for (const prompt of buildAllPrompts(selectedTemplate)) {
+    if (prompt.id in overrides) {
+      templateOptions[prompt.id] = overrides[prompt.id];
+      if (overrides[prompt.id]) {
+        displayAlreadySpecified(prompt.message, "enabled");
       }
     } else {
-      const answer = await Enquirer.prompt<{ markdown: boolean }>({
-        type: "confirm",
-        name: "markdown",
-        message: "Use Markdown?",
-        initial: true,
-      }).catch(() => process.exit(0));
-      markdown = answer.markdown;
+      templateOptions[prompt.id] = await askTemplatePrompt(prompt);
     }
   }
 
@@ -109,9 +171,35 @@ export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
   return {
     projectName,
     template,
-    markdown,
+    templateOptions,
     packageManager,
   };
+};
+
+/**
+ * プロンプトを表示してユーザの回答を取得する．
+ */
+const askTemplatePrompt = async (prompt: TemplatePrompt): Promise<unknown> => {
+  try {
+    if (prompt.type === "confirm") {
+      const answer = await Enquirer.prompt<Record<string, boolean>>({
+        type: "confirm",
+        name: prompt.id,
+        message: prompt.message,
+        initial: prompt.initial ?? false,
+      });
+      return answer[prompt.id];
+    }
+    const answer = await Enquirer.prompt<Record<string, string>>({
+      type: "select",
+      name: prompt.id,
+      message: prompt.message,
+      choices: prompt.choices,
+    });
+    return answer[prompt.id];
+  } catch {
+    process.exit(0);
+  }
 };
 
 const displayAlreadySpecified = (key: string, value: string) => {

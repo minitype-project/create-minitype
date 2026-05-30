@@ -16,9 +16,9 @@ export interface TemplateVars {
 }
 
 /**
- * テンプレートのオプション．
+ * フレームワークが提供する組み込みオプション．
  */
-export interface TemplateOptions {
+export interface TemplateBuiltInOptions {
   /** Markdown から文章を生成するか（report テンプレートのみ）． */
   markdown?: boolean;
   /** YAML から文章を生成するか（cv・invoice テンプレートのみ）． */
@@ -26,11 +26,53 @@ export interface TemplateOptions {
 }
 
 /**
+ * 組み込みオプションとテンプレート固有のオプションを統合したオプション．
+ */
+export type TemplateOptions = TemplateBuiltInOptions & Record<string, unknown>;
+
+/**
+ * オプションに対するプロンプト（質問文）．
+ */
+export type TemplatePrompt =
+  | {
+      /** プロンプトの識別子．{@link TemplateOptions} のキーとして使用される． */
+      id: string;
+      /** ユーザに表示するメッセージ． */
+      message: string;
+      /** プロンプトの種類． */
+      type: "confirm";
+      /** デフォルト値． @default false */
+      initial?: boolean;
+    }
+  | {
+      /** プロンプトの識別子．{@link TemplateOptions} のキーとして使用される． */
+      id: string;
+      /** ユーザに表示するメッセージ． */
+      message: string;
+      /** プロンプトの種類． */
+      type: "select";
+      /** 選択肢のリスト． */
+      choices: { name: string; message: string }[];
+      /**
+       * デフォルト値．
+       * @default 最初の選択肢の {@link id}
+       */
+      initial?: string;
+    };
+
+/**
  * テンプレート．
  */
 export interface Template {
   displayName: string;
   description: string;
+  /**
+   * 使用する組み込みオプションのリスト．
+   * フレームワークが CLI フラグと対話プロンプトを自動的に提供する．
+   */
+  builtinOptions?: ReadonlyArray<keyof TemplateBuiltInOptions>;
+  /** 組み込みオプションでは賄えない，テンプレート固有の追加プロンプト定義． */
+  prompts?: TemplatePrompt[];
   files: (
     vars: TemplateVars,
     options?: TemplateOptions,
@@ -89,6 +131,7 @@ const commonFiles = (
 const report: Template = {
   displayName: "レポート",
   description: "一般的なレポート，報告書（A4，横組）",
+  builtinOptions: ["markdown"],
   files: async (vars, options) => {
     if (options?.markdown) {
       return {

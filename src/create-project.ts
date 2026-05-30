@@ -70,11 +70,12 @@ Remove it or choose a different project name.`);
     const vars: TemplateVars = {
       projectName: this.config.projectName,
       minitypePath: path.relative(this.targetDir, MINITYPE_ABS),
-      minitypeVitePluginPath: path.relative(this.targetDir, MINITYPE_VITE_PLUGIN_ABS),
+      minitypeVitePluginPath: path.relative(
+        this.targetDir,
+        MINITYPE_VITE_PLUGIN_ABS,
+      ),
     };
-    const files = await template.files(vars, {
-      markdown: this.config.markdown,
-    });
+    const files = await template.files(vars, this.config.templateOptions);
 
     for (const [filePath, content] of Object.entries(files)) {
       const fullPath = path.join(this.targetDir, filePath);
