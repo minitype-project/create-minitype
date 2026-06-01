@@ -2,6 +2,7 @@ import Enquirer from "enquirer";
 import pc from "picocolors";
 
 import type { ParsedArgs } from "./args.js";
+import type { ProjectConfig } from "./create-project.js";
 import { resolveTemplate } from "./template-resolver.js";
 import type {
   Template,
@@ -12,16 +13,6 @@ import type {
 import { templates } from "./templates/index.js";
 
 const DEFAULT_PROJECT_NAME = "my-document";
-
-export interface UserConfig {
-  projectName: string;
-  /** 解決済みのテンプレート． */
-  template: Template;
-  /** テンプレートのオプション． */
-  templateOptions: TemplateOptions;
-  /** 依存関係をインストールするパッケージマネージャ．`undefined` の場合はインストールを行わない． */
-  packageManager: "npm" | "yarn" | undefined;
-}
 
 /**
  * 組み込みオプションに対するプロンプト．
@@ -37,7 +28,7 @@ const BUILTIN_OPTION_CONFIG: Record<
 /**
  * CLI フラグから組み込みオプション値を取り出す．
  */
-const cliBuiltinOverrides = (args: ParsedArgs): Record<string, boolean> => {
+const cliBuiltinOverrides = (args: ParsedArgs) => {
   const overrides: Record<string, boolean> = {};
   if (args.markdown !== undefined) {
     overrides.markdown = args.markdown;
@@ -51,7 +42,7 @@ const cliBuiltinOverrides = (args: ParsedArgs): Record<string, boolean> => {
 /**
  * プロンプトのデフォルト値を返す．
  */
-const getDefaultValue = (prompt: TemplatePrompt): unknown => {
+const getDefaultValue = (prompt: TemplatePrompt) => {
   return prompt.type === "confirm"
     ? (prompt.initial ?? false)
     : (prompt.initial ?? prompt.choices[0].name);
@@ -80,7 +71,7 @@ const resolveTemplateOptions = async (
   overrides: Record<string, boolean>,
   resolver: (prompt: TemplatePrompt) => Promise<unknown>,
   verbose = false,
-): Promise<TemplateOptions> => {
+) => {
   const options: TemplateOptions = {};
   for (const prompt of buildAllPrompts(template)) {
     if (prompt.id in overrides) {
@@ -95,7 +86,7 @@ const resolveTemplateOptions = async (
   return options;
 };
 
-export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
+export const promptUser = async (args: ParsedArgs): Promise<ProjectConfig> => {
   // --yes
   if (args.yes) {
     const projectName = args.projectName ?? DEFAULT_PROJECT_NAME;
@@ -141,7 +132,8 @@ export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
     const answer = await Enquirer.prompt<{ template: string }>({
       type: "select",
       name: "template",
-      message: "Template",
+      message:
+        "Template. Specify a built-in template name, a git URL, or a local path.",
       choices: Object.entries(templates).map(([key, tmpl]) => ({
         name: key,
         message: key,
@@ -192,7 +184,7 @@ export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
 /**
  * プロンプトを表示してユーザの回答を取得する．
  */
-const askTemplatePrompt = async (prompt: TemplatePrompt): Promise<unknown> => {
+const askTemplatePrompt = async (prompt: TemplatePrompt) => {
   if (prompt.type === "confirm") {
     const answer = await Enquirer.prompt<Record<string, boolean>>({
       type: "confirm",

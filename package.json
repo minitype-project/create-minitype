@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "build": "tsx build.ts && tsc --emitDeclarationOnly ",
-    "dev": "tsx src/index.ts",
+    "dev": "tsx src/bin.ts",
     "check": "biome check ./src --write",
     "test": "vitest run",
     "test:watch": "vitest"

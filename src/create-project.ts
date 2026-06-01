@@ -4,17 +4,35 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import pc from "picocolors";
 
-import type { UserConfig } from "./prompts.js";
-import type { TemplateVars } from "./templates/index.js";
+import type {
+  Template,
+  TemplateOptions,
+  TemplateVars,
+} from "./templates/index.js";
+
+export interface ProjectConfig {
+  /** プロジェクト名． */
+  projectName: string;
+  /** 解決済みのテンプレート． */
+  template: Template;
+  /** テンプレートのオプション．未指定の場合はデフォルト値が使用される． */
+  templateOptions?: TemplateOptions;
+  /** 依存関係をインストールするパッケージマネージャ．`undefined` の場合はインストールを行わない． */
+  packageManager?: "npm" | "yarn";
+}
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const MINITYPE_ABS = path.resolve(SCRIPT_DIR, "../../minitype");
 const MINITYPE_VITE_PLUGIN_ABS = path.resolve(SCRIPT_DIR, "../../vite-plugin");
 
 export interface CreateProjectResult {
+  /** プロジェクト名． */
   projectName: string;
+  /** テンプレート ID． */
   templateId: string;
+  /** ターゲットディレクトリ． */
   targetDir: string;
+  /** 生成されたファイル群のパス． */
   files: string[];
 }
 
@@ -23,7 +41,7 @@ export class ProjectCreator {
   private targetDir: string;
 
   constructor(
-    private readonly config: UserConfig,
+    private readonly config: ProjectConfig,
     private readonly jsonOutput: boolean,
   ) {
     this.targetDir = path.resolve(process.cwd(), this.config.projectName);

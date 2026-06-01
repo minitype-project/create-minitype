@@ -1,92 +1,34 @@
-import pc from "picocolors";
+import { type ProjectConfig, ProjectCreator } from "./create-project.js";
+import { resolveTemplate } from "./template-resolver.js";
 
-import { parseArgs } from "./args.js";
-import { ProjectCreator } from "./create-project.js";
-import { promptUser } from "./prompts.js";
-import { templates } from "./templates/index.js";
-
-const options = [
-  ["-t, --template <name>", "Template to use (skips prompt)"],
-  ["-y, --yes", "Skip prompts (template must be specified)"],
-  ["-j, --json", "Output JSON (implies --yes, for agent use)"],
-  ["--markdown", "Generate document from Markdown (report only)"],
-  ["--yaml", "Generate document from YAML (cv or invoice only)"],
-  ["--pm", "Install dependencies with npm or yarn"],
-  ["-h, --help", "Show this help"],
-  ["--list-templates", "List available templates"],
-];
+export type { CreateProjectResult, ProjectConfig } from "./create-project.js";
+export { ProjectCreator } from "./create-project.js";
+export { resolveTemplate } from "./template-resolver.js";
+export type {
+  Template,
+  TemplateOptions,
+  TemplatePrompt,
+  TemplateVars,
+} from "./templates/index.js";
+export { templates } from "./templates/index.js";
 
 /**
- * ヘルプを表示する．
+ * プロジェクト作成のオプション．
  */
-const showHelp = () => {
-  console.log(`
-${pc.bold("create-minitype")} – creating a minitype document
-
-${pc.bold("Usage:")}
-  npx create minitype [project-name] [options]
-
-${pc.bold("Options:")}
-${options
-  .map(
-    ([option, description]) =>
-      `  ${pc.cyan(option.padEnd(24))} ${pc.dim(description)}`,
-  )
-  .join("\n")}
-
-${pc.bold("Templates:")}
-${Object.entries(templates)
-  .map(
-    ([key, tmpl]) => `  ${pc.cyan(key.padEnd(24))} ${pc.dim(tmpl.description)}`,
-  )
-  .join("\n")}
-
-${pc.bold("Examples:")}
-  ${pc.dim("# Interactive")}
-  npx create minitype
-
-  ${pc.dim("# Specify project name")}
-  npx create minitype my-report
-
-  ${pc.dim("# Non-interactive (for agents)")}
-  npx create minitype my-report --template report --yes
-
-  ${pc.dim("# JSON output (for agents)")}
-  npx create minitype my-report --template report --json
-`);
+export type CreateProjectOptions = Omit<ProjectConfig, "template"> & {
+  /**
+   * テンプレート ID．
+   * 組み込みテンプレート名，git URL，ローカルパスを指定できる．
+   */
+  templateId: string;
 };
 
 /**
- * 利用可能なテンプレート一覧を表示する．
+ * minitype プロジェクトを作成する．
  */
-const listTemplates = () => {
-  for (const [key, tmpl] of Object.entries(templates)) {
-    console.log(
-      `${pc.cyan(key.padEnd(20))} ${tmpl.displayName}\t${pc.dim(tmpl.description)}`,
-    );
-  }
+export const createProject = async (
+  options: CreateProjectOptions,
+): ReturnType<ProjectCreator["create"]> => {
+  const template = await resolveTemplate(options.templateId);
+  return new ProjectCreator({ ...options, template }, false).create();
 };
-
-/**
- * エントリポイント．
- */
-const main = async () => {
-  try {
-    const args = parseArgs();
-    if (args.help) {
-      showHelp();
-      return;
-    }
-    if (args.listTemplates) {
-      listTemplates();
-      return;
-    }
-    const config = await promptUser(args);
-    await new ProjectCreator(config, args.jsonOutput).create();
-  } catch (e) {
-    console.error(String(e));
-    process.exit(1);
-  }
-};
-
-main();
