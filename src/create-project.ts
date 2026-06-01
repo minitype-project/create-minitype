@@ -6,7 +6,6 @@ import pc from "picocolors";
 
 import type { UserConfig } from "./prompts.js";
 import type { TemplateVars } from "./templates/index.js";
-import { templates } from "./templates/index.js";
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const MINITYPE_ABS = path.resolve(SCRIPT_DIR, "../../minitype");
@@ -14,7 +13,7 @@ const MINITYPE_VITE_PLUGIN_ABS = path.resolve(SCRIPT_DIR, "../../vite-plugin");
 
 interface CreateProjectResult {
   projectName: string;
-  template: string;
+  templateId: string;
   targetDir: string;
   files: string[];
 }
@@ -40,14 +39,14 @@ Remove it or choose a different project name.`);
       process.exit(1);
     }
 
-    await this.createTemplates();
+    await this.createTemplateFiles();
     this.copyFonts();
     this.installPackages();
 
     if (this.jsonOutput) {
       const result: CreateProjectResult = {
         projectName: this.config.projectName,
-        template: this.config.template,
+        templateId: this.config.template.id,
         targetDir: this.targetDir,
         files: this.createdFiles,
       };
@@ -58,15 +57,9 @@ Remove it or choose a different project name.`);
   }
 
   /**
-   * テンプレートを作成する．
+   * テンプレートからファイルを生成する．
    */
-  private async createTemplates() {
-    const template = templates[this.config.template];
-    if (!template) {
-      console.error(`Unknown template: ${this.config.template}`);
-      process.exit(1);
-    }
-
+  private async createTemplateFiles() {
     const vars: TemplateVars = {
       projectName: this.config.projectName,
       minitypePath: path.relative(this.targetDir, MINITYPE_ABS),
@@ -75,7 +68,10 @@ Remove it or choose a different project name.`);
         MINITYPE_VITE_PLUGIN_ABS,
       ),
     };
-    const files = await template.files(vars, this.config.templateOptions);
+    const files = await this.config.template.files(
+      vars,
+      this.config.templateOptions,
+    );
 
     for (const [filePath, content] of Object.entries(files)) {
       const fullPath = path.join(this.targetDir, filePath);

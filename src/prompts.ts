@@ -2,6 +2,7 @@ import Enquirer from "enquirer";
 import pc from "picocolors";
 
 import type { ParsedArgs } from "./args.js";
+import { resolveTemplate } from "./template-loader.js";
 import type {
   Template,
   TemplateBuiltInOptions,
@@ -14,7 +15,8 @@ const DEFAULT_PROJECT_NAME = "my-document";
 
 export interface UserConfig {
   projectName: string;
-  template: string;
+  /** 解決済みのテンプレート． */
+  template: Template;
   /** テンプレートのオプション． */
   templateOptions: TemplateOptions;
   /** 依存関係をインストールするパッケージマネージャ．`undefined` の場合はインストールを行わない． */
@@ -97,17 +99,12 @@ export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
   // --yes
   if (args.yes) {
     const projectName = args.projectName ?? DEFAULT_PROJECT_NAME;
-    const template = args.template;
-    if (!template) {
+    if (!args.templateId) {
       throw new Error("Template is must be specified.");
     }
-    const selectedTemplate = templates[template];
-    if (!selectedTemplate) {
-      throw new Error("Template not found.");
-    }
-
+    const template = await resolveTemplate(args.templateId);
     const templateOptions = await resolveTemplateOptions(
-      selectedTemplate,
+      template,
       cliBuiltinOverrides(args),
       (prompt) => Promise.resolve(getDefaultValue(prompt)),
     );
@@ -136,11 +133,11 @@ export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
   }
 
   // テンプレート
-  let template: string;
-  if (args.template) {
-    template = args.template;
-    displayAlreadySpecified("Template", template);
-  } else {
+  const templateId = await (async () => {
+    if (args.templateId) {
+      displayAlreadySpecified("Template", args.templateId);
+      return args.templateId;
+    }
     const answer = await Enquirer.prompt<{ template: string }>({
       type: "select",
       name: "template",
@@ -151,16 +148,13 @@ export const promptUser = async (args: ParsedArgs): Promise<UserConfig> => {
         hint: tmpl.description,
       })),
     });
-    template = answer.template;
-  }
+    return answer.template;
+  })();
 
-  const selectedTemplate = templates[template];
-  if (!selectedTemplate) {
-    throw new Error("Template not found.");
-  }
+  const template = await resolveTemplate(templateId);
   const overrides = cliBuiltinOverrides(args);
   const templateOptions = await resolveTemplateOptions(
-    selectedTemplate,
+    template,
     overrides,
     askTemplatePrompt,
     true,

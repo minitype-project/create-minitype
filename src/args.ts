@@ -4,7 +4,7 @@ export interface ParsedArgs {
   /** プロジェクト名． */
   projectName?: string;
   /** 使用するテンプレート名． */
-  template?: string;
+  templateId?: string;
   /** 確認なしで実行するか． */
   yes: boolean;
   /** JSON 形式で出力するか． */
@@ -45,7 +45,7 @@ export const parseArgs = (): ParsedArgs => {
 
   return {
     projectName: positionals[0],
-    template: values.template,
+    templateId: values.template,
     yes: values.yes ?? false,
     jsonOutput: values.json ?? false,
     markdown: values.markdown,

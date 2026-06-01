@@ -64,6 +64,8 @@ export type TemplatePrompt =
  * テンプレート．
  */
 export interface Template {
+  /** テンプレートの ID．組み込みの場合はキー名，外部の場合は URL． */
+  id: string;
   displayName: string;
   description: string;
   /**
@@ -129,6 +131,7 @@ const commonFiles = (
 // テンプレート
 // ------
 const report: Template = {
+  id: "report",
   displayName: "レポート",
   description: "一般的なレポート，報告書（A4，横組）",
   builtinOptions: ["markdown"],
@@ -152,6 +155,7 @@ const report: Template = {
 };
 
 const technicalBook: Template = {
+  id: "technical-book",
   displayName: "技術書",
   description: "技術書，マニュアル（B5，横組）",
   files: async (vars) => ({
@@ -164,6 +168,7 @@ const technicalBook: Template = {
 };
 
 const conferencePaper: Template = {
+  id: "conference-paper",
   displayName: "会議論文",
   description: "会議論文（A4，2段組）",
   files: async (vars) => ({
@@ -175,6 +180,7 @@ const conferencePaper: Template = {
 };
 
 const thesis: Template = {
+  id: "thesis",
   displayName: "学位論文",
   description: "学位論文（A4, 横組）",
   files: async (vars) => ({
@@ -186,6 +192,7 @@ const thesis: Template = {
 };
 
 const invoice: Template = {
+  id: "invoice",
   displayName: "請求書",
   description: "請求書（A4, 横組）",
   files: (vars) => {
@@ -200,6 +207,7 @@ const invoice: Template = {
 };
 
 const cv: Template = {
+  id: "cv",
   displayName: "履歴書",
   description: "履歴書（A4, 横組）",
   files: async (vars) => {
@@ -215,6 +223,7 @@ const cv: Template = {
 };
 
 const slide: Template = {
+  id: "slide",
   displayName: "スライド",
   description: "プレゼンテーション用スライド（16:9, 横組）",
   files: async (vars) => {
@@ -228,6 +237,7 @@ const slide: Template = {
 };
 
 const novel: Template = {
+  id: "novel",
   displayName: "小説",
   description: "小説（B5，縦組）",
   files: (vars) => {
@@ -239,13 +249,19 @@ const novel: Template = {
   },
 };
 
-export const templates: Record<string, Template> = {
+export const templates: Record<string, Template> = [
   report,
-  "technical-book": technicalBook,
-  "conference-paper": conferencePaper,
+  technicalBook,
+  conferencePaper,
   thesis,
   invoice,
   cv,
   slide,
   novel,
-};
+].reduce(
+  (acc, tmpl) => {
+    acc[tmpl.id] = tmpl;
+    return acc;
+  },
+  {} as Record<string, Template>,
+);
