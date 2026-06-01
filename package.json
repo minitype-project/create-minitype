@@ -22,7 +22,6 @@
     "@minitype/vite-plugin": "../vite-plugin",
     "@types/node": "^25.4.0",
     "esbuild": "^0.25.0",
-    "tsx": "^4.21.0",
     "typescript": "^6.0.2",
     "vite": "^8.0.3",
     "vitest": "^2.1.9",
@@ -31,6 +30,7 @@
   "dependencies": {
     "enquirer": "^2.4.1",
     "picocolors": "^1.1.1",
-    "sharp": "^0.34.5"
+    "sharp": "^0.34.5",
+    "tsx": "^4.21.0"
   }
 }

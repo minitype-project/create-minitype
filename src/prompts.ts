@@ -2,7 +2,7 @@ import Enquirer from "enquirer";
 import pc from "picocolors";
 
 import type { ParsedArgs } from "./args.js";
-import { resolveTemplate } from "./template-loader.js";
+import { resolveTemplate } from "./template-resolver.js";
 import type {
   Template,
   TemplateBuiltInOptions,

@@ -11,7 +11,7 @@ const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const MINITYPE_ABS = path.resolve(SCRIPT_DIR, "../../minitype");
 const MINITYPE_VITE_PLUGIN_ABS = path.resolve(SCRIPT_DIR, "../../vite-plugin");
 
-interface CreateProjectResult {
+export interface CreateProjectResult {
   projectName: string;
   templateId: string;
   targetDir: string;
@@ -32,28 +32,29 @@ export class ProjectCreator {
   async create() {
     // ディレクトリが既に存在する場合はエラー
     if (fs.existsSync(this.targetDir)) {
-      if (!this.jsonOutput) {
-        console.error(`Directory already exists: ${this.config.projectName}
-Remove it or choose a different project name.`);
-      }
-      process.exit(1);
+      throw new Error(
+        `Directory already exists: ${this.config.projectName}\nRemove it or choose a different project name.`,
+      );
     }
 
     await this.createTemplateFiles();
     this.copyFonts();
     this.installPackages();
 
+    const result: CreateProjectResult = {
+      projectName: this.config.projectName,
+      templateId: this.config.template.id,
+      targetDir: this.targetDir,
+      files: this.createdFiles,
+    };
+
     if (this.jsonOutput) {
-      const result: CreateProjectResult = {
-        projectName: this.config.projectName,
-        templateId: this.config.template.id,
-        targetDir: this.targetDir,
-        files: this.createdFiles,
-      };
       console.log(JSON.stringify(result, null, 2));
     } else {
       this.printSuccess();
     }
+
+    return result;
   }
 
   /**
@@ -140,13 +141,9 @@ Remove it or choose a different project name.`);
     });
 
     if (result.status !== 0) {
-      const message = `Package installation failed (exit code: ${String(result.status)}).`;
-      if (this.jsonOutput) {
-        console.error(message);
-      } else {
-        console.error(`\n${pc.red(message)}`);
-      }
-      process.exit(1);
+      throw new Error(
+        `Package installation failed (exit code: ${String(result.status)}).`,
+      );
     }
   }
 
