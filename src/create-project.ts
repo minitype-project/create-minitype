@@ -17,8 +17,13 @@ export interface ProjectConfig {
   template: Template;
   /** テンプレートのオプション．未指定の場合はデフォルト値が使用される． */
   templateOptions?: TemplateOptions;
-  /** 依存関係をインストールするパッケージマネージャ．`undefined` の場合はインストールを行わない． */
+  /** 依存関係をインストールするパッケージマネージャ．未指定の場合はインストールしない． */
   packageManager?: "npm" | "yarn";
+  /**
+   * プロジェクトを作成するディレクトリ．
+   * @default カレントディレクトリ
+   */
+  outputDir?: string;
 }
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -44,7 +49,10 @@ export class ProjectCreator {
     private readonly config: ProjectConfig,
     private readonly jsonOutput: boolean,
   ) {
-    this.targetDir = path.resolve(process.cwd(), this.config.projectName);
+    this.targetDir = path.resolve(
+      this.config.outputDir ?? process.cwd(),
+      this.config.projectName,
+    );
   }
 
   async create() {
@@ -173,12 +181,15 @@ export class ProjectCreator {
     const installStep = pm
       ? ""
       : `  ${pc.dim("$")} ${pc.green("npm install")}\n`;
+    const cdPath = this.config.outputDir
+      ? this.targetDir
+      : this.config.projectName;
     console.log(`
 ${pc.bold(`Project created: ${this.config.projectName}`)}
 ${this.createdFiles.map((file) => `  ${pc.dim("- ")} ${file}`).join("\n")}
 
 ${pc.bold("Next steps:")}
-  ${pc.dim("$")} ${pc.green(`cd ${this.config.projectName}`)}
+  ${pc.dim("$")} ${pc.green(`cd ${cdPath}`)}
 ${installStep}  ${pc.dim("$")} ${pc.green(`${pm ?? "npm"} run build`)}
 
   - You can edit ${pc.cyan("document.ts")} for the content or
