@@ -9,9 +9,20 @@ const baseSettings = {
   platform: "node" as const,
 };
 
+const importMetaUrlPolyfill =
+  "const __importMetaUrl = require('url').pathToFileURL(__filename).href;";
+const importMetaUrlDefine = { "import.meta.url": "__importMetaUrl" };
+
 // CLI バイナリ
 await build({
   ...baseSettings,
+  // CLI はすべての依存をバンドルするが，tsx は動的 import のため外出し
+  external: ["tsx"],
+  entryPoints: ["./src/cli.ts"],
+  format: "cjs",
+  outfile: "./dist/cli.cjs",
+  banner: { js: ["#!/usr/bin/env node", importMetaUrlPolyfill].join("\n") },
+  define: importMetaUrlDefine,
 });
 
 // 実行可能にする
@@ -36,10 +47,8 @@ await build({
   ...libBaseSettings,
   format: "cjs",
   outfile: "./dist/index.cjs",
-  banner: {
-    js: "const __importMetaUrl = require('url').pathToFileURL(__filename).href;",
-  },
-  define: { "import.meta.url": "__importMetaUrl" },
+  banner: { js: importMetaUrlPolyfill },
+  define: importMetaUrlDefine,
 });
 
 // テンプレートファイルおよびフォントをコピー
