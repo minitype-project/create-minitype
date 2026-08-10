@@ -3,6 +3,13 @@
   "version": "0.1.0",
   "description": "Create a minitype document project",
   "author": "Yuto Wada",
+  "license": "MIT",
+  "keywords": ["minitype", "typesetting", "pdf", "typescript", "document generation"],
+  "homepage": "https://typeset.jp",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/minitype-project/create-minitype.git"
+  },
   "type": "module",
   "bin": {
     "create-minitype": "./dist/cli.cjs"

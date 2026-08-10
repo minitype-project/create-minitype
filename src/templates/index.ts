@@ -1,3 +1,9 @@
+/**
+ * Copyright (c) 2026 Yuto Wada.
+ * Released under the MIT License.
+ * https://opensource.org/licenses/MIT
+ */
+
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
