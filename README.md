@@ -15,7 +15,7 @@ npm create minitype [project-name] [options]
 yarn create minitype
 ```
 
-#### オプション
+### オプション
 
 | オプション | 短縮形 | 説明 |
 | --- | --- | --- |
@@ -28,7 +28,7 @@ yarn create minitype
 | `--list-templates` | | 利用可能なテンプレート一覧を表示 |
 | `--help` | `-h` | ヘルプを表示 |
 
-#### 使用例
+### 使用例
 
 ```bash
 # プロジェクト名を指定して対話形式で実行
@@ -149,3 +149,7 @@ cd <project-name>
 npm install   # または yarn install
 npm run build # output.pdf が生成される
 ```
+
+## 開発
+
+[DEVELOPMENT.md](./DEVELOPMENT.md) を参照してください．

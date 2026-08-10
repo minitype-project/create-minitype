@@ -24,6 +24,8 @@
     "build": "tsx build.ts && tsc --emitDeclarationOnly ",
     "dev": "tsx src/cli.ts",
     "check": "biome check ./src --write",
+    "license": "addlicense -f .license-header.txt -ignore \"src/templates/**\" src/",
+    "license:check": "addlicense -check -f .license-header.txt -ignore \"src/templates/**\" src/",
     "sample": "tsx scripts/generate-sample.ts",
     "test": "vitest run",
     "test:watch": "vitest"

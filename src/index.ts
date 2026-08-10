@@ -1,3 +1,9 @@
+/**
+ * Copyright (c) 2026 Yuto Wada.
+ * Released under the MIT License.
+ * https://opensource.org/licenses/MIT
+ */
+
 import { type ProjectConfig, ProjectCreator } from "./create-project.js";
 import { resolveTemplate } from "./template-resolver.js";
 

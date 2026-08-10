@@ -1,3 +1,9 @@
+/**
+ * Copyright (c) 2026 Yuto Wada.
+ * Released under the MIT License.
+ * https://opensource.org/licenses/MIT
+ */
+
 import { parseArgs as nodeParseArgs } from "node:util";
 
 export interface ParsedArgs {
