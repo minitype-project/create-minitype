@@ -1,4 +1,4 @@
-# カスタムテンプレートの作成
+# テンプレート
 
 create-minitype では，組込みテンプレートまたはカスタムテンプレートを指定できます．
 
@@ -21,6 +21,7 @@ create-minitype では，組込みテンプレートまたはカスタムテン�
 ## カスタムテンプレート
 
 カスタムテンプレートとして，ローカルディレクトリまたは git リポジトリ上のテンプレートを使用できます．
+
 git URL を指定した場合，`~/.create-minitype/git/` 以下にテンプレートがキャッシュされます．
 2 回目以降の実行ではキャッシュが再利用されるため，テンプレートを更新した場合にはキャッシュディレクトリを手動で削除してください．
 
@@ -43,7 +44,7 @@ await createProject({
 });
 ```
 
-### テンプレートの構成
+### テンプレートの定義
 
 テンプレートのディレクトリ（またはリポジトリのルート）に `template.ts` を配置し，`CustomTemplate` 型のオブジェクトをデフォルトエクスポートします．
 TypeScript が利用できない環境では `template.js` にフォールバックします．
@@ -54,7 +55,7 @@ my-template/
 └── ...             # 任意のファイル（template.ts から参照）
 ```
 
-### `template.ts` の記述
+#### `template.ts` の記述
 
 ```ts
 import type { CustomTemplate } from "create-minitype";
@@ -71,21 +72,19 @@ const template: CustomTemplate = {
 export default template;
 ```
 
-#### フィールド一覧
+`CustomTemplate` のフィールドには以下を指定します．
 
 | フィールド | 型 | 説明 |
 | --- | --- | --- |
 | `displayName` | `string` | テンプレートの表示名 |
 | `description` | `string` | テンプレートの説明 |
-| `builtinOptions` | `("markdown" \| "yaml")[]` | 使用する組込みオプション（省略可） |
-| `prompts` | `TemplatePrompt[]` | テンプレート固有のプロンプト定義（省略可） |
+| `builtinOptions?` | `("markdown" \| "yaml")[]` | 使用する組込みオプション |
+| `prompts?` | `TemplatePrompt[]` | テンプレート固有のプロンプト定義 |
 | `files` | `(vars, options?) => Record<string, string \| Buffer>` | ファイルを生成する関数 |
 
-`id` フィールドはフレームワークが自動的に設定するため，定義不要です．
+#### `files` 関数
 
-### `files()` 関数
-
-`files()` はファイルパスをキー，ファイルの内容（文字列または `Buffer`）を値とするオブジェクトを返します．
+`files` 関数はファイルパスをキー，ファイルの内容（文字列または `Buffer`）を値とするオブジェクトを返します．
 非同期処理が必要な場合は `async` 関数として定義できます．
 
 ```ts
@@ -95,7 +94,7 @@ files: async (vars, options) => ({
 }),
 ```
 
-#### テンプレート変数（`vars`）
+`vars` には以下の値が含まれます．
 
 | 変数 | 説明 |
 | --- | --- |
@@ -103,9 +102,9 @@ files: async (vars, options) => ({
 | `vars.minitypePath` | `@minitype/minitype` への相対パス |
 | `vars.minitypeVitePluginPath` | `@minitype/vite-plugin` への相対パス |
 
-### 組込みオプション
+#### 組込みオプション
 
-`builtinOptions` に指定することで，フレームワークが CLI フラグと対話プロンプトを自動的に提供します．
+`builtinOptions` に以下の値を指定することで，フレームワークが CLI フラグと対話プロンプトを自動的に提供します．
 
 | 値 | CLI フラグ | 説明 |
 | --- | --- | --- |
@@ -132,10 +131,10 @@ const template: CustomTemplate = {
 };
 ```
 
-### テンプレート固有のプロンプト
+#### テンプレート固有のプロンプト
 
 組込みオプションでは賄えない独自の設定項目は，`prompts` フィールドで定義できます．
-`prompts` に定義したプロンプトの回答は，`files()` の第 2 引数 `options` から取得できます．
+`prompts` に定義したプロンプトの回答は，`files` 関数の第 2 引数 `options` から取得できます．
 
 #### `confirm` 型（Yes/No）
 
@@ -173,12 +172,12 @@ files: (vars, options) => ({
 }),
 ```
 
-#### プロンプトのフィールド一覧
+プロンプトのフィールドには，以下を設定できます．
 
 | フィールド | 型 | 説明 |
 | --- | --- | --- |
 | `id` | `string` | プロンプトの識別子（`options` のキーとして使用） |
 | `message` | `string` | ユーザに表示するメッセージ |
 | `type` | `"confirm" \| "select"` | プロンプトの種類 |
-| `initial` | `boolean \| string` | デフォルト値（省略可） |
-| `choices` | `{ name: string; message: string }[]` | 選択肢のリスト（`select` のみ） |
+| `initial?` | `boolean \| string` | デフォルト値 |
+| `choices?` | `{ name: string; message: string }[]` | 選択肢のリスト（`select` のみ） |

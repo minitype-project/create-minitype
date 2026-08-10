@@ -1,9 +1,9 @@
 # create-minitype
 
-[minitype](https://typesetting.jp) の文書プロジェクトをセットアップするツールです．
+[minitype](https://typeset.jp) の文書プロジェクトをセットアップするツールです．
 コマンドラインまたは API 経由でテンプレートを選択して，必要なソースファイル一式を自動生成します．
 
-create-minitype is a tool to set up the documentation project for [minitype](https://typesetting.jp).
+**create-minitype** is a tool to set up the documentation project for [minitype](https://typeset.jp).
 Users can select a template via the command line or API to automatically generates all the necessary source files.
 
 [テンプレート](./docs/template.md) – [開発ガイド](./docs/development.md)
@@ -37,16 +37,16 @@ yarn create minitype
 
 ```bash
 # プロジェクト名を指定して対話形式で実行
-yarn create minitype my-report
+npm create minitype my-report
 
 # テンプレートを指定して非対話で実行
-yarn create minitype my-report --template report --yes
+npm create minitype my-report --template report --yes
 
 # Markdown モードで report テンプレートを生成し，依存関係もインストール
-yarn create minitype my-report --template report --markdown --pm yarn
+npm create minitype my-report --template report --markdown --pm npm
 
 # JSON 出力（CI，AIエージェント向け）
-yarn create minitype my-report --template report --json
+npm create minitype my-report --template report --json
 ```
 
 ## API 経由で使用する
@@ -97,10 +97,10 @@ console.log(result.files); // 生成されたファイル一覧
 └── README.md
 ```
 
-生成されたプロジェクトに対しては，以下のコマンドでビルドを実行できます．
+生成されたプロジェクトに対しては，以下のコマンドで文書のビルドを実行できます．
 
 ```bash
 cd <project-name>
-npm install   # または yarn install
+npm install   # または yarn
 npm run build # output.pdf が生成される
 ```
