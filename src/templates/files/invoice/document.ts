@@ -90,7 +90,7 @@ export const body: Body = [
         p(`発行日：${invoice.issueDate}`),
         p(`支払期限：${invoice.dueDate}`),
       ],
-      { flexBasis: ratio(0.5) },
+      { inlineSize: ratio(0.5) },
     ),
     box(
       [
@@ -111,7 +111,7 @@ export const body: Body = [
           align: "right",
         }),
       ],
-      { flexBasis: ratio(0.5) },
+      { inlineSize: ratio(0.5) },
     ),
   ]),
   vspace(8),
@@ -201,7 +201,7 @@ export const body: Body = [
 
   // 小計，税額，合計
   flexbox([
-    box([], { flexBasis: ratio(0.5) }),
+    box([], { inlineSize: ratio(0.5) }),
     box(
       [
         easytable(
@@ -236,7 +236,7 @@ export const body: Body = [
           },
         ),
       ],
-      { flexBasis: ratio(0.5) },
+      { inlineSize: ratio(0.5) },
     ),
   ]),
   vspace(8),

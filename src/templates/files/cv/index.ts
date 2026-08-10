@@ -25,7 +25,7 @@ await minitype(
         lineHeight: H(20),
         needspace: Q(40),
       },
-      list: {
+      li1: {
         indent: 0,
       },
     },
@@ -34,7 +34,7 @@ await minitype(
     },
     gaps: [
       ["h2", "fallback", 4],
-      ["list1", "list1", 1],
+      ["li1", "li1", 1],
       ["paragraph", "h2", 6],
       ["paragraph", "paragraph", 2],
       ["fallback", "fallback", 4],

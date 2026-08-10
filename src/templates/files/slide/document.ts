@@ -1,9 +1,8 @@
 import {
   type Body,
-  box,
-  caption,
   cmyk,
   figure,
+  float,
   li1,
   li2,
   p,
@@ -78,13 +77,12 @@ export const main: [string, Body][] = [
   [
     "図の埋め込み",
     [
-      box(
-        [
-          figure("sample.png", { width: ratio(0.45), align: "center" }),
-          caption("figure() で画像を埋め込める"),
-        ],
-        { float: "top" as const },
-      ),
+      float("top", [
+        figure("src/sample.png", "figure() で画像を埋め込める", {
+          width: ratio(0.45),
+          align: "center",
+        }),
+      ]),
       p(
         "figure() に画像ファイルパスを渡すと PDF に埋め込まれます．" +
           "width に ratio() を渡すと，コンテンツ幅に対する比率で指定できます．",

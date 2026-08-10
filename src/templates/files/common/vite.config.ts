@@ -4,7 +4,7 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [
     minitype({
-      entry: "index.ts",
+      entry: "src/index.ts",
     }),
   ],
 });

@@ -11,7 +11,7 @@ profile:
   website: https://example.com
   summary: >-
     〜に関する研究開発に携わってきました．特に〜の分野で〜の実績があります．
-  photo: photo.png
+  photo: src/photo.png
 
 education:
   - period: YYYY年3月

@@ -48,7 +48,7 @@ const paperSizes = new Set([
 const readTitle = (value: unknown): string => {
   if (typeof value !== "string" || value.trim() === "") {
     throw new Error(
-      "src/novel.md: frontmatter の title には空でない文字列を指定してください．",
+      "frontmatter の title には空でない文字列を指定してください．",
     );
   }
   return value.trim();
@@ -57,7 +57,7 @@ const readTitle = (value: unknown): string => {
 const readPaperSize = (value: unknown) => {
   if (typeof value !== "string" || !paperSizes.has(value.toUpperCase())) {
     throw new Error(
-      "src/novel.md: frontmatter の paperSize には A0–A6 または B0–B6 を指定してください．",
+      "frontmatter の paperSize には A0–A6 または B0–B6 を指定してください．",
     );
   }
   return value.toUpperCase() as PageSize;
@@ -68,7 +68,7 @@ const readPositiveInteger = (name: string, value: unknown): number => {
     return value;
   }
   throw new Error(
-    `src/novel.md: frontmatter の ${name} には 0 より大きい整数を指定してください．`,
+    `frontmatter の ${name} には 0 より大きい整数を指定してください．`,
   );
 };
 
@@ -81,7 +81,7 @@ const readFontSize = (value: unknown): number => {
   }
 
   throw new Error(
-    "src/novel.md: frontmatter の fontSize には 0 より大きい数値（Q）を指定してください．",
+    "frontmatter の fontSize には 0 より大きい数値（Q）を指定してください．",
   );
 };
 
@@ -95,7 +95,7 @@ const readLineHeight = (value: unknown): number => {
   }
 
   throw new Error(
-    "src/novel.md: frontmatter の lineHeight には 0 より大きい数値（Q）を指定してください．",
+    "frontmatter の lineHeight には 0 より大きい数値（Q）を指定してください．",
   );
 };
 
@@ -104,7 +104,7 @@ const readPositiveQ = (name: string, value: unknown): number => {
     return value;
   }
   throw new Error(
-    `src/novel.md: frontmatter の ${name} には 0 より大きい数値（Q）を指定してください．`,
+    `frontmatter の ${name} には 0 より大きい数値（Q）を指定してください．`,
   );
 };
 
@@ -112,9 +112,7 @@ const readOffset = (name: string, value: unknown): number => {
   if (typeof value === "number" && Number.isFinite(value)) {
     return value;
   }
-  throw new Error(
-    `src/novel.md: frontmatter の ${name} には数値（mm）を指定してください．`,
-  );
+  throw new Error(`frontmatter の ${name} には数値（mm）を指定してください．`);
 };
 
 const readPillarStartPage = (value: unknown): number => {
@@ -124,7 +122,8 @@ const readPillarStartPage = (value: unknown): number => {
   return readPositiveInteger("nombreStartPage", value);
 };
 
-const { blocks, frontmatter } = await mdFile<NovelFrontmatter>("src/novel.md");
+const { blocks, frontmatter } =
+  await mdFile<NovelFrontmatter>("src/document.md");
 const title = readTitle(frontmatter.title);
 const size = readPaperSize(frontmatter.paperSize);
 const charsPerLine = readPositiveInteger(

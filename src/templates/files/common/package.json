@@ -3,15 +3,15 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "build": "tsx index.ts",
+    "build": "tsx src/index.ts",
     "dev": "vite",
     "watch": "tsx watch index.ts"
   },
   "dependencies": {
-    "@minitype/minitype": "file:{{minitypePath}}"
+    "@minitype/minitype": "link:{{minitypePath}}"
   },
   "devDependencies": {
-    "@minitype/vite-plugin": "file:{{minitypeVitePluginPath}}",
+    "@minitype/vite-plugin": "link:{{minitypeVitePluginPath}}",
     "@types/pdfkit": "^0.17.0",
     "tsx": "^4.20.0",
     "typescript": "^5.0.0",

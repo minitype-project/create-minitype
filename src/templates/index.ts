@@ -140,16 +140,16 @@ const report: Template = {
       return {
         ...commonFiles(vars, "report"),
         "package.json": renderFile("common/package-yaml.json", vars),
-        "index.ts": renderFile("report/index.ts", vars),
-        "document.ts": renderFile("report/document-markdown.ts", vars),
-        "document.md": renderFile("report/document.md", vars),
-        "sample.png": await createPlaceholderPng(400, 300),
+        "src/index.ts": renderFile("report/index.ts", vars),
+        "src/document.ts": renderFile("report/document-markdown.ts", vars),
+        "src/document.md": renderFile("report/document.md", vars),
+        "src/sample.png": await createPlaceholderPng(400, 300),
       };
     }
     return {
       ...commonFiles(vars, "report"),
-      "index.ts": renderFile("report/index.ts", vars),
-      "document.ts": renderFile("report/document.ts", vars),
+      "src/index.ts": renderFile("report/index.ts", vars),
+      "src/document.ts": renderFile("report/document.ts", vars),
     };
   },
 };
@@ -160,10 +160,10 @@ const technicalBook: Template = {
   description: "技術書，マニュアル（B5，横組）",
   files: async (vars) => ({
     ...commonFiles(vars, "technical-book"),
-    "index.ts": renderFile("technical-book/index.ts", vars),
-    "document.ts": renderFile("technical-book/document.ts", vars),
-    "utils.ts": renderFile("technical-book/utils.ts", vars),
-    "example.png": await createPlaceholderPng(400, 250),
+    "src/index.ts": renderFile("technical-book/index.ts", vars),
+    "src/document.ts": renderFile("technical-book/document.ts", vars),
+    "src/utils.ts": renderFile("technical-book/utils.ts", vars),
+    "src/example.png": await createPlaceholderPng(400, 250),
   }),
 };
 
@@ -173,9 +173,9 @@ const conferencePaper: Template = {
   description: "会議論文（A4，2段組）",
   files: async (vars) => ({
     ...commonFiles(vars, "conference-paper"),
-    "index.ts": renderFile("conference-paper/index.ts", vars),
-    "document.ts": renderFile("conference-paper/document.ts", vars),
-    "result.png": await createPlaceholderPng(400, 250),
+    "src/index.ts": renderFile("conference-paper/index.ts", vars),
+    "src/document.ts": renderFile("conference-paper/document.ts", vars),
+    "src/result.png": await createPlaceholderPng(400, 250),
   }),
 };
 
@@ -185,9 +185,11 @@ const thesis: Template = {
   description: "学位論文（A4, 横組）",
   files: async (vars) => ({
     ...commonFiles(vars, "thesis"),
-    "index.ts": renderFile("thesis/index.ts", vars),
-    "document.ts": renderFile("thesis/document.ts", vars),
-    "result.png": await createPlaceholderPng(400, 250),
+    "src/index.ts": renderFile("thesis/index.ts", vars),
+    "src/document.ts": renderFile("thesis/document.ts", vars),
+    "src/utils.ts": renderFile("thesis/utils.ts", vars),
+    "src/refs.ts": renderFile("thesis/refs.ts", vars),
+    "src/result.png": await createPlaceholderPng(400, 250),
   }),
 };
 
@@ -199,9 +201,9 @@ const invoice: Template = {
     return {
       ...commonFiles(vars, "invoice"),
       "package.json": renderFile("common/package-yaml.json", vars),
-      "index.ts": renderFile("invoice/index.ts", vars),
-      "document.ts": renderFile("invoice/document.ts", vars),
-      "document.yaml": renderFile("invoice/document.yaml", vars),
+      "src/index.ts": renderFile("invoice/index.ts", vars),
+      "src/document.ts": renderFile("invoice/document.ts", vars),
+      "src/document.yaml": renderFile("invoice/document.yaml", vars),
     };
   },
 };
@@ -214,10 +216,10 @@ const cv: Template = {
     return {
       ...commonFiles(vars, "cv"),
       "package.json": renderFile("common/package-yaml.json", vars),
-      "index.ts": renderFile("cv/index.ts", vars),
-      "document.ts": renderFile("cv/document.ts", vars),
-      "document.yaml": renderFile("cv/document.yaml", vars),
-      "photo.png": await createPlaceholderPng(300, 400),
+      "src/index.ts": renderFile("cv/index.ts", vars),
+      "src/document.ts": renderFile("cv/document.ts", vars),
+      "src/document.yaml": renderFile("cv/document.yaml", vars),
+      "src/photo.png": await createPlaceholderPng(300, 400),
     };
   },
 };
@@ -229,9 +231,9 @@ const slide: Template = {
   files: async (vars) => {
     return {
       ...commonFiles(vars, "slide"),
-      "index.ts": renderFile("slide/index.ts", vars),
-      "document.ts": renderFile("slide/document.ts", vars),
-      "sample.png": await createPlaceholderPng(400, 300),
+      "src/index.ts": renderFile("slide/index.ts", vars),
+      "src/document.ts": renderFile("slide/document.ts", vars),
+      "src/sample.png": await createPlaceholderPng(400, 300),
     };
   },
 };
@@ -239,12 +241,45 @@ const slide: Template = {
 const novel: Template = {
   id: "novel",
   displayName: "小説",
-  description: "小説（B5，縦組）",
+  description: "小説（縦組）",
   files: (vars) => {
     return {
       ...commonFiles(vars, "novel"),
-      "index.ts": renderFile("novel/index.ts", vars),
-      "document.ts": renderFile("novel/document.ts", vars),
+      "src/index.ts": renderFile("novel/index.ts", vars),
+      "src/document.md": renderFile("novel/document.md", vars),
+    };
+  },
+};
+
+const businessReport: Template = {
+  id: "business-report",
+  displayName: "事業報告書",
+  description: "事業報告書・ビジネスレポート（B5，横組）",
+  builtinOptions: ["markdown"],
+  files: async (vars, options) => {
+    const assets = {
+      "src/assets/cover.png": await createPlaceholderPng(1280, 900),
+      "src/assets/sample.png": await createPlaceholderPng(800, 300),
+    };
+    if (options?.markdown) {
+      return {
+        ...commonFiles(vars, "business-report"),
+        "src/index.ts": renderFile("business-report/index.ts", vars),
+        "src/document.ts": renderFile(
+          "business-report/document-markdown.ts",
+          vars,
+        ),
+        "src/utils.ts": renderFile("business-report/utils.ts", vars),
+        "src/document.md": renderFile("business-report/document.md", vars),
+        ...assets,
+      };
+    }
+    return {
+      ...commonFiles(vars, "business-report"),
+      "src/index.ts": renderFile("business-report/index.ts", vars),
+      "src/document.ts": renderFile("business-report/document.ts", vars),
+      "src/utils.ts": renderFile("business-report/utils.ts", vars),
+      ...assets,
     };
   },
 };
@@ -258,6 +293,7 @@ export const templates: Record<string, Template> = [
   cv,
   slide,
   novel,
+  businessReport,
 ].reduce(
   (acc, tmpl) => {
     acc[tmpl.id] = tmpl;

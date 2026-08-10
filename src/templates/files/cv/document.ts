@@ -6,7 +6,6 @@ import {
   box,
   type Command,
   cmyk,
-  figure,
   fill,
   flexbox,
   fr,
@@ -14,6 +13,7 @@ import {
   h1,
   h2,
   hbox,
+  image,
   li1,
   p,
   physical,
@@ -98,9 +98,9 @@ const sectionHeader = (title: string) => {
 const timelineRow = (period: string, content: string) => {
   return flexbox([
     box([p(period)], {
-      flexBasis: 35,
+      inlineSize: 35,
     }),
-    box([p(content)], { flexBasis: fr(1) }),
+    box([p(content)], { inlineSize: fr(1) }),
   ]);
 };
 
@@ -121,13 +121,13 @@ export const body: Body = [
         li1(profile.github),
         li1(profile.email),
       ],
-      { flexBasis: ratio(0.6) },
+      { inlineSize: ratio(0.6) },
     ),
     box(
       [
         // 写真
         profile.photo && existsSync(profile.photo)
-          ? figure(profile.photo, { height: 35, align: "right" })
+          ? image(profile.photo, { height: 35, align: "right" })
           : box([p("写真", { align: "center" as const, firstIndent: 0 })], {
               padding: physical(20, 0),
               background: [fill(cmyk(0, 0, 0, 5))],
@@ -142,7 +142,7 @@ export const body: Body = [
               },
             }),
       ],
-      { flexBasis: ratio(0.4), padding: physical(0, 0, 0, 10) },
+      { inlineSize: ratio(0.4), padding: physical(0, 0, 0, 10) },
     ),
   ]),
   vspace(4),
@@ -164,9 +164,9 @@ export const body: Body = [
   ...work.map((item) =>
     box([
       flexbox([
-        box([p(item.period)], { flexBasis: 45 }),
+        box([p(item.period)], { inlineSize: 45 }),
         box([p([[b(`${item.company}  ${item.role}`)], [item.description]])], {
-          flexBasis: fr(1),
+          inlineSize: fr(1),
         }),
       ]),
     ]),
@@ -178,8 +178,8 @@ export const body: Body = [
   ...skills.map(({ category, items }) =>
     box([
       flexbox([
-        box([p([[b(category)]])], { flexBasis: 35 }),
-        box([p(items.join("，"))], { flexBasis: fr(1) }),
+        box([p([[b(category)]])], { inlineSize: 35 }),
+        box([p(items.join("，"))], { inlineSize: fr(1) }),
       ]),
     ]),
   ),

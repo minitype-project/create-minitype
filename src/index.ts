@@ -21,6 +21,11 @@ export type CreateProjectOptions = Omit<ProjectConfig, "template"> & {
    * 組み込みテンプレート名，git URL，ローカルパスを指定できる．
    */
   templateId: string;
+  /**
+   * 結果を JSON 形式で標準出力に出力するか．
+   * @default false
+   */
+  json?: boolean;
 };
 
 /**
@@ -30,5 +35,8 @@ export const createProject = async (
   options: CreateProjectOptions,
 ): ReturnType<ProjectCreator["create"]> => {
   const template = await resolveTemplate(options.templateId);
-  return new ProjectCreator({ ...options, template }, false).create();
+  return new ProjectCreator(
+    { ...options, template },
+    options.json ?? false,
+  ).create();
 };

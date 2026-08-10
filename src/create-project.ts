@@ -192,8 +192,8 @@ ${pc.bold("Next steps:")}
   ${pc.dim("$")} ${pc.green(`cd ${cdPath}`)}
 ${installStep}  ${pc.dim("$")} ${pc.green(`${pm ?? "npm"} run build`)}
 
-  - You can edit ${pc.cyan("document.ts")} for the content or
-    edit ${pc.cyan("index.ts")} for the style.
+  - You can edit ${pc.cyan("src/document.ts")} for the content or
+    edit ${pc.cyan("src/index.ts")} for the style.
   - Output will be saved as ${pc.cyan("output.pdf")}.`);
   }
 }

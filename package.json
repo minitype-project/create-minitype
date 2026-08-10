@@ -22,15 +22,15 @@
   ],
   "scripts": {
     "build": "tsx build.ts && tsc --emitDeclarationOnly ",
-    "dev": "tsx src/bin.ts",
+    "dev": "tsx src/cli.ts",
     "check": "biome check ./src --write",
     "test": "vitest run",
     "test:watch": "vitest"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.10",
-    "@minitype/vite-plugin": "../vite-plugin",
-    "@types/node": "^25.4.0",
+    "@minitype/vite-plugin": "link:../vite-plugin",
+    "@types/node": "^26.1.1",
     "esbuild": "^0.25.0",
     "typescript": "^6.0.2",
     "vite": "^8.0.3",
@@ -38,6 +38,7 @@
     "yaml": "^2.8.2"
   },
   "dependencies": {
+    "@minitype/minitype": "link:../minitype",
     "enquirer": "^2.4.1",
     "picocolors": "^1.1.1",
     "sharp": "^0.34.5",
