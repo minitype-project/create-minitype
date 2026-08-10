@@ -39,12 +39,80 @@ const cloneGitTemplate = (url: string, cacheDir: string): void => {
   const result = spawnSync("git", ["clone", "--depth", "1", url, cacheDir], {
     stdio: "inherit",
   });
+  if (result.error) {
+    throw new Error(
+      `Failed to clone git repository: ${url}\n${result.error.message}`,
+    );
+  }
   if (result.status !== 0) {
     throw new Error(
       `Failed to clone git repository: ${url} (exit code: ${String(result.status)})`,
     );
   }
 };
+
+/**
+ * ディレクトリからテンプレートを読み込む．
+ * `template.ts` を優先し，なければ `template.js` を読み込む．
+ */
+const loadTemplateFromDir = async (
+  dir: string,
+): Promise<Omit<Template, "id">> => {
+  // ------
+  // ファイルの読込み
+  // ------
+  // template.ts の存在をチェックして，なければ template.js を読込み
+  const tsPath = path.join(dir, "template.ts");
+  const jsPath = path.join(dir, "template.js");
+
+  let mod: unknown;
+  if (fs.existsSync(tsPath)) {
+    // tsx 経由で TypeScript ファイルを動的インポート
+    const { tsImport } = await import("tsx/esm/api");
+    mod = await tsImport(tsPath, import.meta.url);
+  } else if (fs.existsSync(jsPath)) {
+    mod = await import(pathToFileURL(jsPath).href);
+  } else {
+    throw new Error(
+      `Template definition not found in: ${dir}\nExpected template.ts or template.js`,
+    );
+  }
+
+  // ------
+  // CJS/ESM interop の解決
+  // ------
+  // tsx が CJS 形式にコンパイルした場合，mod.default が
+  // { __esModule: true, default: Template } の二重ネスト構造になる
+  const modDefault =
+    mod !== null && typeof mod === "object" && "default" in mod
+      ? (mod as Record<string, unknown>).default
+      : undefined;
+  const raw =
+    modDefault !== null &&
+    typeof modDefault === "object" &&
+    "__esModule" in modDefault &&
+    (modDefault as Record<string, unknown>).__esModule === true &&
+    "default" in modDefault
+      ? (modDefault as Record<string, unknown>).default
+      : modDefault;
+
+  // --------
+  // バリデーション
+  // --------
+  // Template 型の必須フィールドが揃っているかチェック
+  const template = raw as Omit<Template, "id"> | null | undefined;
+  if (
+    !template ||
+    typeof template.displayName !== "string" ||
+    typeof template.description !== "string" ||
+    typeof template.files !== "function"
+  ) {
+    throw new Error(
+      `Invalid template: ${dir}\ntemplate.ts must default-export a Template object`,
+    );
+  }
+
+  return template;
 };
 
 /**

@@ -57,7 +57,7 @@ const style: Partial<DocumentStyle> = {
       effects: [{ type: "fill" as const, color: keyColor }],
       headingNumberFormat: () => "",
     },
-    list: {
+    li1: {
       font: "SourceHanSerifJP-Regular",
       size: Q(13),
       lineHeight: H(22),

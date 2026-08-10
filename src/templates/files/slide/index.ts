@@ -49,7 +49,7 @@ const block: DocumentStyle["block"] = {
     lineHeight: H(24),
     firstIndent: 0,
   },
-  list: {
+  li1: {
     font: "SourceHanSansJP-Regular",
     firstIndent: em(-1),
   },
@@ -70,11 +70,11 @@ const block: DocumentStyle["block"] = {
 
 const gaps: Gap[] = [
   ["paragraph", "paragraph", 4],
-  ["paragraph", "list1", 2],
-  ["list1", "paragraph", 4],
-  ["list1", "list1", 2],
-  ["list1", "list2", 1],
-  ["list2", "list1", 2],
+  ["paragraph", "li1", 2],
+  ["li1", "paragraph", 4],
+  ["li1", "li1", 2],
+  ["li1", "li2", 1],
+  ["li2", "li1", 2],
   ["h1", "paragraph", 4],
   ["h2", "paragraph", 2],
   ["paragraph", "h1", 8],
