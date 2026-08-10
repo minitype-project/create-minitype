@@ -24,7 +24,7 @@ export { templates } from "./templates/index.js";
 export type CreateProjectOptions = Omit<ProjectConfig, "template"> & {
   /**
    * テンプレート ID．
-   * 組み込みテンプレート名，git URL，ローカルパスを指定できる．
+   * 組込みテンプレート名，git URL，ローカルパスを指定できる．
    */
   templateId: string;
   /**

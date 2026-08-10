@@ -6,6 +6,38 @@ import { createPlaceholderPng } from "../utils.js";
 // テンプレートの内容は ./files 配下に配置される
 const FILES_DIR = fileURLToPath(new URL("./files", import.meta.url));
 
+// ------
+// 型定義
+// ------
+/**
+ * テンプレート．
+ */
+export interface Template {
+  /** テンプレートの ID．組込みの場合はキー名，外部の場合は URL． */
+  id: string;
+  displayName: string;
+  description: string;
+  /**
+   * 使用する組込みオプションのリスト．
+   * フレームワークが CLI フラグと対話プロンプトを自動的に提供する．
+   */
+  builtinOptions?: ReadonlyArray<keyof TemplateBuiltInOptions>;
+  /** 組込みオプションでは賄えない，テンプレート固有の追加プロンプト定義． */
+  prompts?: TemplatePrompt[];
+  files: (
+    vars: TemplateVars,
+    options?: TemplateOptions,
+  ) =>
+    | Record<string, string | Buffer>
+    | Promise<Record<string, string | Buffer>>;
+}
+
+/**
+ * カスタムテンプレートの定義．
+ * {@link Template} から `id` を除いたもので，`template.ts` のデフォルトエクスポートに使用する．
+ */
+export type CustomTemplate = Omit<Template, "id">;
+
 /**
  * テンプレートの変数．
  */
@@ -16,7 +48,7 @@ export interface TemplateVars {
 }
 
 /**
- * フレームワークが提供する組み込みオプション．
+ * フレームワークが提供する組込みオプション．
  */
 export interface TemplateBuiltInOptions {
   /** Markdown から文章を生成するか（report テンプレートのみ）． */
@@ -26,7 +58,7 @@ export interface TemplateBuiltInOptions {
 }
 
 /**
- * 組み込みオプションとテンプレート固有のオプションを統合したオプション．
+ * 組込みオプションとテンプレート固有のオプションを統合したオプション．
  */
 export type TemplateOptions = TemplateBuiltInOptions & Record<string, unknown>;
 
@@ -60,29 +92,9 @@ export type TemplatePrompt =
       initial?: string;
     };
 
-/**
- * テンプレート．
- */
-export interface Template {
-  /** テンプレートの ID．組み込みの場合はキー名，外部の場合は URL． */
-  id: string;
-  displayName: string;
-  description: string;
-  /**
-   * 使用する組み込みオプションのリスト．
-   * フレームワークが CLI フラグと対話プロンプトを自動的に提供する．
-   */
-  builtinOptions?: ReadonlyArray<keyof TemplateBuiltInOptions>;
-  /** 組み込みオプションでは賄えない，テンプレート固有の追加プロンプト定義． */
-  prompts?: TemplatePrompt[];
-  files: (
-    vars: TemplateVars,
-    options?: TemplateOptions,
-  ) =>
-    | Record<string, string | Buffer>
-    | Promise<Record<string, string | Buffer>>;
-}
-
+// ------
+// ユーティリティ関数
+// ------
 /**
  * ファイルを読み込んで変数で置換した文字列を返す．
  * @param relativePath ファイルの相対パス．

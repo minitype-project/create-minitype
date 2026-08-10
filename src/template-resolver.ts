@@ -123,10 +123,10 @@ const loadTemplateFromDir = async (
 
 /**
  * テンプレート ID を解決して Template を返す．
- * 組み込みテンプレート名，git URL，ローカルパスの順に判定する．
+ * 組込みテンプレート名，git URL，ローカルパスの順に判定する．
  */
 export const resolveTemplate = async (id: string): Promise<Template> => {
-  // 組み込みテンプレート
+  // 組込みテンプレート
   const builtin = templates[id];
   if (builtin) {
     return builtin;

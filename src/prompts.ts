@@ -21,7 +21,7 @@ import { templates } from "./templates/index.js";
 const DEFAULT_PROJECT_NAME = "my-document";
 
 /**
- * 組み込みオプションに対するプロンプト．
+ * 組込みオプションに対するプロンプト．
  */
 const BUILTIN_OPTION_CONFIG: Record<
   keyof TemplateBuiltInOptions,
@@ -32,7 +32,7 @@ const BUILTIN_OPTION_CONFIG: Record<
 };
 
 /**
- * CLI フラグから組み込みオプション値を取り出す．
+ * CLI フラグから組込みオプション値を取り出す．
  */
 const cliBuiltinOverrides = (args: ParsedArgs) => {
   const overrides: Record<string, boolean> = {};
