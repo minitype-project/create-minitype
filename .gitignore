@@ -5,3 +5,4 @@ package-lock.json
 .claude
 
 /test-*
+/tmp

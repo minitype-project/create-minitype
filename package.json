@@ -24,6 +24,7 @@
     "build": "tsx build.ts && tsc --emitDeclarationOnly ",
     "dev": "tsx src/cli.ts",
     "check": "biome check ./src --write",
+    "sample": "tsx scripts/generate-sample.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },
