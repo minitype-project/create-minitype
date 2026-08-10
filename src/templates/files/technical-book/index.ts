@@ -18,7 +18,7 @@ const lineHeight = H(22);
 
 const style: Partial<DocumentStyle> = {
   size,
-  writingMode: "horizontal" as const,
+  writingMode: "horizontal",
   padding: calculatePhysicalPadding(
     size,
     40,
@@ -33,28 +33,28 @@ const style: Partial<DocumentStyle> = {
       size: Q(13),
       lineHeight: H(22),
       firstIndent: em(1),
-      effects: [{ type: "fill" as const, color: cmyk(0, 0, 0, 100) }],
+      effects: [{ type: "fill", color: cmyk(0, 0, 0, 100) }],
     },
     h1: {
       font: "SourceHanSansJP-Bold",
       size: Q(28),
       lineHeight: H(42),
       firstIndent: 0,
-      effects: [{ type: "fill" as const, color: keyColor }],
+      effects: [{ type: "fill", color: keyColor }],
     },
     h2: {
       font: "SourceHanSansJP-Bold",
       size: Q(18),
       lineHeight: H(28),
       firstIndent: 0,
-      effects: [{ type: "fill" as const, color: keyColor }],
+      effects: [{ type: "fill", color: keyColor }],
     },
     h3: {
       font: "SourceHanSansJP-Bold",
       size: Q(14),
       lineHeight: H(22),
       firstIndent: 0,
-      effects: [{ type: "fill" as const, color: keyColor }],
+      effects: [{ type: "fill", color: keyColor }],
       headingNumberFormat: () => "",
     },
     li1: {
@@ -73,7 +73,7 @@ const style: Partial<DocumentStyle> = {
       font: "SourceHanSansJP-Regular",
       size: Q(10),
       lineHeight: H(17),
-      align: "center" as const,
+      align: "center",
       firstIndent: 0,
     },
     footnote: {

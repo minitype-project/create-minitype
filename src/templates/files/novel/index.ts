@@ -89,7 +89,6 @@ const readLineHeight = (value: unknown): number => {
   if (value === undefined) {
     return 19;
   }
-  18;
   if (typeof value === "number" && Number.isFinite(value) && value > 0) {
     return value;
   }

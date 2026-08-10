@@ -4,8 +4,8 @@ import { body } from "./document.js";
 await minitype(
   [{ body }],
   {
-    size: "A4" as const,
-    writingMode: "horizontal" as const,
+    size: "A4",
+    writingMode: "horizontal",
     padding: physical(25),
     block: {
       paragraph: {

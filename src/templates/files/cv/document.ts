@@ -128,13 +128,13 @@ export const body: Body = [
         // 写真
         profile.photo && existsSync(profile.photo)
           ? image(profile.photo, { height: 35, align: "right" })
-          : box([p("写真", { align: "center" as const, firstIndent: 0 })], {
+          : box([p("写真", { align: "center", firstIndent: 0 })], {
               padding: physical(20, 0),
               background: [fill(cmyk(0, 0, 0, 5))],
               border: {
-                type: "physical" as const,
+                type: "physical",
                 ...Object.fromEntries(
-                  (["top", "right", "bottom", "left"] as const).map((dir) => [
+                  ["top", "right", "bottom", "left"].map((dir) => [
                     dir,
                     solid(0.2, cmyk(0, 0, 0, 30)),
                   ]),

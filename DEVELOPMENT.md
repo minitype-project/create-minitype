@@ -43,13 +43,34 @@ src/index.ts
   └─ templates/index.ts
 ```
 
+### CLI の実行フロー
+
+```
+yarn dev [project-name] [options]
+   │
+   ▼
+args.ts: parseArgs()
+   │  argv を ParsedArgs にパース
+   ▼
+prompts.ts: promptUser()
+   │  不足している情報を対話的に収集
+   │  resolveTemplate() でテンプレートオブジェクトを取得
+   │  → ProjectConfig を生成
+   ▼
+create-project.ts: ProjectCreator.create()
+   │  template.files(vars, options) でファイル内容を生成
+   │  copyFonts() でフォントをコピー
+   │  installPackages() で yarn/npm install を実行（任意）
+   ▼
+<project-name>/ を作成
+```
 
 ## コーディングスタイル
 
 ### 関数定義
 
 可能な限り `function` 宣言を使用せず，アロー関数として記述する．
-トップレベルの関数は `return` 文を使った複数行形式で書く．
+トップレベルの関数は `return` 文を使った複数行形式で記述する．
 
 ```ts
 // OK
