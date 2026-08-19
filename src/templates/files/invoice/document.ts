@@ -86,9 +86,9 @@ export const body: Body = [
           size: Q(24),
           lineHeight: H(36),
         }),
-        p(`No. ${invoice.invoiceNumber}`),
-        p(`発行日：${invoice.issueDate}`),
-        p(`支払期限：${invoice.dueDate}`),
+        p`No. ${invoice.invoiceNumber}`,
+        p`発行日：${invoice.issueDate}`,
+        p`支払期限：${invoice.dueDate}`,
       ],
       { inlineSize: ratio(0.5) },
     ),
@@ -117,16 +117,16 @@ export const body: Body = [
   vspace(8),
 
   // 請求先
-  h2(invoice.recipient.name),
-  p(invoice.recipient.address),
+  h2`${invoice.recipient.name}`,
+  p`${invoice.recipient.address}`,
   vspace(8),
 
   // 合計金額
-  p("下記の通りご請求申し上げます。"),
+  p`下記の通りご請求申し上げます。`,
   vspace(4),
   box(
     [
-      h2("ご請求金額"),
+      h2`ご請求金額`,
       p(
         [
           [
@@ -159,7 +159,7 @@ export const body: Body = [
   vspace(8),
 
   // 明細表
-  h2("明細"),
+  h2`明細`,
   vspace(2),
   easytable(
     [
@@ -242,10 +242,10 @@ export const body: Body = [
   vspace(8),
 
   // 振込先・備考
-  h2("振込先"),
-  p(invoice.issuer.bankInfo),
+  h2`振込先`,
+  p`${invoice.issuer.bankInfo}`,
   vspace(4),
 
-  h2("備考"),
-  p(invoice.notes),
+  h2`備考`,
+  p`${invoice.notes}`,
 ];

@@ -24,19 +24,17 @@ import {
   vspace,
 } from "@minitype/minitype";
 
-/**
- * スライドの総ページ数．
- * 進捗バーの計算に使用する．
- * {@link slidePage} を追加・削除したときに更新すること．
- */
-export const TOTAL_PAGES = 7;
-
 const HUE_START = 190;
 const KEY_L = 0.6;
 const KEY_C = 0.2;
 
+let _totalPages = 1;
 let _hue = HUE_START;
 let _i = 0;
+
+// ------
+// 色定義
+// ------
 
 /** ページごとに更新されるキーカラー． */
 export let KEY = oklch(KEY_L, KEY_C, _hue);
@@ -58,6 +56,10 @@ export const WHITE = rgb(255, 255, 255);
 
 /** 補足テキストに使用するグレーカラー． */
 export const GRAY = rgb(180, 180, 180);
+
+// ------
+// フォント定義
+// ------
 
 /** 源ノ角ゴシック JP Regular のフォント名． */
 export const FONT_R = "SourceHanSansJP-Regular";
@@ -187,6 +189,20 @@ export const key = (text: string | InlineOrExtender[]) => {
 // ブロックヘルパ
 // ------
 
+/** スライドページを生成するファクトリ関数の型． */
+export type SlideFactory = () => Block[];
+
+/**
+ * スライドファクトリ関数の配列を受け取り，総ページ数を確定してからスライドを生成する．
+ * @param factories 各スライドのブロック配列を返すファクトリ関数の配列．
+ * @returns 全スライドのブロック配列．
+ */
+export const initSlides = (factories: (() => Block[])[]): Block[] => {
+  _totalPages = factories.length;
+  _i = 0;
+  return factories.flatMap((factory) => factory());
+};
+
 /**
  * スライドページを作成する．
  * @param title スライドのタイトル．
@@ -195,7 +211,7 @@ export const key = (text: string | InlineOrExtender[]) => {
  */
 export const slidePage = (title: string, blocks: () => Block[]): Block[] => {
   _i++;
-  _hue = (HUE_START + ((_i - 1) * 360) / TOTAL_PAGES) % 360;
+  _hue = (HUE_START + ((_i - 1) * 360) / _totalPages) % 360;
   KEY = oklch(KEY_L, KEY_C, _hue);
   BOX_BG = oklch(0.97, 0.03, _hue);
   CODE_BG = oklch(0.2, 0.04, _hue);
@@ -210,7 +226,7 @@ export const slidePage = (title: string, blocks: () => Block[]): Block[] => {
         align: "left",
       }),
       vspace(-0.5),
-      rect(((WIDTH - 12 * 2) / TOTAL_PAGES) * _i, 0.5, {
+      rect(((WIDTH - 12 * 2) / _totalPages) * _i, 0.5, {
         background: [fill(KEY)],
         align: "left",
       }),

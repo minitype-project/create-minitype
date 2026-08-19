@@ -113,13 +113,13 @@ export const body: Body = [
   flexbox([
     box(
       [
-        h1(profile.name),
+        h1`${profile.name}`,
         p(profile.nameEn, { firstIndent: 0, size: Q(12), lineHeight: H(20) }),
         vspace(4),
-        li1(profile.birthDate),
-        li1([[url(profile.website, profile.website)]]),
-        li1(profile.github),
-        li1(profile.email),
+        li1`${profile.birthDate}`,
+        li1`${url(profile.website, profile.website)}`,
+        li1`${profile.github}`,
+        li1`${profile.email}`,
       ],
       { inlineSize: ratio(0.6) },
     ),
@@ -165,7 +165,7 @@ export const body: Body = [
     box([
       flexbox([
         box([p(item.period)], { inlineSize: 45 }),
-        box([p([[b(`${item.company}  ${item.role}`)], [item.description]])], {
+        box([p`${b(`${item.company}  ${item.role}`)}\n${item.description}`], {
           inlineSize: fr(1),
         }),
       ]),
@@ -178,8 +178,8 @@ export const body: Body = [
   ...skills.map(({ category, items }) =>
     box([
       flexbox([
-        box([p([[b(category)]])], { inlineSize: 35 }),
-        box([p(items.join("，"))], { inlineSize: fr(1) }),
+        box([p`${b(category)}`], { inlineSize: 35 }),
+        box([p`${items.join("，")}`], { inlineSize: fr(1) }),
       ]),
     ]),
   ),

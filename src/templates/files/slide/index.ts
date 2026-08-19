@@ -8,18 +8,21 @@ import {
   Q,
   vspace,
 } from "@minitype/minitype";
-import { author, date, slides, subtitle, title } from "./document.js";
+import { author, date, slidePages, subtitle, title } from "./document.js";
 import {
   DARK,
   FONT_B,
   FONT_CODE,
   FONT_R,
   HEIGHT,
+  initSlides,
   pageNumRegular,
   titleBgFlow,
   WHITE,
   WIDTH,
 } from "./helper.js";
+
+const slides = initSlides(slidePages);
 
 // ------
 // タイトルページ
