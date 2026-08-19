@@ -27,6 +27,7 @@ import { boldFont, H1, H2, H3 } from "./utils.js";
 // ------
 // タイトルページ
 // ------
+
 export const titleGroup: Group = {
   body: [
     {
@@ -103,6 +104,7 @@ const nombre: Flow = {
 // ------
 // フロントマター
 // ------
+
 const frontMatter: Body = [
   H1("概要", "abstract", true),
   p`本論文では，〜について研究した．〜の問題に対して，〜手法を提案した．実験により，〜であることを確認した．`,
@@ -153,6 +155,7 @@ const frontMatter: Body = [
 // ------
 // 第1章
 // ------
+
 const chapter1: Body = [
   H1("はじめに", "ch1"),
   p`本章では，研究の背景，研究の目的，および本論文の構成を示す．`,
@@ -177,6 +180,7 @@ const chapter1: Body = [
 // ------
 // 第2章
 // ------
+
 const chapter2: Body = [
   H1("関連研究", "ch2"),
   p`関連研究を概観する ${cite("r01", "r02")}．`,
@@ -193,6 +197,7 @@ const chapter2: Body = [
 // ------
 // 第3章
 // ------
+
 const chapter3: Body = [
   H1("提案手法", "ch3"),
   p`提案手法の詳細を説明する．`,
@@ -218,6 +223,7 @@ const chapter3: Body = [
 // ------
 // 第4章
 // ------
+
 const figResult: Box = {
   ...figure("src/result.png", "実験結果のグラフ", {
     width: ratio(0.9),
@@ -243,6 +249,7 @@ const chapter4: Body = [
 // ------
 // 第5章
 // ------
+
 const chapter5: Body = [
   H1("考察", "ch5"),
   p`実験結果の考察を述べる．`,
@@ -253,6 +260,7 @@ const chapter5: Body = [
 // ------
 // 第6章
 // ------
+
 const chapter6: Body = [
   H1("おわりに", "ch6"),
   p`本研究のまとめと今後の課題を述べる．`,
@@ -269,6 +277,7 @@ const chapter6: Body = [
 // ------
 // 参考文献
 // ------
+
 const references: Body = [
   H1("参考文献", "references", true),
   ...bibliography({ indent: em(3) }),
@@ -278,6 +287,7 @@ const references: Body = [
 // ------
 // 本文
 // ------
+
 const mainBody: Body = [
   nombre,
   ...frontMatter,

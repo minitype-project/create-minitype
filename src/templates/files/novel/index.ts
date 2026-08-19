@@ -14,6 +14,10 @@ import {
   type WritingMode,
 } from "@minitype/minitype";
 
+// ------
+// フロントマター検証
+// ------
+
 type NovelFrontmatter = Record<string, unknown> & {
   title?: unknown;
   paperSize?: unknown;
@@ -121,6 +125,10 @@ const readPillarStartPage = (value: unknown): number => {
   return readPositiveInteger("nombreStartPage", value);
 };
 
+// ------
+// フロントマター読み込み
+// ------
+
 const { blocks, frontmatter } =
   await mdFile<NovelFrontmatter>("src/document.md");
 const title = readTitle(frontmatter.title);
@@ -143,6 +151,10 @@ const nombreFontSize = readPositiveQ(
 const pillarOffset = readOffset("pillarOffset", frontmatter.pillarOffset);
 const nombreOffset = readOffset("nombreOffset", frontmatter.nombreOffset);
 const pillarStartPage = readPillarStartPage(frontmatter.pillarStartPage);
+
+// ------
+// ヘッダ，フッタ
+// ------
 
 const header: Flow = {
   type: "flow",
@@ -174,6 +186,10 @@ const footer: Flow = {
     }),
   ],
 };
+
+// ------
+// 組版処理
+// ------
 
 const body: Body = [header, footer, ...blocks];
 const writingMode: WritingMode = "vertical";

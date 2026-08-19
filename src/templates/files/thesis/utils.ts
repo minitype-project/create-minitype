@@ -1,7 +1,15 @@
 import type { HeadingLevel, Text } from "@minitype/minitype";
 
+// ------
+// フォント定義
+// ------
+
 export const regularFont = "SourceHanSerifJP-Regular";
 export const boldFont = "SourceHanSansJP-Bold";
+
+// ------
+// 見出しヘルパ
+// ------
 
 const heading = (
   level: HeadingLevel,

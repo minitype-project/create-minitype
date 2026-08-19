@@ -12,8 +12,16 @@ import {
   solid,
 } from "@minitype/minitype";
 
+// ------
+// 色定義
+// ------
+
 export const keyColor = cmyk(85, 55, 0, 20);
 export const subColor = cmyk(5, 0, 0, 0);
+
+// ------
+// ブロックヘルパ
+// ------
 
 export const h2 = (title: string) => {
   return box([h2Inner(title)], {

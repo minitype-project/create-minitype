@@ -28,6 +28,7 @@ import { parse } from "yaml";
 // ------
 // 型定義
 // ------
+
 interface Profile {
   name: string;
   nameEn: string;
@@ -71,6 +72,7 @@ interface CvData {
 // ------
 // YAML データの読み込み
 // ------
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { settings, profile, education, work, skills, publications } = parse(
   readFileSync(path.join(__dirname, "document.yaml"), "utf-8"),
@@ -82,6 +84,7 @@ const subColor = cmyk(...settings["sub-cmyk"]);
 // ------
 // レイアウト
 // ------
+
 const sectionHeader = (title: string) => {
   return box([h2(title)], {
     margin: physical(0, 0, 0, 1),
@@ -104,7 +107,7 @@ const timelineRow = (period: string, content: string) => {
   ]);
 };
 
-const b = (content: string): Command => {
+const bold = (content: string): Command => {
   return { type: "command", name: "b", body: [content] };
 };
 
@@ -165,9 +168,12 @@ export const body: Body = [
     box([
       flexbox([
         box([p(item.period)], { inlineSize: 45 }),
-        box([p`${b(`${item.company}  ${item.role}`)}\n${item.description}`], {
-          inlineSize: fr(1),
-        }),
+        box(
+          [p`${bold(`${item.company}  ${item.role}`)}\n${item.description}`],
+          {
+            inlineSize: fr(1),
+          },
+        ),
       ]),
     ]),
   ),
@@ -178,7 +184,7 @@ export const body: Body = [
   ...skills.map(({ category, items }) =>
     box([
       flexbox([
-        box([p`${b(category)}`], { inlineSize: 35 }),
+        box([p`${bold(category)}`], { inlineSize: 35 }),
         box([p`${items.join("，")}`], { inlineSize: fr(1) }),
       ]),
     ]),
