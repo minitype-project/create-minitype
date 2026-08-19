@@ -11,9 +11,9 @@ import {
 import { author, date, slides, subtitle, title } from "./document.js";
 import {
   DARK,
-  FB,
-  FM,
-  FR,
+  FONT_B,
+  FONT_CODE,
+  FONT_R,
   HEIGHT,
   pageNumRegular,
   titleBgFlow,
@@ -33,7 +33,7 @@ const titleTextFlow: Flow = {
   inlineSize: WIDTH - 24,
   blocks: [
     p(title, {
-      font: FB,
+      font: FONT_B,
       size: Q(36),
       lineHeight: em(1.3),
       firstIndent: 0,
@@ -77,7 +77,7 @@ await minitype(
     padding: physical(7.5, 12, 4, 12),
     block: {
       paragraph: {
-        font: FR,
+        font: FONT_R,
         size: Q(20),
         lineHeight: em(1.5),
         kerning: true,
@@ -86,7 +86,7 @@ await minitype(
         effects: [fill(DARK)],
       },
       h1: {
-        font: FB,
+        font: FONT_B,
         size: Q(24),
         lineHeight: em(1.4),
         firstIndent: 0,
@@ -94,7 +94,7 @@ await minitype(
         effects: [fill(DARK)],
       },
       h2: {
-        font: FB,
+        font: FONT_B,
         size: Q(22),
         lineHeight: em(1.4),
         firstIndent: 0,
@@ -102,26 +102,26 @@ await minitype(
         effects: [fill(DARK)],
       },
       li1: {
-        font: FR,
+        font: FONT_R,
         indent: em(0.6),
         firstIndent: em(-1),
         marker: (listType, indices) =>
           listType === "ordered" ? `${indices[0]}.` : `・`,
       },
       li2: {
-        font: FR,
+        font: FONT_R,
         indent: em(2),
         firstIndent: em(-1),
         marker: () => `・`,
       },
       code: {
-        font: FM,
+        font: FONT_CODE,
         size: Q(13),
         firstIndent: 0,
       },
     },
     command: {
-      b: { font: FB },
+      b: { font: FONT_B },
     },
     gaps: [["fallback", "fallback", 1]],
   },

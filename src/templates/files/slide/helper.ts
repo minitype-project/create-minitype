@@ -24,61 +24,103 @@ import {
   vspace,
 } from "@minitype/minitype";
 
-// スライドの枚数（進捗バーの計算に使用）．
-// slidePage を追加・削除したときに更新すること．
+/**
+ * スライドの総ページ数．
+ * 進捗バーの計算に使用する．
+ * {@link slidePage} を追加・削除したときに更新すること．
+ */
 export const TOTAL_PAGES = 7;
 
 const HUE_START = 190;
-const TEAL_L = 0.6;
-const TEAL_C = 0.2;
+const KEY_L = 0.6;
+const KEY_C = 0.2;
 
 let _hue = HUE_START;
 let _i = 0;
 
-export let TEAL = oklch(TEAL_L, TEAL_C, _hue);
+/** ページごとに更新されるキーカラー． */
+export let KEY = oklch(KEY_L, KEY_C, _hue);
+
+/** ページごとに更新される背景ボックスカラー． */
 export let BOX_BG = oklch(0.97, 0.03, _hue);
+
+/** ページごとに更新されるコードブロック背景カラー． */
 export let CODE_BG = oklch(0.2, 0.04, _hue);
+
+/** 強調表示に使用する赤色． */
 export const RED = hsl(340, 80, 50);
+
+/** 本文テキストに使用するダークカラー． */
 export const DARK = rgb(34, 34, 34);
+
+/** 白色． */
 export const WHITE = rgb(255, 255, 255);
+
+/** 補足テキストに使用するグレーカラー． */
 export const GRAY = rgb(180, 180, 180);
 
-export const FR = "SourceHanSansJP-Regular";
-export const FB = "SourceHanSansJP-Bold";
-export const FM = "SourceCodePro-Regular";
-export const FMB = "SourceCodePro-Bold";
+/** 源ノ角ゴシック JP Regular のフォント名． */
+export const FONT_R = "SourceHanSansJP-Regular";
 
+/** 源ノ角ゴシック JP Bold のフォント名． */
+export const FONT_B = "SourceHanSansJP-Bold";
+
+/** Source Code Pro Regular のフォント名． */
+export const FONT_CODE = "SourceCodePro-Regular";
+
+/** Source Code Pro Bold のフォント名． */
+export const FONT_CODE_B = "SourceCodePro-Bold";
+
+/** スライドの幅（mm）． */
 export const WIDTH = 192;
+
+/** スライドの高さ（mm）． */
 export const HEIGHT = 108;
 
 // ------
 // インラインヘルパ
 // ------
 
+/**
+ * キーカラーのバッジインラインを作成する．
+ * @param text バッジに表示するテキスト．
+ * @returns バッジのインライン要素．
+ */
 export const badge = (text: string) => {
   return command(text, {
     style: {
-      font: FB,
+      font: FONT_B,
       effects: [fill(WHITE)],
-      background: [fill(TEAL)],
+      background: [fill(KEY)],
       padding: physical(1, 2.5, 1.1, 2.5),
       borderRadius: 2,
     },
   });
 };
 
+/**
+ * ラベル用のキーカラーバッジインラインを作成する．
+ * {@link badge} より水平パディングが広い．
+ * @param text バッジに表示するテキスト．
+ * @returns バッジのインライン要素．
+ */
 export const labelBadge = (text: string) => {
   return command(text, {
     style: {
-      font: FB,
+      font: FONT_B,
       effects: [fill(WHITE)],
-      background: [fill(TEAL)],
+      background: [fill(KEY)],
       padding: physical(1, 3, 1.1, 3),
       borderRadius: 2,
     },
   });
 };
 
+/**
+ * テキストを 80% の大きさに縮小するインラインコマンドを作成する．
+ * @param text 縮小するテキストまたはインライン要素の配列．
+ * @returns 縮小スタイルを適用したインライン要素．
+ */
 export const s = (text: string | InlineOrExtender[]) => {
   return command(text, {
     style: {
@@ -87,6 +129,11 @@ export const s = (text: string | InlineOrExtender[]) => {
   });
 };
 
+/**
+ * テキストを 70% の大きさに縮小するインラインコマンドを作成する．
+ * @param text 縮小するテキストまたはインライン要素の配列．
+ * @returns 縮小スタイルを適用したインライン要素．
+ */
 export const ss = (text: string | InlineOrExtender[]) => {
   return command(text, {
     style: {
@@ -95,27 +142,43 @@ export const ss = (text: string | InlineOrExtender[]) => {
   });
 };
 
+/**
+ * テキストにキーカラーを適用するインラインコマンドを作成する．
+ * @param inlines キーカラーを適用するインライン要素の配列．
+ * @returns キーカラースタイルを適用したインライン要素．
+ */
 export const c = (inlines: InlineOrExtender[]) => {
   return command(inlines, {
     style: {
-      effects: [fill(TEAL)],
+      effects: [fill(KEY)],
     },
   });
 };
 
+/**
+ * テキストに赤色・ボールドを適用するインラインコマンドを作成する．
+ * @param inlines 赤色・ボールドを適用するテキストまたはインライン要素の配列．
+ * @returns 赤色・ボールドスタイルを適用したインライン要素．
+ */
 export const r = (inlines: string | InlineOrExtender[]) => {
   return command(inlines, {
     style: {
       effects: [fill(RED)],
-      font: FB,
+      font: FONT_B,
     },
   });
 };
 
-export const teal = (text: string | InlineOrExtender[]) => {
+/**
+ * テキストにキーカラーを適用するインラインコマンドを作成する．
+ * {@link c} と異なり，文字列も受け付ける．
+ * @param text キーカラーを適用するテキストまたはインライン要素の配列．
+ * @returns キーカラースタイルを適用したインライン要素．
+ */
+export const key = (text: string | InlineOrExtender[]) => {
   return command(text, {
     style: {
-      effects: [fill(TEAL)],
+      effects: [fill(KEY)],
     },
   });
 };
@@ -123,6 +186,7 @@ export const teal = (text: string | InlineOrExtender[]) => {
 // ------
 // ブロックヘルパ
 // ------
+
 /**
  * スライドページを作成する．
  * @param title スライドのタイトル．
@@ -132,14 +196,14 @@ export const teal = (text: string | InlineOrExtender[]) => {
 export const slidePage = (title: string, blocks: () => Block[]): Block[] => {
   _i++;
   _hue = (HUE_START + ((_i - 1) * 360) / TOTAL_PAGES) % 360;
-  TEAL = oklch(TEAL_L, TEAL_C, _hue);
+  KEY = oklch(KEY_L, KEY_C, _hue);
   BOX_BG = oklch(0.97, 0.03, _hue);
   CODE_BG = oklch(0.2, 0.04, _hue);
 
   return [
     newpage(),
     box([
-      p(title, { font: FB, effects: [fill(TEAL)], size: Q(22) }),
+      p(title, { font: FONT_B, effects: [fill(KEY)], size: Q(22) }),
       vspace(0.5),
       rect(WIDTH - 12 * 2, 0.5, {
         background: [fill(BOX_BG)],
@@ -147,7 +211,7 @@ export const slidePage = (title: string, blocks: () => Block[]): Block[] => {
       }),
       vspace(-0.5),
       rect(((WIDTH - 12 * 2) / TOTAL_PAGES) * _i, 0.5, {
-        background: [fill(TEAL)],
+        background: [fill(KEY)],
         align: "left",
       }),
     ]),
@@ -157,17 +221,23 @@ export const slidePage = (title: string, blocks: () => Block[]): Block[] => {
 };
 
 const CODE_FONT: CompositeFont = {
-  default: { font: FR },
-  latin: { font: FM },
-  kana: { font: FR },
+  default: { font: FONT_R },
+  latin: { font: FONT_CODE },
+  kana: { font: FONT_R },
 };
 
+/**
+ * シンタックスハイライト付きのコードブロックを作成する．
+ * @param lines コードの各行の文字列配列．
+ * @param lang ハイライトに使用するプログラミング言語名．
+ * @returns コードブロックのブロック要素．
+ */
 export const codeBox = (lines: string[], lang: string) => {
   return box(
     [
       code(lines, lang, {
         font: CODE_FONT,
-        boldFont: FMB,
+        boldFont: FONT_CODE_B,
         highlight: "atom-one-dark",
         effects: [fill(WHITE)],
       }),
@@ -180,6 +250,11 @@ export const codeBox = (lines: string[], lang: string) => {
   );
 };
 
+/**
+ * テーマカラーの背景を持つボックスを作成する．
+ * @param blocks ボックス内に配置するブロック要素の配列．
+ * @returns 背景付きボックスのブロック要素．
+ */
 export const bgBox = (blocks: Block[]) => {
   return box(blocks, {
     inlineSize: fr(1),
@@ -189,6 +264,11 @@ export const bgBox = (blocks: Block[]) => {
   });
 };
 
+/**
+ * バッジ付きのリストアイテムを生成する関数を作成する．
+ * @param spacing アイテム間の垂直スペース（mm）．
+ * @returns アイテムの配列を受け取り，ブロック配列を返す関数．
+ */
 export const badgeItems = (spacing: number) => {
   return (
     items: [
@@ -230,6 +310,12 @@ export const badgeItems = (spacing: number) => {
     ]);
 };
 
+/**
+ * ラベルバッジと箇条書きを横並びに配置するサマリー行を作成する．
+ * @param label 左側に表示するラベルバッジのテキスト．
+ * @param bullets 右側に表示する箇条書き文字列またはブロック要素の配列．
+ * @returns サマリー行のブロック要素．
+ */
 export const summaryRow = (label: string, bullets: (string | Block)[]) => {
   return flexbox(
     [
@@ -247,6 +333,9 @@ export const summaryRow = (label: string, bullets: (string | Block)[]) => {
 // フロー
 // ------
 
+/**
+ * タイトルページ全面をキーカラーで塗りつぶすフロー定義．
+ */
 export const titleBgFlow: Flow = {
   type: "flow",
   position: "page",
@@ -254,7 +343,7 @@ export const titleBgFlow: Flow = {
   inlineSize: WIDTH,
   blocks: [
     rect(WIDTH, HEIGHT, {
-      background: [fill(TEAL)],
+      background: [fill(KEY)],
       align: "left",
     }),
   ],
@@ -262,6 +351,9 @@ export const titleBgFlow: Flow = {
   zIndex: -10,
 };
 
+/**
+ * タイトルページを除く各ページ右下にページ番号を表示するフロー．
+ */
 export const pageNumRegular: Flow = {
   type: "flow",
   position: "page",
