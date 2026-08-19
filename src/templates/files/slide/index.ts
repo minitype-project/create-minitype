@@ -8,6 +8,7 @@ import {
   Q,
   vspace,
 } from "@minitype/minitype";
+
 import { author, date, slidePages, subtitle, title } from "./document.js";
 import {
   DARK,

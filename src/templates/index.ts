@@ -188,11 +188,12 @@ const technicalBook: Template = {
 const conferencePaper: Template = {
   id: "conference-paper",
   displayName: "会議論文",
-  description: "会議論文（A4，2段組）",
+  description: "会議論文（B5，2段組）",
   files: async (vars) => ({
     ...commonFiles(vars, "conference-paper"),
     "src/index.ts": renderFile("conference-paper/index.ts", vars),
     "src/document.ts": renderFile("conference-paper/document.ts", vars),
+    "src/helper.ts": renderFile("conference-paper/helper.ts", vars),
     "src/result.png": await createPlaceholderPng(400, 250),
   }),
 };
@@ -214,7 +215,7 @@ const thesis: Template = {
 const invoice: Template = {
   id: "invoice",
   displayName: "請求書",
-  description: "請求書（A4, 横組）",
+  description: "請求書（A4, 横組）です．",
   files: (vars) => {
     return {
       ...commonFiles(vars, "invoice"),
@@ -229,7 +230,7 @@ const invoice: Template = {
 const cv: Template = {
   id: "cv",
   displayName: "履歴書",
-  description: "履歴書（A4, 横組）",
+  description: "履歴書（A4, 横組）です．",
   files: async (vars) => {
     return {
       ...commonFiles(vars, "cv"),
@@ -245,7 +246,7 @@ const cv: Template = {
 const slide: Template = {
   id: "slide",
   displayName: "スライド",
-  description: "プレゼンテーション用スライド（16:9, 横組）",
+  description: "プレゼンテーション用スライド（16:9, 横組）です．",
   files: async (vars) => {
     return {
       ...commonFiles(vars, "slide"),
@@ -260,7 +261,7 @@ const slide: Template = {
 const novel: Template = {
   id: "novel",
   displayName: "小説",
-  description: "小説（縦組）",
+  description: "小説（縦組）です．用紙サイズを調整することができます．",
   files: (vars) => {
     return {
       ...commonFiles(vars, "novel"),
