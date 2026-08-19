@@ -1,15 +1,10 @@
 import {
   type BlockStyleRecord,
-  box,
   captionTransformer,
-  cmyk,
   em,
   type Flow,
-  fill,
   footnoteTransformer,
   type Gap,
-  type Group,
-  H,
   headingTransformer,
   minitype,
   p,
@@ -18,7 +13,7 @@ import {
   Q,
 } from "@minitype/minitype";
 
-import { abstractBody, mainContent, titleBlock } from "./document.js";
+import { mainContent, titleBlock } from "./document.js";
 
 // ------
 // スタイル定義
@@ -27,96 +22,113 @@ import { abstractBody, mainContent, titleBlock } from "./document.js";
 const blockStyles: BlockStyleRecord = {
   paragraph: {
     font: "SourceHanSerifJP-Regular",
-    size: Q(11),
-    lineHeight: H(17),
+    size: Q(14),
+    lineHeight: em(1.5),
     firstIndent: em(1),
   },
   h1: {
-    font: "SourceHanSansJP-Bold",
-    size: Q(13),
-    lineHeight: H(18),
+    font: "SourceHanSansJP-Regular",
+    size: Q(28),
+    firstIndent: 0,
+    align: "center",
+  },
+  h2: {
+    font: "SourceHanSansJP-Regular",
+    size: Q(20),
     firstIndent: 0,
     headingNumberFormat: (index) => `${index[0]}. `,
     needspace: 10,
   },
-  h2: {
-    font: "SourceHanSansJP-Bold",
-    size: Q(11),
-    lineHeight: H(17),
+  h3: {
+    font: "SourceHanSansJP-Regular",
+    size: Q(16),
     firstIndent: 0,
     headingNumberFormat: (index) => `${index[0]}.${index[1]} `,
     needspace: 8,
   },
   li1: {
-    size: Q(10),
-    lineHeight: H(17),
-    firstIndent: em(-2),
+    firstIndent: em(-1),
   },
   li2: {
-    size: Q(10),
-    lineHeight: H(17),
     firstIndent: em(-2),
   },
   code: {
     font: "SourceCodePro-Regular",
-    size: Q(9),
-    lineHeight: H(15),
     firstIndent: 0,
   },
   caption: {
-    font: "SourceHanSansJP-Regular",
-    size: Q(9),
-    lineHeight: H(15),
     align: "center",
     firstIndent: 0,
   },
   footnote: {
-    size: Q(9),
-    lineHeight: H(13),
+    size: Q(10),
+    firstIndent: 0,
   },
 };
 
 const commandStyles = {
   b: { font: "SourceHanSerifJP-Bold" },
-  c: { font: "SourceCodePro-Regular", background: [fill(cmyk(0, 0, 0, 8))] },
+  c: { font: "SourceCodePro-Regular" },
 };
 
 const gaps: Gap[] = [
   // 見出し
-  ["h1", "paragraph", 2],
-  ["h1", "h2", 2],
-  ["h2", "paragraph", 2],
-  ["paragraph", "h1", 8],
-  ["paragraph", "h2", 5],
+  ["h1", "paragraph", 6],
+  ["h2", "paragraph", 4],
+  ["h3", "paragraph", 3],
+  ["fallback", "h1", 14],
+  ["fallback", "h2", 10],
+  ["fallback", "h3", 6],
+  ["paragraph", "h2", 10],
+  ["paragraph", "h3", 6],
+  ["h2", "h3", 2],
+  ["li1", "h2", 10],
+  ["li2", "h2", 10],
 
   // リスト
-  ["paragraph", "li1", 4],
+  ["paragraph", "li1", 2],
   ["li1", "paragraph", 4],
-  ["li2", "paragraph", 4],
-  ["li1", "h1", 8],
-  ["li2", "h1", 8],
-  ["li1", "li1", 0],
-  ["li1", "li2", 0],
-  ["li2", "li1", 0],
-  ["li2", "li2", 0],
+  ["li1", "li1", 1],
+  ["li1", "li2", 2],
+  ["li2", "li1", 2],
+  ["li2", "li2", 1],
 
-  // 段落
-  ["paragraph", "paragraph", 0],
+  // コード・数式
+  ["paragraph", "code", 4],
+  ["code", "paragraph", 6],
   ["paragraph", "math", 4],
   ["math", "paragraph", 4],
-  ["code", "paragraph", 4],
-  ["paragraph", "code", 4],
 
-  // 画像
+  // 図表
   ["fallback", "figure", 8],
   ["figure", "fallback", 8],
   ["image", "caption", 4],
+  ["caption", "paragraph", 6],
 
-  // その他
-  ["fallback", "fallback", 2],
+  // 段落
+  ["paragraph", "paragraph", 2],
+  ["fallback", "fallback", 4],
 ];
 
-// フッタ（ノンブル）
+// ------
+// ヘッダ・フッタ
+// ------
+
+const header: Flow = {
+  type: "flow",
+  position: "pillar",
+  blockOffset: -10,
+  blocks: [
+    p("{{projectName}}", {
+      align: "right",
+      firstIndent: 0,
+      size: 3,
+      lineHeight: 4.5,
+    }),
+  ],
+  page: (pageIndex: number) => pageIndex >= 1,
+};
+
 const footer: Flow = {
   type: "flow",
   position: "nombre",
@@ -131,27 +143,16 @@ const footer: Flow = {
   ],
 };
 
-// 2 段組
-const twoColumnBody = box(mainContent, {
-  columns: 2,
-  columnGap: 8,
-  splitable: true,
-  footnoteSpan: "column",
-});
-
-const documentGroup: Group = {
-  body: [footer, ...titleBlock, ...abstractBody, twoColumnBody],
-};
-
 // ------
 // 組版処理
 // ------
+
 await minitype(
-  [documentGroup],
+  [{ body: [header, footer, ...titleBlock, ...mainContent] }],
   {
-    size: "B5",
+    size: "A4",
     writingMode: "horizontal",
-    padding: physical(20, 18, 22, 18),
+    padding: physical(32, 25),
     block: blockStyles,
     command: commandStyles,
     gaps,
@@ -160,7 +161,7 @@ await minitype(
     fontDir: "fonts",
     disableDefaultTransformers: true,
     blockTransformers: [
-      headingTransformer({ numberedLevels: [1, 2] }),
+      headingTransformer({ numberedLevels: [2, 3] }),
       captionTransformer,
       footnoteTransformer(),
     ],
