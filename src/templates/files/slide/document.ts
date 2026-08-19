@@ -42,14 +42,14 @@ const slideAgenda: SlideFactory = () =>
 
 const slideAbout: SlideFactory = () =>
   slidePage("minitype とは", () => [
-    h2`TypeScript で PDF ドキュメントを生成するライブラリ`,
+    h2`TypeScript で PDF 文書を生成するライブラリ`,
     vspace(4),
     flexbox(
       [
         bgBox([
           p`${b("特徴")}`,
           vspace(2),
-          li1`TypeScript でドキュメント構造を記述`,
+          li1`TypeScript で文書構造を記述`,
           li1`日本語・欧文の混植に対応`,
           li1`数式・コード・図表の埋め込みをサポート`,
           li1`${key("Vite プラグイン")}でブラウザプレビューが可能`,
@@ -69,7 +69,7 @@ const slideAbout: SlideFactory = () =>
 
 const slideBasic: SlideFactory = () =>
   slidePage("基本的な使い方", () => [
-    h2`ブロック要素を組み合わせてドキュメントを構成する`,
+    h2`ブロック要素を組み合わせて文書を構成する`,
     vspace(4),
     bgBox([
       li1`${b("p()")}${s("  — 段落")}`,
@@ -84,7 +84,7 @@ const slideBasic: SlideFactory = () =>
 
 const slideCustom: SlideFactory = () =>
   slidePage("スタイルのカスタマイズ", () => [
-    h2`index.ts の DocumentStyle でドキュメント全体のスタイルを定義する`,
+    h2`index.ts の DocumentStyle で文書全体のスタイルを定義する`,
     vspace(4),
     bgBox([
       li1`${b("size")}${s("  — ページサイズ（A4, B5, カスタム等）")}`,
@@ -135,10 +135,10 @@ const slideSummary: SlideFactory = () =>
     h2`minitype を使うと TypeScript だけで本格的な PDF を生成できる`,
     vspace(4),
     bgBox([
-      li1`ブロック要素の組み合わせでドキュメント構造を表現`,
+      li1`ブロック要素の組み合わせで文書構造を表現`,
       li1`DocumentStyle でデザインを一元管理`,
       li1`日本語組版・数式・コードに標準対応`,
-      li1`今後：このテンプレートを起点に自分のドキュメントを作ろう`,
+      li1`今後：このテンプレートを起点に自分の文書を作成`,
     ]),
   ]);
 

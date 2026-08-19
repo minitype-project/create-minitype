@@ -368,7 +368,7 @@ export const titleBgFlow: Flow = {
 };
 
 /**
- * タイトルページを除く各ページ右下にページ番号を表示するフロー．
+ * タイトルページを除く各ページ右下にノンブルを表示するフロー．
  */
 export const pageNumRegular: Flow = {
   type: "flow",

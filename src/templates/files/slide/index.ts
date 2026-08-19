@@ -126,7 +126,10 @@ await minitype(
     command: {
       b: { font: FONT_B },
     },
-    gaps: [["fallback", "fallback", 1]],
+    gaps: [
+      ["fallback", "fallback", 1],
+      ["image", "caption", 3],
+    ],
   },
   { fontDir: "fonts" },
 ).save("output.pdf");
