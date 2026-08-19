@@ -49,6 +49,12 @@ const sharedBlock: DocumentStyle["block"] = {
     lineHeight: H(17),
     firstIndent: em(-2),
   },
+  li2: {
+    font: "SourceHanSerifJP-Regular",
+    size: Q(10),
+    lineHeight: H(17),
+    firstIndent: em(-2),
+  },
   code: {
     font: "SourceCodePro-Regular",
     size: Q(9),
@@ -79,21 +85,26 @@ const sharedGaps: Gap[] = [
   ["h1", "paragraph", 2],
   ["h1", "h2", 2],
   ["h2", "paragraph", 2],
-  ["paragraph", "h1", 7],
+  ["paragraph", "h1", 8],
   ["paragraph", "h2", 5],
 
   // リスト
-  ["li1", "h1", 7],
+  ["paragraph", "li1", 4],
+  ["li1", "paragraph", 4],
+  ["li2", "paragraph", 4],
+  ["li1", "h1", 8],
+  ["li2", "h1", 8],
   ["li1", "li1", 0],
   ["li1", "li2", 0],
+  ["li2", "li1", 0],
   ["li2", "li2", 0],
 
   // 段落
   ["paragraph", "paragraph", 0],
-  ["paragraph", "math", 3],
-  ["math", "paragraph", 3],
-  ["code", "paragraph", 3],
-  ["paragraph", "code", 3],
+  ["paragraph", "math", 4],
+  ["math", "paragraph", 4],
+  ["code", "paragraph", 4],
+  ["paragraph", "code", 4],
 
   // 画像
   ["fallback", "figure", 8],

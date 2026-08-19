@@ -193,6 +193,7 @@ const conferencePaper: Template = {
     ...commonFiles(vars, "conference-paper"),
     "src/index.ts": renderFile("conference-paper/index.ts", vars),
     "src/document.ts": renderFile("conference-paper/document.ts", vars),
+    "src/refs.ts": renderFile("conference-paper/refs.ts", vars),
     "src/helper.ts": renderFile("conference-paper/helper.ts", vars),
     "src/result.png": await createPlaceholderPng(400, 250),
   }),
