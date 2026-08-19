@@ -1,228 +1,129 @@
 import {
-  box,
-  cmyk,
-  type DocumentStyle,
   em,
   type Flow,
   fill,
-  type Gap,
-  type Group,
-  H,
   minitype,
-  newpage,
   p,
-  page,
   physical,
   Q,
   vspace,
 } from "@minitype/minitype";
+import { author, date, slides, subtitle, title } from "./document.js";
 import {
-  accentColor,
-  author,
-  date,
-  main,
-  subtitle,
-  title,
-  whiteColor,
-  whiteDimColor,
-} from "./document.js";
+  DARK,
+  FB,
+  FM,
+  FR,
+  HEIGHT,
+  pageNumRegular,
+  titleBgFlow,
+  WHITE,
+  WIDTH,
+} from "./helper.js";
 
-export const width = 192;
-export const height = 108;
+// ------
+// タイトルページ
+// ------
 
-const block: DocumentStyle["block"] = {
-  paragraph: {
-    font: "SourceHanSansJP-Regular",
-    size: Q(16),
-    lineHeight: em(1.8),
-    firstIndent: 0,
-  },
-  h1: {
-    font: "SourceHanSansJP-Bold",
-    size: Q(18),
-    lineHeight: H(28),
-    firstIndent: 0,
-  },
-  h2: {
-    font: "SourceHanSansJP-Regular",
-    size: Q(15),
-    lineHeight: H(24),
-    firstIndent: 0,
-  },
-  li1: {
-    font: "SourceHanSansJP-Regular",
-    firstIndent: em(-1),
-  },
-  code: {
-    font: "SourceCodePro-Regular",
-    size: Q(14),
-    lineHeight: H(17),
-    firstIndent: 0,
-  },
-  caption: {
-    font: "SourceHanSansJP-Regular",
-    size: Q(12),
-    lineHeight: H(17),
-    align: "center",
-    firstIndent: 0,
-  },
-};
-
-const gaps: Gap[] = [
-  ["paragraph", "paragraph", 4],
-  ["paragraph", "li1", 2],
-  ["li1", "paragraph", 4],
-  ["li1", "li1", 2],
-  ["li1", "li2", 1],
-  ["li2", "li1", 2],
-  ["h1", "paragraph", 4],
-  ["h2", "paragraph", 2],
-  ["paragraph", "h1", 8],
-  ["paragraph", "h2", 5],
-  ["figure", "caption", 2],
-  ["caption", "paragraph", 6],
-  ["fallback", "fallback", 4],
-];
-
-const titleGroup: Group = {
-  body: [
-    // 背景
-    {
-      type: "flow",
-      position: "page",
-      inlineOffset: 0,
-      blockOffset: 0,
-      inlineSize: width,
-      zIndex: -1,
-      blocks: [box([vspace(143)], { background: [fill(accentColor)] })],
-    },
-    {
-      type: "flow",
-      position: "page",
-      inlineOffset: 0,
-      blockOffset: 34,
-      inlineSize: width,
-      blocks: [
-        // タイトル，サブタイトル
-        p(title, {
-          align: "center",
-          firstIndent: 0,
-          font: "SourceHanSansJP-Bold",
-          size: Q(36),
-          lineHeight: em(1.2),
-          effects: [{ type: "fill", color: whiteColor }],
-        }),
-        p(subtitle, {
-          align: "center",
-          firstIndent: 0,
-          font: "SourceHanSansJP-Regular",
-          size: Q(18),
-          effects: [{ type: "fill", color: whiteDimColor }],
-        }),
-        vspace(8),
-
-        // 発表者情報
-        p(author, {
-          align: "center",
-          firstIndent: 0,
-          font: "SourceHanSansJP-Regular",
-          size: Q(18),
-          lineHeight: H(21),
-          effects: [{ type: "fill", color: whiteColor }],
-        }),
-        p(date, {
-          align: "center",
-          firstIndent: 0,
-          size: Q(18),
-          lineHeight: H(18),
-          effects: [{ type: "fill", color: whiteDimColor }],
-        }),
-      ],
-    },
-  ],
-};
-
-/**
- * スライドタイトルを作成する．
- * @param title タイトル文字列．
- * @returns タイトルボックスブロック．
- */
-const headline = (text: string, pageIndex: number): Flow => {
-  return {
-    type: "flow",
-    position: "page",
-    inlineOffset: 0,
-    blockOffset: 0,
-    inlineSize: width,
-    blocks: [
-      box(
-        [
-          p(text, {
-            font: "SourceHanSansJP-Bold",
-            size: Q(24),
-            lineHeight: H(34),
-            firstIndent: 0,
-            effects: [{ type: "fill", color: whiteColor }],
-          }),
-        ],
-        {
-          background: [fill(accentColor)],
-          padding: physical(5, 10, 4, 10),
-        },
-      ),
-    ],
-    page: (inPageIndex: number) => inPageIndex === pageIndex,
-  };
-};
-
-// フッタ（ページ番号）
-const footer: Flow = {
+const titleTextFlow: Flow = {
   type: "flow",
-  position: "nombre",
-  inlineOffset: 2,
-  blockOffset: -10,
+  position: "page",
+  inlineOffset: 12,
+  blockOffset: HEIGHT * 0.3,
+  inlineSize: WIDTH - 24,
   blocks: [
-    p([[page]], {
-      align: "right",
+    p(title, {
+      font: FB,
+      size: Q(36),
+      lineHeight: em(1.3),
       firstIndent: 0,
-      size: Q(16),
-      lineHeight: H(15),
+      effects: [fill(WHITE)],
+    }),
+    p(subtitle, {
+      size: Q(20),
+      firstIndent: 0,
+      effects: [fill(WHITE)],
+    }),
+    vspace(8),
+    p(author, {
+      size: Q(18),
+      firstIndent: 0,
+      effects: [fill(WHITE)],
+    }),
+    p(date, {
+      size: Q(18),
+      firstIndent: 0,
+      effects: [fill(WHITE)],
     }),
   ],
+  page: (i) => i === 0,
 };
 
-// 本文スライド
-const body = [
-  ...main.flatMap((pageMain, i) => [
-    headline(pageMain[0], i + 1),
-    ...pageMain[1],
-    newpage(),
-  ]),
-  footer,
-];
+// ------
+// ボディ
+// ------
 
-const mainGroup: Group = {
-  body,
-  pageIndex: 1,
-};
+const body = [titleBgFlow, titleTextFlow, pageNumRegular, ...slides];
+
+// ------
+// 組版処理
+// ------
 
 await minitype(
-  [titleGroup, mainGroup],
+  [{ body }],
   {
-    size: { width: 192, height: 108 },
+    size: { width: WIDTH, height: HEIGHT },
     writingMode: "horizontal",
-    padding: physical(22, 10, 0, 10),
-    block,
-    command: {
-      b: { font: "SourceHanSansJP-Bold" },
-      c: {
-        font: "SourceCodePro-Regular",
-        background: [fill(cmyk(0, 0, 0, 8))],
+    padding: physical(7.5, 12, 4, 12),
+    block: {
+      paragraph: {
+        font: FR,
+        size: Q(20),
+        lineHeight: em(1.5),
+        kerning: true,
+        firstIndent: 0,
+        align: "left",
+        effects: [fill(DARK)],
+      },
+      h1: {
+        font: FB,
+        size: Q(24),
+        lineHeight: em(1.4),
+        firstIndent: 0,
+        headingNumberFormat: () => "",
+        effects: [fill(DARK)],
+      },
+      h2: {
+        font: FB,
+        size: Q(22),
+        lineHeight: em(1.4),
+        firstIndent: 0,
+        headingNumberFormat: () => "",
+        effects: [fill(DARK)],
+      },
+      li1: {
+        font: FR,
+        indent: em(0.6),
+        firstIndent: em(-1),
+        marker: (listType, indices) =>
+          listType === "ordered" ? `${indices[0]}.` : `・`,
+      },
+      li2: {
+        font: FR,
+        indent: em(2),
+        firstIndent: em(-1),
+        marker: () => `・`,
+      },
+      code: {
+        font: FM,
+        size: Q(13),
+        firstIndent: 0,
       },
     },
-    gaps,
+    command: {
+      b: { font: FB },
+    },
+    gaps: [["fallback", "fallback", 1]],
   },
-  {
-    fontDir: "fonts",
-  },
+  { fontDir: "fonts" },
 ).save("output.pdf");

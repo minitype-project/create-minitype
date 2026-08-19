@@ -251,7 +251,8 @@ const slide: Template = {
       ...commonFiles(vars, "slide"),
       "src/index.ts": renderFile("slide/index.ts", vars),
       "src/document.ts": renderFile("slide/document.ts", vars),
-      "src/sample.png": await createPlaceholderPng(400, 300),
+      "src/helper.ts": renderFile("slide/helper.ts", vars),
+      "src/sample.png": await createPlaceholderPng(400, 250),
     };
   },
 };
