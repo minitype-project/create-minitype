@@ -153,7 +153,7 @@ const nombreOffset = readOffset("nombreOffset", frontmatter.nombreOffset);
 const pillarStartPage = readPillarStartPage(frontmatter.pillarStartPage);
 
 // ------
-// ヘッダ，フッタ
+// 柱，ノンブル
 // ------
 
 const header: Flow = {

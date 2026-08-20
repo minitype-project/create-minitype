@@ -1,19 +1,22 @@
 import {
+  type Block,
   type BlockStyleRecord,
   captionTransformer,
   em,
   type Flow,
   footnoteTransformer,
   type Gap,
+  h1,
   headingTransformer,
   minitype,
   p,
   page,
   physical,
   Q,
+  vspace,
 } from "@minitype/minitype";
 
-import { mainContent, titleBlock } from "./document.js";
+import { author, date, mainContent, title } from "./document.js";
 
 // ------
 // スタイル定義
@@ -111,7 +114,23 @@ const gaps: Gap[] = [
 ];
 
 // ------
-// ヘッダ・フッタ
+// タイトル，著者，日付
+// ------
+
+const now = new Date();
+const today = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`;
+const dateText =
+  date === false ? false : typeof date === "string" ? date : today;
+
+const titleBlock: Block[] = [
+  h1([[title]]),
+  p([[author]], { align: "center" }),
+  ...(dateText !== false ? [p([[dateText]], { align: "center" })] : []),
+  vspace(6),
+];
+
+// ------
+// 柱，ノンブル
 // ------
 
 const header: Flow = {

@@ -1,6 +1,6 @@
 ---
 title: レポートタイトル
-author: 著者名：〇〇 〇〇
+author: 〇〇 〇〇
 date: true
 ---
 

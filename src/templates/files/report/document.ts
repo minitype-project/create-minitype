@@ -5,7 +5,6 @@ import {
   float,
   fn,
   footnote,
-  h1,
   h2,
   h3,
   li1,
@@ -13,28 +12,30 @@ import {
   math,
   p,
   ratio,
-  vspace,
 } from "@minitype/minitype";
 
 import { h2Unnumbered } from "./helper.js";
 import { bibliography, cite } from "./refs.js";
 
 // ------
-// タイトル
+// タイトル，著者，日付
 // ------
 
-const today = new Date().toLocaleDateString("ja-JP", {
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-});
-
-export const titleBlock: Block[] = [
-  h1`レポートタイトル`,
-  p({ align: "center" })`著者名：〇〇 〇〇`,
-  p([[today]], { align: "center" }),
-  vspace(6),
-];
+/**
+ * レポートのタイトル．
+ */
+export const title = "レポートタイトル";
+/**
+ * レポートの著者．
+ */
+export const author = "〇〇 〇〇";
+/**
+ * レポートの日付．
+ * - true の場合は今日の日付を表示する．
+ * - false の場合は日付を表示しない．
+ * - string の場合はその文字列を表示する．
+ */
+export const date: boolean | string = true;
 
 // ------
 // 本文
