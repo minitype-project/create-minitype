@@ -42,50 +42,61 @@ const generateSamples = async (targetIds: string[]): Promise<void> => {
   }
 
   for (const id of targetIds) {
-    const tmpProjectDir = path.join(TMP_DIR, id);
+    const template = templates[id];
+    const sampleConfigs = template.samples
+      ? template.samples.map(({ suffix, options }) => ({
+          label: `${id}-${suffix}`,
+          options: options ?? {},
+        }))
+      : [{ label: id, options: {} }];
 
-    console.log(`\n[${id}] Creating project...`);
+    for (const { label, options } of sampleConfigs) {
+      const tmpProjectDir = path.join(TMP_DIR, label);
 
-    // 前回の残骸が残っている場合は削除する
-    if (fs.existsSync(tmpProjectDir)) {
+      console.log(`\n[${label}] Creating project...`);
+
+      // 前回の残骸が残っている場合は削除する
+      if (fs.existsSync(tmpProjectDir)) {
+        fs.rmSync(tmpProjectDir, { recursive: true, force: true });
+      }
+
+      await createProject({
+        projectName: label,
+        templateId: id,
+        packageManager: "yarn",
+        outputDir: TMP_DIR,
+        templateOptions: options,
+      });
+
+      console.log(`[${label}] Building PDF...`);
+
+      const buildResult = spawnSync("yarn", ["build"], {
+        cwd: tmpProjectDir,
+        stdio: "inherit",
+      });
+
+      if (buildResult.status !== 0) {
+        console.error(
+          `[${label}] Build failed (exit code: ${String(buildResult.status)})`,
+        );
+        fs.rmSync(tmpProjectDir, { recursive: true, force: true });
+        continue;
+      }
+
+      const pdfSrc = path.join(tmpProjectDir, "output.pdf");
+      const pdfDst = path.join(SAMPLE_DIR, `${label}.pdf`);
+
+      if (!fs.existsSync(pdfSrc)) {
+        console.error(`[${label}] output.pdf not found after build`);
+        fs.rmSync(tmpProjectDir, { recursive: true, force: true });
+        continue;
+      }
+
+      fs.copyFileSync(pdfSrc, pdfDst);
       fs.rmSync(tmpProjectDir, { recursive: true, force: true });
+
+      console.log(`[${label}] Saved to samples/${label}.pdf`);
     }
-
-    await createProject({
-      projectName: id,
-      templateId: id,
-      packageManager: "yarn",
-      outputDir: TMP_DIR,
-    });
-
-    console.log(`[${id}] Building PDF...`);
-
-    const buildResult = spawnSync("yarn", ["build"], {
-      cwd: tmpProjectDir,
-      stdio: "inherit",
-    });
-
-    if (buildResult.status !== 0) {
-      console.error(
-        `[${id}] Build failed (exit code: ${String(buildResult.status)})`,
-      );
-      fs.rmSync(tmpProjectDir, { recursive: true, force: true });
-      continue;
-    }
-
-    const pdfSrc = path.join(tmpProjectDir, "output.pdf");
-    const pdfDst = path.join(SAMPLE_DIR, `${id}.pdf`);
-
-    if (!fs.existsSync(pdfSrc)) {
-      console.error(`[${id}] output.pdf not found after build`);
-      fs.rmSync(tmpProjectDir, { recursive: true, force: true });
-      continue;
-    }
-
-    fs.copyFileSync(pdfSrc, pdfDst);
-    fs.rmSync(tmpProjectDir, { recursive: true, force: true });
-
-    console.log(`[${id}] Saved to samples/${id}.pdf`);
   }
 };
 

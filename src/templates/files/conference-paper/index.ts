@@ -48,24 +48,20 @@ const blockStyles: BlockStyleRecord = {
     needspace: 8,
   },
   li1: {
-    size: Q(10),
-    lineHeight: H(17),
     firstIndent: em(-2),
   },
   li2: {
-    size: Q(10),
-    lineHeight: H(17),
     firstIndent: em(-2),
   },
   code: {
     font: "SourceCodePro-Regular",
-    size: Q(9),
+    size: Q(10),
     lineHeight: H(15),
     firstIndent: 0,
   },
   caption: {
     font: "SourceHanSansJP-Regular",
-    size: Q(9),
+    size: Q(10),
     lineHeight: H(15),
     align: "center",
     firstIndent: 0,
@@ -125,8 +121,6 @@ const footer: Flow = {
     p([[page]], {
       align: "center",
       firstIndent: 0,
-      size: 3,
-      lineHeight: 4.5,
     }),
   ],
 };

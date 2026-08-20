@@ -36,6 +36,16 @@ export interface Template {
   ) =>
     | Record<string, string | Buffer>
     | Promise<Record<string, string | Buffer>>;
+  /**
+   * サンプル PDF の生成設定．
+   * 未指定の場合はデフォルトオプションで 1 つ（`${id}.pdf`）生成する．
+   */
+  samples?: Array<{
+    /** サフィックス（`${id}-${suffix}.pdf` のように使用される）． */
+    suffix: string;
+    /** プロジェクト作成時に渡すオプション． */
+    options?: TemplateOptions;
+  }>;
 }
 
 /**
@@ -153,6 +163,7 @@ const report: Template = {
   displayName: "レポート",
   description: "一般的なレポート，報告書（A4，横組）",
   builtinOptions: ["markdown"],
+  samples: [{ suffix: "ts" }, { suffix: "md", options: { markdown: true } }],
   files: async (vars, options) => {
     if (options?.markdown) {
       return {
@@ -168,6 +179,9 @@ const report: Template = {
       ...commonFiles(vars, "report"),
       "src/index.ts": renderFile("report/index.ts", vars),
       "src/document.ts": renderFile("report/document.ts", vars),
+      "src/helper.ts": renderFile("report/helper.ts", vars),
+      "src/refs.ts": renderFile("report/refs.ts", vars),
+      "src/result.png": await createPlaceholderPng(400, 300),
     };
   },
 };

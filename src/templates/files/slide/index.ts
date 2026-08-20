@@ -1,7 +1,10 @@
 import {
+  type BlockStyleRecord,
+  type CommandStyleRecord,
   em,
   type Flow,
   fill,
+  type Gap,
   minitype,
   p,
   physical,
@@ -23,12 +26,70 @@ import {
   WIDTH,
 } from "./helper.js";
 
+// ------
+// スタイル定義
+// ------
+
+const blockStyles: BlockStyleRecord = {
+  paragraph: {
+    font: FONT_R,
+    size: Q(20),
+    lineHeight: em(1.5),
+    kerning: true,
+    firstIndent: 0,
+    align: "left",
+    effects: [fill(DARK)],
+  },
+  h1: {
+    font: FONT_B,
+    size: Q(24),
+    lineHeight: em(1.4),
+    firstIndent: 0,
+    headingNumberFormat: () => "",
+    effects: [fill(DARK)],
+  },
+  h2: {
+    font: FONT_B,
+    size: Q(22),
+    lineHeight: em(1.4),
+    firstIndent: 0,
+    headingNumberFormat: () => "",
+    effects: [fill(DARK)],
+  },
+  li1: {
+    font: FONT_R,
+    indent: em(0.6),
+    firstIndent: em(-1),
+    marker: (listType: string, indices: number[]) =>
+      listType === "ordered" ? `${indices[0]}.` : `・`,
+  },
+  li2: {
+    font: FONT_R,
+    indent: em(2),
+    firstIndent: em(-1),
+    marker: () => `・`,
+  },
+  code: {
+    font: FONT_CODE,
+    size: Q(13),
+    firstIndent: 0,
+  },
+};
+
+const commandStyles: CommandStyleRecord = {
+  b: { font: FONT_B },
+};
+
+const gaps: Gap[] = [
+  ["fallback", "fallback", 1],
+  ["image", "caption", 3],
+];
+
 const slides = initSlides(slidePages);
 
 // ------
 // タイトルページ
 // ------
-
 const titleTextFlow: Flow = {
   type: "flow",
   position: "page",
@@ -63,10 +124,6 @@ const titleTextFlow: Flow = {
   page: (i) => i === 0,
 };
 
-// ------
-// ボディ
-// ------
-
 const body = [titleBgFlow, titleTextFlow, pageNumRegular, ...slides];
 
 // ------
@@ -79,58 +136,9 @@ await minitype(
     size: { width: WIDTH, height: HEIGHT },
     writingMode: "horizontal",
     padding: physical(7.5, 12, 4, 12),
-    block: {
-      paragraph: {
-        font: FONT_R,
-        size: Q(20),
-        lineHeight: em(1.5),
-        kerning: true,
-        firstIndent: 0,
-        align: "left",
-        effects: [fill(DARK)],
-      },
-      h1: {
-        font: FONT_B,
-        size: Q(24),
-        lineHeight: em(1.4),
-        firstIndent: 0,
-        headingNumberFormat: () => "",
-        effects: [fill(DARK)],
-      },
-      h2: {
-        font: FONT_B,
-        size: Q(22),
-        lineHeight: em(1.4),
-        firstIndent: 0,
-        headingNumberFormat: () => "",
-        effects: [fill(DARK)],
-      },
-      li1: {
-        font: FONT_R,
-        indent: em(0.6),
-        firstIndent: em(-1),
-        marker: (listType, indices) =>
-          listType === "ordered" ? `${indices[0]}.` : `・`,
-      },
-      li2: {
-        font: FONT_R,
-        indent: em(2),
-        firstIndent: em(-1),
-        marker: () => `・`,
-      },
-      code: {
-        font: FONT_CODE,
-        size: Q(13),
-        firstIndent: 0,
-      },
-    },
-    command: {
-      b: { font: FONT_B },
-    },
-    gaps: [
-      ["fallback", "fallback", 1],
-      ["image", "caption", 3],
-    ],
+    block: blockStyles,
+    command: commandStyles,
+    gaps,
   },
   { fontDir: "fonts" },
 ).save("output.pdf");
