@@ -1,5 +1,9 @@
 import {
+  all,
   type BlockStyleRecord,
+  type Body,
+  bottom,
+  box,
   calculatePhysicalPadding,
   cmyk,
   type DocumentStyle,
@@ -7,13 +11,30 @@ import {
   fill,
   type Gap,
   H,
+  h1,
   minitype,
+  p,
   physical,
   Q,
+  solid,
+  vspace,
 } from "@minitype/minitype";
 
-import { body } from "./document.js";
-import { keyColor } from "./helper.js";
+import {
+  coverDate,
+  coverDisclaimer,
+  coverSubtitle,
+  sections,
+} from "./document.js";
+import {
+  background,
+  coverBackground,
+  cyan,
+  footer,
+  header,
+  keyColor,
+  white,
+} from "./helper.js";
 
 // ------
 // スタイル定義
@@ -22,27 +43,6 @@ import { keyColor } from "./helper.js";
 const size = "B5";
 const fontSize = Q(14);
 const lineHeight = H(22);
-
-const gaps: Gap[] = [
-  // 見出し
-  ["h1", "fallback", 2],
-  ["h2", "fallback", 2],
-  ["h3", "fallback", 2],
-
-  // 段落
-  ["paragraph", "h2", 8],
-  ["paragraph", "h3", 4],
-  ["paragraph", "paragraph", 0],
-  ["paragraph", "code", 4],
-  ["fallback", "li1", 0],
-
-  ["li1", "li1", 0],
-
-  ["code", "paragraph", 6],
-  ["figure", "caption", 4],
-  ["caption", "paragraph", 8],
-  ["fallback", "fallback", 4],
-];
 
 const blockStyles: BlockStyleRecord = {
   paragraph: {
@@ -93,6 +93,41 @@ const blockStyles: BlockStyleRecord = {
   },
 };
 
+const gaps: Gap[] = [
+  // 見出し
+  ["h1", "fallback", 4],
+  ["h2", "fallback", 4],
+  ["h3", "fallback", 4],
+
+  // リスト
+  ["li1", "li1", 2],
+  ["li1", "li2", 2],
+  ["li2", "li1", 2],
+  ["li2", "li2", 2],
+  ["fallback", "li1", 4],
+  ["li1", "fallback", 4],
+  ["li2", "fallback", 4],
+
+  // 段落
+  ["paragraph", "paragraph", 2],
+
+  // 画像
+  ["fallback", "figure", 4],
+  ["figure", "fallback", 4],
+  ["image", "caption", 4],
+
+  // 表
+  ["fallback", "easytable", 4],
+  ["easytable", "fallback", 4],
+  ["caption", "table", 2],
+  ["paragraph", "table", 4],
+  ["math", "table", 4],
+  ["math", "table", 4],
+  ["li1", "table", 4],
+  ["li2", "table", 4],
+  ["lstlisting", "table", 4],
+];
+
 const commandStyles = {
   b: { font: "SourceHanSansJP-Bold" },
   c: {
@@ -120,8 +155,70 @@ const style: Partial<DocumentStyle> = {
 };
 
 // ------
+// 表紙
+// ------
+
+const cover = [
+  box(
+    [
+      p("BUSINESS REPORT", {
+        firstIndent: 0,
+        size: 4,
+        lineHeight: 6,
+        effects: [fill(cyan)],
+      }),
+      vspace(4),
+      h1([["{{projectName}}"]], {
+        effects: [fill(white)],
+        size: Q(44),
+        lineHeight: em(1.4),
+      }),
+      p(coverSubtitle, {
+        firstIndent: 0,
+        size: Q(22),
+        lineHeight: em(1.5),
+        effects: [fill(white)],
+      }),
+      vspace(8),
+      p(coverDate, {
+        firstIndent: 0,
+        size: Q(20),
+        lineHeight: 6,
+        effects: [fill(cyan)],
+      }),
+    ],
+    { padding: physical(24, 0, 10, 0), margin: bottom(32) },
+  ),
+  box(
+    [
+      p(coverDisclaimer, {
+        firstIndent: 0,
+        effects: [fill(white)],
+      }),
+    ],
+    {
+      padding: physical(4, 5),
+      margin: bottom(5),
+      background: [fill(cmyk(100, 100, 100, 100, 0.2))],
+      border: all(solid(0.35, cyan)),
+      borderRadius: 2,
+    },
+  ),
+];
+
+// ------
 // 組版処理
 // ------
+
+const body: Body = [
+  background,
+  coverBackground,
+  header,
+  footer,
+  ...cover,
+  ...sections,
+];
+
 await minitype([{ body }], style, {
   fontDir: "fonts",
 }).save("output.pdf");

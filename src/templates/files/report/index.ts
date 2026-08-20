@@ -88,9 +88,9 @@ const gaps: Gap[] = [
   ["li1", "li2", 2],
   ["li2", "li1", 2],
   ["li2", "li2", 2],
-  ["fallback", "li1", 2],
-  ["li1", "fallback", 2],
-  ["li2", "fallback", 2],
+  ["fallback", "li1", 4],
+  ["li1", "fallback", 4],
+  ["li2", "fallback", 4],
 
   // 段落
   ["paragraph", "paragraph", 2],

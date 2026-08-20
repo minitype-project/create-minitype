@@ -1,99 +1,24 @@
-import {
-  all,
-  type Body,
-  b,
-  bottom,
-  box,
-  cmyk,
-  em,
-  fill,
-  h1,
-  h3,
-  li1,
-  newpage,
-  p,
-  physical,
-  Q,
-  solid,
-  vspace,
-} from "@minitype/minitype";
+import { type Body, b, h3, li1, newpage, p } from "@minitype/minitype";
 
 import {
-  background,
   callout,
-  coverBackground,
-  cyan,
   disclaimer,
-  footer,
-  header,
   metric,
   panel,
   section,
   visual,
-  white,
-} from "./utils.js";
+} from "./helper.js";
 
-const reportDate = "2026年度版";
+// ------
+// 表紙
+// ------
 
-export const body: Body = [
-  background,
-  coverBackground,
-  header,
-  footer,
+export const coverDate = "2026年度版";
+export const coverSubtitle = "事業の現状と今後の展望";
+export const coverDisclaimer =
+  "本資料は情報提供を目的としたものであり，特定の商品・サービスの推奨を目的とするものではありません．";
 
-  // ------
-  // 表紙
-  // ------
-
-  box(
-    [
-      p("BUSINESS REPORT", {
-        firstIndent: 0,
-        size: 4,
-        lineHeight: 6,
-        effects: [fill(cyan)],
-      }),
-      vspace(4),
-      h1([["{{projectName}}"]], {
-        effects: [fill(white)],
-        size: Q(44),
-        lineHeight: em(1.4),
-      }),
-      p("事業の現状と今後の展望", {
-        firstIndent: 0,
-        size: Q(22),
-        lineHeight: em(1.5),
-        effects: [fill(white)],
-      }),
-      vspace(8),
-      p(reportDate, {
-        firstIndent: 0,
-        size: Q(20),
-        lineHeight: 6,
-        effects: [fill(cyan)],
-      }),
-    ],
-    { padding: physical(24, 0, 10, 0), margin: bottom(32) },
-  ),
-  box(
-    [
-      p(
-        "本資料は情報提供を目的としたものであり，特定の商品・サービスの推奨を目的とするものではありません．",
-        {
-          firstIndent: 0,
-          effects: [fill(white)],
-        },
-      ),
-    ],
-    {
-      padding: physical(4, 5),
-      margin: bottom(5),
-      background: [fill(cmyk(100, 100, 100, 100, 0.2))],
-      border: all(solid(0.35, cyan)),
-      borderRadius: 2,
-    },
-  ),
-
+export const sections: Body = [
   // ------
   // エグゼクティブサマリー
   // ------

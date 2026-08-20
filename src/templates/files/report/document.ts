@@ -3,7 +3,6 @@ import {
   type Block,
   easytable,
   figure,
-  float,
   fn,
   footnote,
   H,

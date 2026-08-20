@@ -294,7 +294,9 @@ const businessReport: Template = {
   samples: [{ suffix: "ts" }, { suffix: "md", options: { markdown: true } }],
   files: async (vars, options) => {
     const assets = {
-      "src/assets/cover.png": await createPlaceholderPng(1280, 900),
+      "src/assets/cover.jpg": readFileSync(
+        path.join(FILES_DIR, "business-report/cover.jpg"),
+      ),
       "src/assets/sample.png": await createPlaceholderPng(800, 300),
     };
     if (options?.markdown) {
@@ -305,7 +307,7 @@ const businessReport: Template = {
           "business-report/document-markdown.ts",
           vars,
         ),
-        "src/utils.ts": renderFile("business-report/utils.ts", vars),
+        "src/helper.ts": renderFile("business-report/helper.ts", vars),
         "src/document.md": renderFile("business-report/document.md", vars),
         ...assets,
       };
@@ -314,7 +316,7 @@ const businessReport: Template = {
       ...commonFiles(vars, "business-report"),
       "src/index.ts": renderFile("business-report/index.ts", vars),
       "src/document.ts": renderFile("business-report/document.ts", vars),
-      "src/utils.ts": renderFile("business-report/utils.ts", vars),
+      "src/helper.ts": renderFile("business-report/helper.ts", vars),
       ...assets,
     };
   },
