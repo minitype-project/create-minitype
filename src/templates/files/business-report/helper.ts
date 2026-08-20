@@ -24,19 +24,28 @@ import {
 // サイズ
 // ------
 
+/** ページ幅（mm）． */
 export const pageWidth = 182;
+
+/** ページ高さ（mm）． */
 export const pageHeight = 257;
 
 // ------
-// 色定数
+// 色定義
 // ------
 
-export const keyColor = cmyk(100, 72, 18, 45);
-export const pale = cmyk(8, 2, 0, 0);
-export const navy = cmyk(100, 72, 18, 45);
-export const cyan = cmyk(64, 6, 0, 0);
+/** キーカラー（ダークネイビー）． */
+export const keyColor = cmyk(100, 70, 20, 45);
+/** 薄い背景色（ペールブルー）． */
+export const pale = cmyk(10, 5, 0, 0);
+/** ネイビー． */
+export const navy = cmyk(100, 70, 15, 45);
+/** シアン． */
+export const cyan = cmyk(65, 5, 0, 0);
+/** 白色． */
 export const white = cmyk(0, 0, 0, 0);
-export const muted = cmyk(58, 35, 24, 20);
+/** グレーがかった青． */
+export const muted = cmyk(60, 35, 25, 20);
 
 const blue = cmyk(88, 48, 0, 12);
 const line = cmyk(42, 12, 0, 0);
@@ -45,6 +54,10 @@ const line = cmyk(42, 12, 0, 0);
 // ブロック定数
 // ------
 
+/**
+ * ヘッダーフロー．
+ * 2ページ目以降に表示され，プロジェクト名とボーダーラインを描画する．
+ */
 export const header: Flow = {
   type: "flow",
   position: "pillar",
@@ -71,6 +84,10 @@ export const header: Flow = {
   page: (pageIndex: number) => pageIndex > 0,
 };
 
+/**
+ * フッターフロー．
+ * 2ページ目以降にページ番号を中央揃えで表示する．
+ */
 export const footer: Flow = {
   type: "flow",
   position: "nombre",
@@ -87,6 +104,10 @@ export const footer: Flow = {
   page: (pageIndex: number) => pageIndex > 0,
 };
 
+/**
+ * 背景フロー．
+ * 全ページに適用され，ネイビーのヘッダー帯，シアンのアクセントライン，左端のペール帯を描画する．
+ */
 export const background: Flow = {
   type: "flow",
   position: "page",
@@ -101,6 +122,10 @@ export const background: Flow = {
   zIndex: -30,
 };
 
+/**
+ * 表紙背景フロー．
+ * 1ページ目のみに適用され，カバー画像をページ全体に表示する．
+ */
 export const coverBackground: Flow = {
   type: "flow",
   position: "page",
@@ -120,6 +145,10 @@ export const coverBackground: Flow = {
 // ブロックヘルパ関数
 // ------
 
+/**
+ * 左ボーダー付きの h2 ブロックを生成する．
+ * @param title - 見出しテキスト．
+ */
 export const h2 = (title: string) => {
   return box([h2Inner(title)], {
     padding: physical(2, 4),
@@ -127,6 +156,19 @@ export const h2 = (title: string) => {
   });
 };
 
+/**
+ * タイトルとブロック群からセクションのボディを生成する．
+ * @param title - セクションタイトル．
+ * @param blocks - セクション内に配置するブロックの配列．
+ */
+export const section = (title: string, blocks: Block[]): Body => {
+  return [h1(title), ...blocks];
+};
+
+/**
+ * 指定した画像ファイルをページ幅に合わせて表示するビジュアルブロックを生成する．
+ * @param src - 画像ファイルのパス．
+ */
 export const visual = (src: string): Block => {
   return box(
     [
@@ -140,6 +182,12 @@ export const visual = (src: string): Block => {
   );
 };
 
+/**
+ * 枠線と背景色を持つパネルブロックを生成する．
+ * @param blocks - パネル内に配置するブロックの配列．
+ * @param _accent - アクセントカラー（現在未使用）．
+ * @default _accent blue
+ */
 export const panel = (blocks: Block[], _accent = blue): Block => {
   return box(blocks, {
     padding: physical(4, 5),
@@ -147,9 +195,15 @@ export const panel = (blocks: Block[], _accent = blue): Block => {
     border: all(solid(0.25, line)),
     background: [fill(cmyk(4, 1, 0, 0))],
     borderRadius: 2,
+    gapRole: "panel",
   });
 };
 
+/**
+ * タイトルと本文を持つコールアウトブロックを生成する．
+ * @param title - コールアウトのタイトル（太字で表示）．
+ * @param text - コールアウトの本文テキスト．
+ */
 export const callout = (title: string, text: string): Block => {
   return box(
     [
@@ -162,10 +216,17 @@ export const callout = (title: string, text: string): Block => {
       border: all(solid(0.35, cyan)),
       background: [fill(cmyk(12, 2, 0, 0))],
       borderRadius: 2,
+      gapRole: "callout",
     },
   );
 };
 
+/**
+ * ラベル，値，補足テキストを縦に並べたメトリクスブロックを生成する．
+ * @param label - メトリクスのラベル（小さいテキストで表示）．
+ * @param value - メトリクスの値（大きい太字で表示）．
+ * @param note - メトリクスの補足テキスト（小さいテキストで表示）．
+ */
 export const metric = (label: string, value: string, note: string): Block => {
   return box(
     [
@@ -194,14 +255,15 @@ export const metric = (label: string, value: string, note: string): Block => {
       border: all(solid(0.25, line)),
       background: [fill(white)],
       borderRadius: 2,
+      gapRole: "metric",
     },
   );
 };
 
-export const section = (title: string, blocks: Block[]): Body => {
-  return [h1(title), ...blocks];
-};
-
+/**
+ * グレーの枠線と背景色を持つ免責事項ブロックを生成する．
+ * @param blocks - 免責事項内に配置するブロックの配列．
+ */
 export const disclaimer = (blocks: Block[]): Block => {
   return box(blocks, {
     padding: physical(4, 5),
@@ -209,5 +271,6 @@ export const disclaimer = (blocks: Block[]): Block => {
     border: all(solid(0.25, cmyk(0, 0, 0, 50))),
     background: [fill(cmyk(0, 0, 0, 5))],
     borderRadius: 2,
+    gapRole: "disclaimer",
   });
 };

@@ -23,7 +23,10 @@ import {
 import {
   coverDate,
   coverDisclaimer,
+  coverLabel,
+  coverNote,
   coverSubtitle,
+  coverTitle,
   sections,
 } from "./document.js";
 import {
@@ -48,48 +51,35 @@ const blockStyles: BlockStyleRecord = {
   paragraph: {
     font: "SourceHanSansJP-Regular",
     size: Q(13),
-    lineHeight: H(22),
+    lineHeight: em(1.7),
     firstIndent: em(1),
     effects: [{ type: "fill", color: cmyk(0, 0, 0, 100) }],
   },
   h1: {
     font: "SourceHanSansJP-Bold",
     size: Q(28),
-    lineHeight: H(36),
-    firstIndent: 0,
     effects: [{ type: "fill", color: keyColor }],
   },
   h2: {
     font: "SourceHanSansJP-Bold",
     size: Q(20),
-    lineHeight: H(25),
-    firstIndent: 0,
     effects: [{ type: "fill", color: keyColor }],
   },
   h3: {
     font: "SourceHanSansJP-Bold",
     size: Q(16),
-    lineHeight: H(22),
-    firstIndent: 0,
     effects: [{ type: "fill", color: keyColor }],
     headingNumberFormat: () => "",
   },
-  li1: {
-    size: Q(13),
-    lineHeight: H(22),
-  },
   code: {
-    size: Q(10),
-    lineHeight: H(17),
+    size: Q(12),
   },
   caption: {
-    size: Q(10),
-    lineHeight: H(17),
+    size: Q(12),
     align: "center",
   },
   footnote: {
-    size: Q(10),
-    lineHeight: H(16),
+    size: Q(11),
   },
 };
 
@@ -126,6 +116,16 @@ const gaps: Gap[] = [
   ["li1", "table", 4],
   ["li2", "table", 4],
   ["lstlisting", "table", 4],
+
+  // カスタムブロック
+  ["fallback", "callout", 4],
+  ["fallback", "metric", 4],
+  ["fallback", "panel", 4],
+  ["fallback", "disclaimer", 4],
+  ["callout", "fallback", 4],
+  ["metric", "fallback", 4],
+  ["panel", "fallback", 4],
+  ["disclaimer", "fallback", 4],
 ];
 
 const commandStyles = {
@@ -161,18 +161,21 @@ const style: Partial<DocumentStyle> = {
 const cover = [
   box(
     [
-      p("BUSINESS REPORT", {
+      p(coverLabel, {
         firstIndent: 0,
         size: 4,
         lineHeight: 6,
         effects: [fill(cyan)],
       }),
       vspace(4),
-      h1([["{{projectName}}"]], {
-        effects: [fill(white)],
-        size: Q(44),
-        lineHeight: em(1.4),
-      }),
+      h1(
+        coverTitle.map((line) => [line]),
+        {
+          effects: [fill(white)],
+          size: Q(44),
+          lineHeight: em(1.4),
+        },
+      ),
       p(coverSubtitle, {
         firstIndent: 0,
         size: Q(22),
@@ -204,6 +207,9 @@ const cover = [
       borderRadius: 2,
     },
   ),
+  ...(coverNote
+    ? [p(coverNote, { firstIndent: 0, effects: [fill(white)] })]
+    : []),
 ];
 
 // ------

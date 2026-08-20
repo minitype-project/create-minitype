@@ -13,10 +13,13 @@ import {
 // 表紙
 // ------
 
+export const coverLabel = "BUSINESS REPORT";
+export const coverTitle = ["{{projectName}}"];
 export const coverDate = "2026年度版";
 export const coverSubtitle = "事業の現状と今後の展望";
 export const coverDisclaimer =
   "本資料は情報提供を目的としたものであり，特定の商品・サービスの推奨を目的とするものではありません．";
+export const coverNote = "";
 
 export const sections: Body = [
   // ------

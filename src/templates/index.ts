@@ -288,8 +288,8 @@ const novel: Template = {
 
 const businessReport: Template = {
   id: "business-report",
-  displayName: "事業報告書",
-  description: "事業報告書・ビジネスレポート（B5，横組）",
+  displayName: "ビジネスレポート",
+  description: "ビジネスレポート，事業報告書（B5，横組）",
   builtinOptions: ["markdown"],
   samples: [{ suffix: "ts" }, { suffix: "md", options: { markdown: true } }],
   files: async (vars, options) => {

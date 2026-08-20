@@ -1,4 +1,5 @@
 ---
+label: label
 title:
   - {{projectName}}
 subtitle: 事業の現状と今後の展望
