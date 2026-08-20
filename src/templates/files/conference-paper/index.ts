@@ -35,36 +35,33 @@ const blockStyles: BlockStyleRecord = {
     font: "SourceHanSansJP-Bold",
     size: Q(13),
     lineHeight: H(18),
-    firstIndent: 0,
-    headingNumberFormat: (index) => `${index[0]}. `,
+    headingNumberFormat: (index) => `${index[0]}　`,
     needspace: 10,
   },
   h2: {
     font: "SourceHanSansJP-Bold",
     size: Q(11),
     lineHeight: H(17),
-    firstIndent: 0,
-    headingNumberFormat: (index) => `${index[0]}.${index[1]} `,
+    headingNumberFormat: (index) => `${index[0]}.${index[1]}　`,
     needspace: 8,
   },
   li1: {
-    firstIndent: em(-2),
+    indent: em(1),
   },
   li2: {
-    firstIndent: em(-2),
+    indent: em(2),
   },
   code: {
+    align: "left",
     font: "SourceCodePro-Regular",
     size: Q(10),
     lineHeight: H(15),
-    firstIndent: 0,
   },
   caption: {
     font: "SourceHanSansJP-Regular",
     size: Q(10),
     lineHeight: H(15),
     align: "center",
-    firstIndent: 0,
   },
   footnote: {
     size: Q(9),
@@ -79,37 +76,40 @@ const commandStyles = {
 
 const gaps: Gap[] = [
   // 見出し
-  ["h1", "paragraph", 2],
-  ["h1", "h2", 2],
-  ["h2", "paragraph", 2],
-  ["paragraph", "h1", 8],
-  ["paragraph", "h2", 5],
+  ["h1", "fallback", 2],
+  ["h2", "fallback", 2],
+  ["fallback", "h1", 4],
+  ["fallback", "h2", 4],
 
   // リスト
-  ["paragraph", "li1", 4],
-  ["li1", "paragraph", 4],
-  ["li2", "paragraph", 4],
-  ["li1", "h1", 8],
-  ["li2", "h1", 8],
   ["li1", "li1", 0],
   ["li1", "li2", 0],
   ["li2", "li1", 0],
   ["li2", "li2", 0],
+  ["fallback", "li1", 2],
+  ["li1", "fallback", 2],
+  ["li2", "fallback", 2],
 
   // 段落
   ["paragraph", "paragraph", 0],
-  ["paragraph", "math", 4],
-  ["math", "paragraph", 4],
-  ["code", "paragraph", 4],
-  ["paragraph", "code", 4],
 
   // 画像
-  ["fallback", "figure", 8],
-  ["figure", "fallback", 8],
+  ["fallback", "figure", 4],
+  ["figure", "fallback", 4],
   ["image", "caption", 4],
 
-  // その他
-  ["fallback", "fallback", 2],
+  // 表
+  ["fallback", "easytable", 4],
+  ["easytable", "fallback", 4],
+  ["caption", "table", 2],
+
+  // 数式
+  ["fallback", "math", 4],
+  ["math", "fallback", 4],
+
+  // ソースコード
+  ["fallback", "lstlisting", 4],
+  ["lstlisting", "fallback", 4],
 ];
 
 // フッタ（ノンブル）

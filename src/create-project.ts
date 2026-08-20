@@ -153,6 +153,10 @@ export class ProjectCreator {
         this.createdFiles.push(`fonts/${file}`);
       }
     }
+    fs.copyFileSync(
+      path.join(fontsDir, "LICENSE.txt"),
+      path.join(targetFontsDir, "LICENSE.txt"),
+    );
   }
 
   /**

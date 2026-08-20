@@ -1,8 +1,10 @@
 import {
+  autoref,
   type Block,
   type Body,
   box,
   cmyk,
+  easytable,
   figure,
   float,
   fn,
@@ -10,11 +12,14 @@ import {
   H,
   h1,
   h2,
+  il,
+  inlineMath,
   li1,
   li2,
   lstlisting,
   math,
   p,
+  physical,
   Q,
   ratio,
   solid,
@@ -116,30 +121,69 @@ export const mainContent: Block[] = [
 
   h1`提案手法`,
   p`本章では，提案手法の詳細について述べる．提案手法は〜を基盤とし，〜を組み合わせることで〜の問題を解決する．全体の処理フローは入力〜，特徴抽出，推論の三段階から構成される．`,
-  p`提案手法の核心となる処理は以下のように定式化される．入力 $x \in \mathbb{R}^d$ に対して，まず変換 $f$ を適用し特徴ベクトル $z$ を得る．次に，重み行列 $W$ と入力の積に非線形関数を適用して出力 $y$ を得る．`,
+  p`提案手法の核心となる処理は以下のように定式化される．入力 ${inlineMath("x \\in \\mathbb{R}^d")} に対して，まず変換 ${inlineMath("f")} を適用し特徴ベクトル ${inlineMath("z")} を得る．次に，重み行列 ${inlineMath("W")} と入力の積に非線形関数を適用して出力 ${inlineMath("y")} を得る．`,
 
   math(["y = \\sigma\\left(W z + b\\right), \\quad z = f(x)"]),
 
-  p`ここで $\sigma$ は活性化関数，$b$ はバイアス項を表す．重み $W$ の学習には〜損失関数を用い，確率的勾配降下法により最適化を行う．また，〜の安定化のため，〜を用いた正則化を適用した．`,
+  p`ここで ${inlineMath("\\sigma")} は活性化関数，${inlineMath("b")} はバイアス項を表す．重み ${inlineMath("W")} の学習には〜損失関数を用い，確率的勾配降下法により最適化を行う．また，〜の安定化のため，〜を用いた正則化を適用した．`,
+  p`実装例を${autoref("lst-model")}に示す．`,
+  lstlisting(
+    [
+      "import torch",
+      "import torch.nn as nn",
+      "",
+      "class ProposedModel(nn.Module):",
+      "  def __init__(self, d: int):",
+      "    super().__init__()",
+      "    self.f = nn.Linear(d, d)",
+      "    self.W = nn.Linear(d, 1)",
+      "",
+      "  def forward(self, x: torch.Tensor):",
+      "    z = torch.relu(self.f(x))",
+      "    return torch.sigmoid(self.W(z))",
+    ],
+    { lang: "python", title: "model.py", label: "lst-model" },
+  ),
 
   h1`実験`,
   p`提案手法の有効性を検証するため，〜データセットを用いた実験を行った．主な実験設定を以下に示す．`,
   li1`実験環境`,
-  li2`CPU: 〜，GPU: 〜，メモリ: 〜`,
+  li2`CPU：〜，GPU：〜，メモリ：〜`,
   li1`データセット`,
-  li2`学習データ: 〜サンプル（〜クラス）`,
-  li2`テストデータ: 〜サンプル`,
-  li1`評価指標: 精度（Accuracy），F1 スコア（マクロ平均）`,
-  p`ベースラインとして，先行研究 ${cite("yamada2023")} ${cite("tanaka2023")} の手法を用いた．5-fold クロスバリデーションにより性能を評価した．`,
+  li2`学習データ：〜サンプル（〜クラス）`,
+  li2`テストデータ：〜サンプル`,
+  li1`評価指標：精度（Accuracy），F1 スコア（マクロ平均）`,
+  p`ベースラインとして，先行研究 ${cite("yamada2023", "tanaka2023")} の手法を用いた．5-fold クロスバリデーションにより性能を評価した．`,
+  p`各手法の性能比較を${autoref("table:results")}に示す．`,
+  easytable(
+    [
+      ["手法", "精度（%）", "F1 スコア"],
+      [il`ベースライン A ${cite("yamada2023")}`, "XX.X", "XX.X"],
+      [il`ベースライン B ${cite("tanaka2023")}`, "XX.X", "XX.X"],
+      ["提案手法", "XX.X", "XX.X"],
+    ],
+    {
+      caption: "各手法の性能比較",
+      label: "table:results",
+      style: {
+        cellPadding: physical(2, 2),
+        textStyle: (rowIndex) => ({
+          lineHeight: H(15),
+          font: rowIndex === 0 ? "SourceHanSansJP-Regular" : undefined,
+        }),
+      },
+    },
+  ),
 
   float("top", [
     figure("src/result.png", "各手法の性能比較（〜データセット）", {
       width: ratio(0.95),
       align: "center",
+      label: "figure:results",
     }),
   ]),
 
-  p`実験結果を図1に示す．提案手法は〜において全てのベースラインを上回り，最高精度を達成した．特に〜の条件下では，従来の最高精度と比較して X.X ポイントの改善が確認された．一方，〜の場合には改善幅が小さく，この点については考察で述べる．`,
+  p`実験結果を${autoref("figure:results")}に示す．提案手法は〜において全てのベースラインを上回り，最高精度を達成した．特に〜の条件下では，従来の最高精度と比較して X.X ポイントの改善が確認された．一方，〜の場合には改善幅が小さく，この点については考察で述べる．`,
   p`また，計算効率の観点からも評価を行った．提案手法の推論時間はベースライン ${cite("yamada2023")} と比較して 〜% 削減され，実用上十分な処理速度を実現した．学習収束速度についても，提案手法は〜エポック以内に安定した性能に達し，〜エポックを要したベースラインに対して高効率であった．`,
 
   h1`考察`,
