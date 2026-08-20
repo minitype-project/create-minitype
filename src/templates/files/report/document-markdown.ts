@@ -5,26 +5,20 @@ import {
   type Block,
   type BlockExtender,
   type CodeMapper,
-  cmyk,
-  code,
+  figure,
+  type ImageMapper,
+  lstlisting,
   mdString,
-  physical,
-  solid,
+  ratio,
 } from "@minitype/minitype";
 import { parse } from "yaml";
 
 const codeMapper: CodeMapper = (_code: string, lang?: string) => {
-  return [
-    {
-      type: "box",
-      blocks: [code(_code, lang)],
-      style: {
-        padding: physical(3, 2),
-        border: physical(solid(0.2, cmyk(0, 0, 0, 80)), undefined),
-        gapRole: "code",
-      },
-    },
-  ];
+  return [lstlisting(_code.split("\n"), { lang })];
+};
+
+const imageMapper: ImageMapper = (src: string, alt: string) => {
+  return [figure(src, alt, { width: ratio(0.6), align: "center" })];
 };
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -48,5 +42,5 @@ if (match) {
 export { author, date, title };
 
 export const mainContent: (Block | BlockExtender)[] = [
-  ...mdString(bodyContent, { code: codeMapper }).blocks,
+  ...mdString(bodyContent, { code: codeMapper, image: imageMapper }).blocks,
 ];

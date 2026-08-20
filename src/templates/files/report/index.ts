@@ -39,14 +39,14 @@ const blockStyles: BlockStyleRecord = {
     font: "SourceHanSansJP-Regular",
     size: Q(20),
     firstIndent: 0,
-    headingNumberFormat: (index) => `${index[0]}. `,
+    headingNumberFormat: (index) => `${index[0]}　`,
     needspace: 10,
   },
   h3: {
     font: "SourceHanSansJP-Regular",
     size: Q(16),
     firstIndent: 0,
-    headingNumberFormat: (index) => `${index[0]}.${index[1]} `,
+    headingNumberFormat: (index) => `${index[0]}.${index[1]}　`,
     needspace: 8,
   },
   li1: {
@@ -76,41 +76,48 @@ const commandStyles = {
 
 const gaps: Gap[] = [
   // 見出し
-  ["h1", "paragraph", 6],
-  ["h2", "paragraph", 4],
-  ["h3", "paragraph", 3],
-  ["fallback", "h1", 14],
-  ["fallback", "h2", 10],
+  ["h1", "fallback", 6],
+  ["h2", "fallback", 4],
+  ["h3", "fallback", 2],
+  ["fallback", "h1", 8],
+  ["fallback", "h2", 8],
   ["fallback", "h3", 6],
-  ["paragraph", "h2", 10],
-  ["paragraph", "h3", 6],
-  ["h2", "h3", 2],
-  ["li1", "h2", 10],
-  ["li2", "h2", 10],
 
   // リスト
-  ["paragraph", "li1", 2],
-  ["li1", "paragraph", 4],
-  ["li1", "li1", 1],
+  ["li1", "li1", 2],
   ["li1", "li2", 2],
   ["li2", "li1", 2],
-  ["li2", "li2", 1],
-
-  // コード・数式
-  ["paragraph", "code", 4],
-  ["code", "paragraph", 6],
-  ["paragraph", "math", 4],
-  ["math", "paragraph", 4],
-
-  // 図表
-  ["fallback", "figure", 8],
-  ["figure", "fallback", 8],
-  ["image", "caption", 4],
-  ["caption", "paragraph", 6],
+  ["li2", "li2", 2],
+  ["fallback", "li1", 2],
+  ["li1", "fallback", 2],
+  ["li2", "fallback", 2],
 
   // 段落
   ["paragraph", "paragraph", 2],
-  ["fallback", "fallback", 4],
+
+  // 画像
+  ["fallback", "figure", 4],
+  ["figure", "fallback", 4],
+  ["image", "caption", 4],
+
+  // 表
+  ["fallback", "easytable", 4],
+  ["easytable", "fallback", 4],
+  ["caption", "table", 2],
+  ["paragraph", "table", 4],
+  ["math", "table", 4],
+  ["math", "table", 4],
+  ["li1", "table", 4],
+  ["li2", "table", 4],
+  ["lstlisting", "table", 4],
+
+  // 数式
+  ["fallback", "math", 4],
+  ["math", "fallback", 4],
+
+  // ソースコード
+  ["fallback", "lstlisting", 4],
+  ["lstlisting", "fallback", 4],
 ];
 
 // ------
@@ -138,7 +145,7 @@ const header: Flow = {
   position: "pillar",
   blockOffset: -10,
   blocks: [
-    p("{{projectName}}", {
+    p(title, {
       align: "right",
       firstIndent: 0,
       size: 3,
