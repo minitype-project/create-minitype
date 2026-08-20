@@ -291,6 +291,7 @@ const businessReport: Template = {
   displayName: "事業報告書",
   description: "事業報告書・ビジネスレポート（B5，横組）",
   builtinOptions: ["markdown"],
+  samples: [{ suffix: "ts" }, { suffix: "md", options: { markdown: true } }],
   files: async (vars, options) => {
     const assets = {
       "src/assets/cover.png": await createPlaceholderPng(1280, 900),
