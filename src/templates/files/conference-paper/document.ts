@@ -176,7 +176,7 @@ export const mainContent: Block[] = [
   ),
 
   float("top", [
-    figure("src/result.png", "各手法の性能比較（〜データセット）", {
+    figure("src/sample.png", "各手法の性能比較（〜データセット）", {
       width: ratio(0.95),
       align: "center",
       label: "figure:results",

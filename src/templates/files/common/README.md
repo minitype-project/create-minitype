@@ -74,7 +74,7 @@ code(
 );
 
 // 画像，キャプション
-figure("image.png", { width: ratio(0.8), align: "center" });
+figure("sample.png", { width: ratio(0.8), align: "center" });
 caption("画像のキャプション");
 
 // 表，キャプション

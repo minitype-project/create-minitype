@@ -84,7 +84,7 @@ export const mainContent: Block[] = [
 
 
   float("top", [
-    figure("src/result.png", "〜の実験結果", {
+    figure("src/sample.png", "〜の実験結果", {
       width: ratio(0.8),
       align: "center",
       label: "figure:result",

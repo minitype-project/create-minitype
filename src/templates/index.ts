@@ -181,7 +181,7 @@ const report: Template = {
       "src/document.ts": renderFile("report/document.ts", vars),
       "src/helper.ts": renderFile("report/helper.ts", vars),
       "src/refs.ts": renderFile("report/refs.ts", vars),
-      "src/result.png": await createPlaceholderPng(400, 300),
+      "src/sample.png": await createPlaceholderPng(400, 300),
     };
   },
 };
@@ -194,8 +194,8 @@ const technicalBook: Template = {
     ...commonFiles(vars, "technical-book"),
     "src/index.ts": renderFile("technical-book/index.ts", vars),
     "src/document.ts": renderFile("technical-book/document.ts", vars),
-    "src/utils.ts": renderFile("technical-book/utils.ts", vars),
-    "src/example.png": await createPlaceholderPng(400, 250),
+    "src/helper.ts": renderFile("technical-book/helper.ts", vars),
+    "src/sample.png": await createPlaceholderPng(400, 250),
   }),
 };
 
@@ -209,7 +209,7 @@ const conferencePaper: Template = {
     "src/document.ts": renderFile("conference-paper/document.ts", vars),
     "src/refs.ts": renderFile("conference-paper/refs.ts", vars),
     "src/helper.ts": renderFile("conference-paper/helper.ts", vars),
-    "src/result.png": await createPlaceholderPng(400, 250),
+    "src/sample.png": await createPlaceholderPng(400, 250),
   }),
 };
 
@@ -223,7 +223,7 @@ const thesis: Template = {
     "src/document.ts": renderFile("thesis/document.ts", vars),
     "src/utils.ts": renderFile("thesis/utils.ts", vars),
     "src/refs.ts": renderFile("thesis/refs.ts", vars),
-    "src/result.png": await createPlaceholderPng(400, 250),
+    "src/sample.png": await createPlaceholderPng(400, 250),
   }),
 };
 

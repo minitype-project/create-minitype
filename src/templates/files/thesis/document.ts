@@ -226,7 +226,7 @@ const chapter3: Body = [
 // ------
 
 const figResult: Box = {
-  ...figure("src/result.png", "実験結果のグラフ", {
+  ...figure("src/sample.png", "実験結果のグラフ", {
     width: ratio(0.9),
     align: "center",
   }),
