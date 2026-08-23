@@ -19,7 +19,6 @@ import {
   physical,
   Q,
   ratio,
-  vspace,
 } from "@minitype/minitype";
 
 import { abstract, c, code, h2 } from "./helper.js";

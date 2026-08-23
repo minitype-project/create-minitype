@@ -14,9 +14,13 @@ import {
 } from "@minitype/minitype";
 
 import { mainGroup, titleGroup } from "./document.js";
-import { boldFont, regularFont } from "./utils.js";
+import { boldFont, regularFont } from "./helper.js";
 
-const block: BlockStyleRecord = {
+// ------
+// スタイル定義
+// ------
+
+const blockStyles: BlockStyleRecord = {
   paragraph: {
     font: regularFont,
     size: Q(14),
@@ -46,13 +50,30 @@ const block: BlockStyleRecord = {
     headingNumberFormat: (index) => `${index[0]}.${index[1]}.${index[2]}　`,
     needspace: 10,
   },
+  li1: {
+    indent: em(1),
+  },
+  li2: {
+    indent: em(2),
+  },
+  code: {
+    align: "left",
+    font: "SourceCodePro-Regular",
+    size: Q(12),
+    lineHeight: H(18),
+  },
   caption: {
+    font: regularFont,
     align: "center",
     firstIndent: 0,
   },
+  footnote: {
+    size: Q(11),
+    lineHeight: H(17),
+  },
 };
 
-const command: CommandStyleRecord = {
+const commandStyles: CommandStyleRecord = {
   b: {
     font: boldFont,
   },
@@ -65,6 +86,15 @@ const gaps: Gap[] = [
   ["h3", "fallback", 3],
   ["fallback", "h2", 10],
   ["fallback", "h3", 6],
+
+  // リスト
+  ["li1", "li1", 0],
+  ["li1", "li2", 0],
+  ["li2", "li1", 0],
+  ["li2", "li2", 0],
+  ["fallback", "li1", 2],
+  ["li1", "fallback", 4],
+  ["li2", "fallback", 4],
 
   // 図（box）↔ 周辺ブロック
   ["paragraph", "box", 6],
@@ -80,7 +110,19 @@ const gaps: Gap[] = [
   ["paragraph", "figure", 4],
   ["figure", "fallback", 6],
   ["fallback", "figure", 4],
+
+  // 表
+  ["fallback", "easytable", 6],
+  ["easytable", "fallback", 6],
+
+  // ソースコード
+  ["fallback", "lstlisting", 4],
+  ["lstlisting", "fallback", 4],
 ];
+
+// ------
+// 組版処理
+// ------
 
 await minitype(
   [titleGroup, mainGroup],
@@ -88,8 +130,8 @@ await minitype(
     size: "A4",
     writingMode: "horizontal",
     padding: physical(36, 28, 32, 28),
-    block,
-    command,
+    block: blockStyles,
+    command: commandStyles,
     gaps,
   },
   {

@@ -131,7 +131,7 @@ const renderFile = (relativePath: string, vars: TemplateVars): string => {
  * @param templateName テンプレートの名前．
  * @returns 共通ファイルのオブジェクト．
  */
-const commonFiles = (
+const allProjectFiles = (
   vars: TemplateVars,
   templateName: string,
 ): Record<string, string> => {
@@ -165,23 +165,24 @@ const report: Template = {
   builtinOptions: ["markdown"],
   samples: [{ suffix: "ts" }, { suffix: "md", options: { markdown: true } }],
   files: async (vars, options) => {
+    const commonFiles = {
+      ...allProjectFiles(vars, "report"),
+      "src/index.ts": renderFile("report/index.ts", vars),
+      "src/sample.png": await createPlaceholderPng(400, 300),
+    };
     if (options?.markdown) {
       return {
-        ...commonFiles(vars, "report"),
+        ...commonFiles,
         "package.json": renderFile("common/package-yaml.json", vars),
-        "src/index.ts": renderFile("report/index.ts", vars),
         "src/document.ts": renderFile("report/document-markdown.ts", vars),
         "src/document.md": renderFile("report/document.md", vars),
-        "src/sample.png": await createPlaceholderPng(400, 300),
       };
     }
     return {
-      ...commonFiles(vars, "report"),
-      "src/index.ts": renderFile("report/index.ts", vars),
+      ...allProjectFiles(vars, "report"),
       "src/document.ts": renderFile("report/document.ts", vars),
       "src/helper.ts": renderFile("report/helper.ts", vars),
       "src/refs.ts": renderFile("report/refs.ts", vars),
-      "src/sample.png": await createPlaceholderPng(400, 300),
     };
   },
 };
@@ -191,7 +192,7 @@ const technicalBook: Template = {
   displayName: "技術書",
   description: "技術書，マニュアル（B5，横組）",
   files: async (vars) => ({
-    ...commonFiles(vars, "technical-book"),
+    ...allProjectFiles(vars, "technical-book"),
     "src/index.ts": renderFile("technical-book/index.ts", vars),
     "src/document.ts": renderFile("technical-book/document.ts", vars),
     "src/helper.ts": renderFile("technical-book/helper.ts", vars),
@@ -204,7 +205,7 @@ const conferencePaper: Template = {
   displayName: "会議論文",
   description: "会議論文（B5，2段組）",
   files: async (vars) => ({
-    ...commonFiles(vars, "conference-paper"),
+    ...allProjectFiles(vars, "conference-paper"),
     "src/index.ts": renderFile("conference-paper/index.ts", vars),
     "src/document.ts": renderFile("conference-paper/document.ts", vars),
     "src/refs.ts": renderFile("conference-paper/refs.ts", vars),
@@ -218,10 +219,10 @@ const thesis: Template = {
   displayName: "学位論文",
   description: "学位論文（A4, 横組）",
   files: async (vars) => ({
-    ...commonFiles(vars, "thesis"),
+    ...allProjectFiles(vars, "thesis"),
     "src/index.ts": renderFile("thesis/index.ts", vars),
     "src/document.ts": renderFile("thesis/document.ts", vars),
-    "src/utils.ts": renderFile("thesis/utils.ts", vars),
+    "src/helper.ts": renderFile("thesis/helper.ts", vars),
     "src/refs.ts": renderFile("thesis/refs.ts", vars),
     "src/sample.png": await createPlaceholderPng(400, 250),
   }),
@@ -233,7 +234,7 @@ const invoice: Template = {
   description: "請求書（A4, 横組）です．",
   files: (vars) => {
     return {
-      ...commonFiles(vars, "invoice"),
+      ...allProjectFiles(vars, "invoice"),
       "package.json": renderFile("common/package-yaml.json", vars),
       "src/index.ts": renderFile("invoice/index.ts", vars),
       "src/document.ts": renderFile("invoice/document.ts", vars),
@@ -248,7 +249,7 @@ const cv: Template = {
   description: "履歴書（A4, 横組）です．",
   files: async (vars) => {
     return {
-      ...commonFiles(vars, "cv"),
+      ...allProjectFiles(vars, "cv"),
       "package.json": renderFile("common/package-yaml.json", vars),
       "src/index.ts": renderFile("cv/index.ts", vars),
       "src/document.ts": renderFile("cv/document.ts", vars),
@@ -264,7 +265,7 @@ const slide: Template = {
   description: "プレゼンテーション用スライド（16:9, 横組）です．",
   files: async (vars) => {
     return {
-      ...commonFiles(vars, "slide"),
+      ...allProjectFiles(vars, "slide"),
       "src/index.ts": renderFile("slide/index.ts", vars),
       "src/document.ts": renderFile("slide/document.ts", vars),
       "src/helper.ts": renderFile("slide/helper.ts", vars),
@@ -279,7 +280,7 @@ const novel: Template = {
   description: "小説（縦組）です．用紙サイズを調整することができます．",
   files: (vars) => {
     return {
-      ...commonFiles(vars, "novel"),
+      ...allProjectFiles(vars, "novel"),
       "src/index.ts": renderFile("novel/index.ts", vars),
       "src/document.md": renderFile("novel/document.md", vars),
     };
@@ -293,31 +294,59 @@ const businessReport: Template = {
   builtinOptions: ["markdown"],
   samples: [{ suffix: "ts" }, { suffix: "md", options: { markdown: true } }],
   files: async (vars, options) => {
-    const assets = {
+    const commonFiles = {
+      ...allProjectFiles(vars, "business-report"),
+      "src/index.ts": renderFile("business-report/index.ts", vars),
       "src/assets/cover.jpg": readFileSync(
         path.join(FILES_DIR, "business-report/cover.jpg"),
       ),
+      "src/helper.ts": renderFile("business-report/helper.ts", vars),
       "src/assets/sample.png": await createPlaceholderPng(800, 300),
     };
     if (options?.markdown) {
       return {
-        ...commonFiles(vars, "business-report"),
-        "src/index.ts": renderFile("business-report/index.ts", vars),
+        ...commonFiles,
         "src/document.ts": renderFile(
           "business-report/document-markdown.ts",
           vars,
         ),
-        "src/helper.ts": renderFile("business-report/helper.ts", vars),
         "src/document.md": renderFile("business-report/document.md", vars),
-        ...assets,
       };
     }
     return {
-      ...commonFiles(vars, "business-report"),
-      "src/index.ts": renderFile("business-report/index.ts", vars),
+      ...commonFiles,
       "src/document.ts": renderFile("business-report/document.ts", vars),
-      "src/helper.ts": renderFile("business-report/helper.ts", vars),
-      ...assets,
+    };
+  },
+};
+
+const visualBook: Template = {
+  id: "visual-book",
+  displayName: "ビジュアルブック",
+  description: "視覚的な 2 段組のドキュメント（B5，横組）",
+  builtinOptions: ["markdown"],
+  samples: [{ suffix: "ts" }, { suffix: "md", options: { markdown: true } }],
+  files: async (vars, options) => {
+    const commonFiles = {
+      ...allProjectFiles(vars, "visual-book"),
+      "src/index.ts": renderFile("visual-book/index.ts", vars),
+      "src/helper.ts": renderFile("visual-book/helper.ts", vars),
+      "src/assets/header.jpg": readFileSync(
+        path.join(FILES_DIR, "visual-book/header.jpg"),
+      ),
+      "src/sample.png": await createPlaceholderPng(400, 250),
+    };
+    if (options?.markdown) {
+      return {
+        ...commonFiles,
+        "src/document.ts": renderFile("visual-book/document-markdown.ts", vars),
+        "src/document.md": renderFile("visual-book/document.md", vars),
+        ...commonFiles,
+      };
+    }
+    return {
+      ...commonFiles,
+      "src/document.ts": renderFile("visual-book/document.ts", vars),
     };
   },
 };
@@ -332,6 +361,7 @@ export const templates: Record<string, Template> = [
   slide,
   novel,
   businessReport,
+  visualBook,
 ].reduce(
   (acc, tmpl) => {
     acc[tmpl.id] = tmpl;

@@ -1,9 +1,8 @@
 import {
   autoref,
   type Body,
-  type Box,
   clearpage,
-  code,
+  easytable,
   em,
   type Flow,
   figure,
@@ -11,19 +10,41 @@ import {
   fn,
   footnote,
   type Group,
+  H,
+  il,
+  inlineMath,
   li1,
+  li2,
   listOfImages,
+  lstlisting,
   math,
   p,
   page,
+  physical,
   Q,
   ratio,
   toc,
   vspace,
 } from "@minitype/minitype";
-
+import { boldFont, H1, H2, H3 } from "./helper.js";
 import { bibliography, cite } from "./refs.js";
-import { boldFont, H1, H2, H3 } from "./utils.js";
+
+// ------
+// 論文情報
+// ------
+
+/** 論文タイトル（日本語）． */
+const title = "論文タイトル";
+/** 論文タイトル（英語）． */
+const titleEn = "Thesis Title in English";
+/** 著者名． */
+const authorName = "著者 氏名";
+/** 指導教員名． */
+const supervisor = "教授 〇〇 〇〇";
+/** 年度． */
+const fiscalYear = "〇〇〇〇";
+/** 提出年月（例：2025 年 3 月）． */
+const submissionDate = "YYYY 年 MM 月";
 
 // ------
 // タイトルページ
@@ -38,28 +59,28 @@ export const titleGroup: Group = {
       blockOffset: 70,
       inlineSize: 150,
       blocks: [
-        p("〇〇〇〇年度 卒業論文", {
+        p(`${fiscalYear}年度 卒業論文`, {
           align: "center",
           firstIndent: 0,
           size: Q(20),
           lineHeight: em(1.5),
         }),
         vspace(20),
-        p("論文タイトル", {
+        p(title, {
           align: "center",
           firstIndent: 0,
           font: boldFont,
           size: Q(28),
           lineHeight: em(1.5),
         }),
-        p("Thesis Title in English", {
+        p(titleEn, {
           align: "center",
           firstIndent: 0,
           size: Q(18),
           lineHeight: em(1.5),
         }),
         vspace(40),
-        p("著者 氏名", {
+        p(authorName, {
           align: "center",
           firstIndent: 0,
           font: boldFont,
@@ -67,14 +88,14 @@ export const titleGroup: Group = {
           lineHeight: em(1.5),
         }),
         vspace(5),
-        p("指導教員：教授 〇〇 〇〇", {
+        p(`指導教員：${supervisor}`, {
           align: "center",
           firstIndent: 0,
           size: Q(20),
           lineHeight: em(1.5),
         }),
         vspace(10),
-        p("YYYY 年 MM 月", {
+        p(submissionDate, {
           align: "center",
           firstIndent: 0,
           size: Q(20),
@@ -88,6 +109,7 @@ export const titleGroup: Group = {
 // ------
 // ノンブル
 // ------
+
 const nombre: Flow = {
   type: "flow",
   position: "nombre",
@@ -168,6 +190,7 @@ const chapter1: Body = [
   H2("研究目的", "s1-2"),
   p`本研究の目的は，〜である．`,
   li1`目的1：〜`,
+  li2`詳細：〜`,
   li1`目的2：〜`,
   li1`目的3：〜`,
   vspace(4),
@@ -205,18 +228,23 @@ const chapter3: Body = [
 
   H2("概要", "s3-1"),
   p`提案手法の全体的な流れを説明する．`,
+  li1`ステップ1：入力データの前処理`,
+  li2`詳細：〜の形式に変換する`,
+  li1`ステップ2：特徴抽出`,
+  li1`ステップ3：推論と後処理`,
+  vspace(4),
 
   H2("詳細", "s3-2"),
-  H3("ステップ1", "s3-2-1"),
-  p`ステップ1の詳細説明．`,
-  math(["\\hat{y} = \\text{argmax}_{y \\in Y} P(y | x)"]),
+  H3("定式化", "s3-2-1"),
+  p`入力 ${inlineMath("x \\in \\mathbb{R}^d")} に対して，変換 ${inlineMath("f")} を適用し出力 ${inlineMath("y")} を得る．`,
+  math(["y = \\hat{y} = \\text{argmax}_{y \\in Y} P(y | x)"]),
 
-  H3("ステップ2", "s3-2-2"),
-  p`ステップ2の詳細説明．`,
-  code(
-    ["def propose(x):", "    # 提案手法の実装", "    return result"],
-    "python",
-  ),
+  H3("実装", "s3-2-2"),
+  p`提案手法の実装例を示す．`,
+  lstlisting(["def propose(x):", "    # 提案手法の実装", "    return result"], {
+    lang: "python",
+    title: "propose.py",
+  }),
 
   clearpage(),
 ];
@@ -225,24 +253,46 @@ const chapter3: Body = [
 // 第4章
 // ------
 
-const figResult: Box = {
-  ...figure("src/sample.png", "実験結果のグラフ", {
-    width: ratio(0.9),
-    align: "center",
-  }),
-  id: "fig-result",
-};
-
 const chapter4: Body = [
   H1("実験と評価", "ch4"),
   p`実験設定と結果について述べる．`,
 
   H2("実験設定", "s4-1"),
   p`実験の設定を説明する．`,
+  li1`実験環境`,
+  li2`CPU：〜，GPU：〜，メモリ：〜`,
+  li1`データセット：〜データセット（学習：〜件，評価：〜件）`,
+  li1`評価指標：精度（Accuracy），F1 スコア（マクロ平均）`,
+  vspace(4),
 
   H2("実験結果", "s4-2"),
-  float("top", [figResult]),
-  p`${autoref("fig-result")}に実験結果を示す．`,
+  float("top", [
+    figure("src/sample.png", "実験結果のグラフ", {
+      width: ratio(0.9),
+      align: "center",
+      label: "fig-result",
+    }),
+  ]),
+  p`${autoref("fig-result")}に実験結果を示す．${autoref("table:results")}に各手法の定量的比較を示す．`,
+  easytable(
+    [
+      ["手法", "精度（%）", "再現率（%）", "F1 スコア"],
+      [il`ベースライン A ${cite("r01")}`, "XX.X", "XX.X", "XX.X"],
+      [il`ベースライン B ${cite("r02")}`, "XX.X", "XX.X", "XX.X"],
+      ["提案手法", "XX.X", "XX.X", "XX.X"],
+    ],
+    {
+      caption: "各手法の定量的比較",
+      label: "table:results",
+      style: {
+        cellPadding: physical(2, 4),
+        textStyle: (rowIndex) => ({
+          lineHeight: H(18),
+          font: rowIndex === 0 ? boldFont : undefined,
+        }),
+      },
+    },
+  ),
 
   clearpage(),
 ];
