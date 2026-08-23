@@ -11,7 +11,7 @@ profile:
   website: https://example.com
   summary: >-
     〜に関する研究開発に携わってきました．特に〜の分野で〜の実績があります．
-  photo: src/photo.png
+  photo: src/sample.png
 
 education:
   - period: YYYY年3月
@@ -34,26 +34,26 @@ work:
 skills:
   - category: プログラミング言語
     items:
-    - TypeScript
-    - Python
-    - Rust
-    - Go
+      - TypeScript
+      - Python
+      - Rust
+      - Go
   - category: フレームワーク・ライブラリ
     items:
-    - React
-    - Node.js
-    - FastAPI
+      - React
+      - Node.js
+      - FastAPI
   - category: ツール・インフラ
     items:
-    - Git
-    - Docker
-    - AWS
-    - Linux
+      - Git
+      - Docker
+      - AWS
+      - Linux
   - category: 言語
     items:
-    - 日本語（母語）
-    - 英語（TOEIC 000点）
+      - 日本語（母語）
+      - 英語（TOEIC 000点）
 
 publications:
-  - 'Author 1, Author 2, Author 3. Title, Conference, pp.〇〇–〇〇, YYYY.'
-  - '著者1，著者2，著者3．論文タイトル．学会名，pp.〇〇–〇〇，YYYY．'
+  - "Author 1, Author 2, Author 3. Title, Conference, pp.〇〇–〇〇, YYYY."
+  - "著者1，著者2，著者3．論文タイトル．学会名，pp.〇〇–〇〇，YYYY．"

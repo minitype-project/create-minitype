@@ -1,150 +1,162 @@
 import {
-  type Body,
-  bottom,
-  box,
-  caption,
-  type Flow,
+  autoref,
+  type Block,
+  easytable,
+  figure,
   float,
   fn,
   footnote,
+  H,
   h1,
   h3,
+  il,
   li1,
+  li2,
+  lstlisting,
   math,
   newpage,
   p,
-  page,
-  solid,
+  physical,
+  Q,
+  ratio,
   vspace,
 } from "@minitype/minitype";
 
-import { abstract, code, h2, keyColor } from "./utils.js";
+import { abstract, c, code, h2 } from "./helper.js";
 
 // ------
 // メタデータ
 // ------
 
-const bookTitle = "技術書タイトル";
-
-// ------
-// 柱，ノンブル
-// ------
-
-const header: Flow = {
-  type: "flow",
-  position: "pillar",
-  blockOffset: -14,
-  blocks: [
-    box(
-      [
-        p(bookTitle, {
-          align: (pageIndex: number) =>
-            pageIndex % 2 === 1 ? "right" : "left",
-          font: "SourceHanSansJP-Regular",
-          firstIndent: 0,
-          size: 3,
-          lineHeight: 4.5,
-        }),
-      ],
-      {
-        padding: bottom(3),
-        border: bottom(solid(0.2, keyColor)),
-      },
-    ),
-  ],
-  page: (pageIndex: number) => pageIndex >= 0,
-};
-
-const footer: Flow = {
-  type: "flow",
-  position: "nombre",
-  blockOffset: 8,
-  blocks: [
-    p([[page]], {
-      align: "center",
-      firstIndent: 0,
-      size: 3,
-      lineHeight: 4.5,
-    }),
-  ],
-};
+export const bookTitle = "技術書タイトル";
 
 // ------
 // 本文
 // ------
 
-export const body: Body = [
-  header,
-  footer,
-
+export const body: Block[] = [
   h1`第1章 Gitとは何か`,
 
-  abstract([p`あいうえお．`]),
+  abstract([
+    p`本章では，バージョン管理システムである Git の基本概念と，本書全体の構成について説明する．`,
+  ]),
 
-  p`本書では，Gitを用いたソースコード管理の基本について説明します．Gitは，プログラムの変更履歴を記録し，過去の状態に戻したり，複数人で同じプロジェクトを編集したりするためのツールです．`,
-
-  h2("Gitを使う理由"),
-  p(
-    "ソフトウェア開発では，ファイルを少しずつ変更しながら作業を進めます．その過程では，どこを変更したのか，なぜ変更したのか，いつ変更したのかを後から確認できることが重要です．Gitを使うと，変更の単位をコミットとして記録し，作業の流れを明確に残すことができます．",
-  ),
+  p`Git は，ファイルの変更履歴を記録・管理するための分散型バージョン管理システムです．プログラムの変更内容をコミットという単位で保存し，過去の任意の時点の状態に戻したり，複数の作業を並行して進めたりすることができます．`,
 
   h2("本書の構成"),
+  p`本書は以下の4章から構成されます．`,
   li1`第1章：Gitとは何か`,
+  li2`バージョン管理の基本概念`,
+  li2`Gitを使う理由`,
   li1`第2章：基本的な使い方`,
+  li2`リポジトリの作成とコミット`,
+  li2`設定ファイルの記述方法`,
   li1`第3章：ブランチを用いた作業`,
+  li2`ブランチの作成・統合`,
   li1`第4章：リモートリポジトリとの連携`,
-  vspace(4),
+  li2`GitHubを用いたチーム開発`,
+
+  h2("Gitを使う理由"),
+  p`ソフトウェア開発では，ファイルを少しずつ変更しながら作業を進めます．Gitを使うと，変更の単位をコミットとして記録し，${fn("why-git")}作業の流れを明確に残すことができます．また，ブランチ機能を活用することで，複数の作業を独立して進めることができます．`,
+  footnote(
+    "why-git",
+    "Git を使わない場合，ファイル名に日付を付けて管理する方法が一般的でしたが，変更の意図や差分を追跡することが困難でした．",
+  ),
 
   newpage(),
 
   h1`第2章 基本的な使い方`,
 
-  abstract([p`あいうえお．`]),
+  abstract([
+    p`本章では，Gitリポジトリの作成からコミットの記録まで，基本的な操作の流れを説明する．設定ファイルの書き方についても解説する．`,
+  ]),
+
+  h2("Gitの設定"),
+  p`Gitを初めて使う際には，ユーザ名とメールアドレスを設定します．これらの情報は，コミットに記録される著者情報として使われます．設定は，ホームディレクトリの${fn("gitconfig-path")}${il`${c(".gitconfig")}`}ファイルに保存されます．`,
+  footnote(
+    "gitconfig-path",
+    "macOS・Linux では ~/.gitconfig，Windows では %USERPROFILE%\\.gitconfig に保存されます．",
+  ),
+  lstlisting(
+    [
+      "[user]",
+      "    name  = Your Name",
+      "    email = you@example.com",
+      "",
+      "[core]",
+      "    editor = vim",
+      "",
+      "[alias]",
+      "    st = status",
+      "    co = checkout",
+      "    br = branch",
+      "    lg = log --oneline --graph",
+    ],
+    { lang: "ini", title: ".gitconfig", label: "lst:gitconfig" },
+  ),
 
   h2("リポジトリの作成"),
-  p`Gitで管理する作業場所をリポジトリと呼びます．既存のディレクトリをGitで管理するには，対象のディレクトリで次のコマンドを実行します．`,
+  p`Gitで管理する作業場所をリポジトリと呼びます．既存のディレクトリをGitで管理するには，次のコマンドを実行します．`,
   code("git init", "bash"),
 
-  p`このコマンドを実行すると，現在のディレクトリにGitの管理情報が作成されます．以後，このディレクトリ内のファイル変更をGitで記録できるようになります．`,
-
-  h2("変更状態の確認"),
-  p`作業中のファイルがどのような状態にあるかを確認するには，次のコマンドを使います．`,
-  code("git status", "bash"),
-
-  p`git statusは，変更されたファイル，まだGitに追加されていないファイル，コミット待ちのファイルなどを表示します．作業の途中でこまめに実行すると，現在の状態を把握しやすくなります．`,
+  p`このコマンドを実行すると，現在のディレクトリにGitの管理情報が格納された${il`${c(".git")}`}ディレクトリが作成されます．`,
 
   h2("変更の記録"),
-  p`Gitでは，変更したファイルをすぐに履歴として記録するのではなく，まずステージング領域に追加します．たとえば，main.tsを記録対象にするには次のようにします．`,
-  code("git add main.ts", "bash"),
+  p`Gitでは，変更したファイルをすぐに履歴として記録するのではなく，まずステージング領域に追加します．その後，コミットによって履歴として保存します．`,
+  code('git add main.ts\ngit commit -m "Add main script"', "bash"),
 
-  p`ステージングした変更は，commitコマンドによって履歴として保存します．`,
-  code('git commit -m "Add main script"', "bash"),
+  p`${autoref("table:commands")}に，頻繁に使用する主なGitコマンドをまとめます．`,
+  easytable(
+    [
+      ["コマンド", "説明"],
+      [il`${c("git status")}`, "作業ツリーの状態を確認する"],
+      [il`${c("git add <file>")}`, "変更をステージングに追加する"],
+      [il`${c("git commit")}`, "ステージングの内容を履歴に保存する"],
+      [il`${c("git log")}`, "コミット履歴を一覧表示する"],
+      [il`${c("git diff")}`, "作業ツリーとステージングの差分を確認する"],
+    ],
+    {
+      caption: "頻繁に使用するGitコマンド",
+      label: "table:commands",
+      style: {
+        cellPadding: physical(2, 3),
+        textStyle: (rowIndex) => ({
+          lineHeight: H(16),
+          font:
+            rowIndex === 0
+              ? "SourceHanSansJP-Regular"
+              : "SourceHanSerifJP-Regular",
+          size: Q(11),
+        }),
+      },
+    },
+  ),
 
   h3("コミットメッセージ"),
-  p`コミットメッセージ${fn("commit-message")}には，その変更で何を行ったのかを短く具体的に書きます．`,
-  footnote(
-    "commit-message",
-    "たとえば「Fix bug」だけではなく，「Fix path handling in config loader」のように対象と内容が分かる表現にするとよいです．",
-  ),
+  p`コミットメッセージには，その変更で何を行ったのかを短く具体的に書きます．たとえば「Fix bug」だけではなく，「Fix path handling in config loader」のように対象と内容が分かる表現にするとよいです．`,
 
   newpage(),
 
   h1`第3章 ブランチを用いた作業`,
 
+  figure("src/sample.png", "ブランチを用いた開発フロー", {
+    width: ratio(0.85),
+    align: "center",
+    label: "figure:workflow",
+  }),
+
   h2("ブランチの役割"),
-  p`ブランチは，作業の流れを分岐させるための仕組みです．新しい機能を追加するときや，既存の処理を修正するときにブランチを作成すると，mainブランチを安定した状態に保ったまま作業できます．`,
+  p`ブランチは，作業の流れを分岐させるための仕組みです．${autoref("figure:workflow")}に示すように，新しい機能を追加するときや既存の処理を修正するときにブランチを作成すると，mainブランチを安定した状態に保ったまま作業できます．`,
 
   h2("ブランチの作成と移動"),
-  p`新しいブランチを作成して，そのブランチに移動するには次のコマンドを使います．`,
+  p`新しいブランチを作成してそのブランチに移動するには，次のコマンドを使います．`,
   code("git switch -c feature/login", "bash"),
 
-  p`この例では，feature/loginという名前のブランチを作成しています．ブランチ名には，作業内容が分かる名前を付けると，後から見たときに意図を理解しやすくなります．`,
+  p`この例では，${il`${c("feature/login")}`}という名前のブランチを作成しています．ブランチ名には，作業内容が分かる名前を付けると，後から見たときに意図を理解しやすくなります．`,
 
   h2("差分の確認"),
-  p`作業中の変更内容を確認するには，次のコマンドを使います．`,
+  p`作業中の変更内容を確認するには，次のコマンドを使います．差分を確認してからコミットすることで，意図しない変更を履歴に含めることを防げます．`,
   code("git diff", "bash"),
-
-  p`差分を確認してからコミットすることで，意図しない変更を履歴に含めることを防げます．特に複数のファイルを同時に編集している場合は，コミット前の確認が重要です．`,
 
   h2("ブランチの統合"),
   p`作業ブランチでの変更をmainブランチに取り込むには，mainブランチに移動してからmergeを実行します．`,
@@ -159,27 +171,25 @@ export const body: Body = [
   h2("リモートリポジトリとは"),
   p`リモートリポジトリは，ネットワーク上に置かれたGitリポジトリです．GitHubやGitLabなどのサービスを利用すると，ローカル環境で作成した履歴を共有し，複数人で同じプロジェクトを開発できます．`,
 
-  h2("リモートの登録"),
-  p`ローカルリポジトリにリモートリポジトリを登録するには，次のコマンドを使います．`,
-  code("git remote add origin git@github.com:example/project.git", "bash"),
+  h2("リモートの登録と変更の送信"),
+  p`ローカルリポジトリにリモートリポジトリを登録して，コミットを送信するまでの流れを示します．`,
+  code(
+    "git remote add origin git@github.com:example/project.git\ngit push -u origin main",
+    "bash",
+  ),
 
-  h2("変更の送信"),
-  p`ローカルで作成したコミットをリモートリポジトリへ送信するには，pushを使います．`,
-  code("git push -u origin main", "bash"),
-
-  p`初回のpushでは，-uオプションを付けることで，ローカルのmainブランチとリモートのmainブランチを対応付けます．次回以降は，単にgit pushと入力するだけで送信できます．`,
+  p`初回のpushでは，${il`${c("-u")}`}オプションを付けることで，ローカルのmainブランチとリモートのmainブランチを対応付けます．次回以降は，単に${il`${c("git push")}`}と入力するだけで送信できます．`,
 
   h2("変更の取得"),
-  p`リモートリポジトリ上の変更を取得して，現在のブランチに取り込むにはpullを使います．`,
+  p`リモートリポジトリ上の変更を取得して現在のブランチに取り込むには，pullを使います．`,
   code("git pull", "bash"),
 
   h2("まとめ"),
-  p`Gitの基本は，変更を確認し，必要なものをステージングし，意味のある単位でコミットすることです．さらに，ブランチを使って作業を分け，リモートリポジトリと連携することで，個人開発からチーム開発まで幅広い場面に対応できます．`,
+  p`Gitの基本は，変更を確認し，必要なものをステージングし，意味のある単位でコミットすることです．ブランチを使って作業を分け，リモートリポジトリと連携することで，個人開発からチーム開発まで幅広い場面に対応できます．`,
 
   float("top", [
     math([
       "\\mathrm{good\\ commit} = \\mathrm{small\\ change} + \\mathrm{clear\\ message}",
     ]),
-    caption("良いコミットの考え方"),
   ]),
 ];
