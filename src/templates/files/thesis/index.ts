@@ -118,7 +118,8 @@ const gaps: Gap[] = [
   ["lstlisting", "fallback", 8],
 
   // 脚注
-  ["footnote", "fallback", 4],
+  ["footnote", "footnote", 2],
+  ["fallback", "footnote", 4],
 ];
 
 // ------

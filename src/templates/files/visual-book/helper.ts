@@ -25,7 +25,7 @@ import {
 /** ページ幅（mm）． */
 export const pageWidth = 182;
 /** ヘッダー画像の高さ（mm）． */
-export const headerImageHeight = 50;
+export const headerImageHeight = 60;
 
 // ------
 // 色定義

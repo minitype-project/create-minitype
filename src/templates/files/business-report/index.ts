@@ -128,7 +128,8 @@ const gaps: Gap[] = [
   ["disclaimer", "fallback", 4],
 
   // 脚注
-  ["footnote", "fallback", 4],
+  ["footnote", "footnote", 2],
+  ["fallback", "footnote", 4],
 ];
 
 const commandStyles = {

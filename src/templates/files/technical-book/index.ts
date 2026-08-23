@@ -133,7 +133,8 @@ const gaps: Gap[] = [
   ["math", "fallback", 4],
 
   // 脚注
-  ["footnote", "fallback", 4],
+  ["footnote", "footnote", 2],
+  ["fallback", "footnote", 4],
 ];
 
 // ------
