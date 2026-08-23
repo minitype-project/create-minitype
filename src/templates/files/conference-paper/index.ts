@@ -81,6 +81,9 @@ const gaps: Gap[] = [
   ["fallback", "h1", 4],
   ["fallback", "h2", 4],
 
+  // 段落
+  ["paragraph", "paragraph", 0],
+
   // リスト
   ["li1", "li1", 0],
   ["li1", "li2", 0],
@@ -89,9 +92,6 @@ const gaps: Gap[] = [
   ["fallback", "li1", 2],
   ["li1", "fallback", 2],
   ["li2", "fallback", 2],
-
-  // 段落
-  ["paragraph", "paragraph", 0],
 
   // 画像
   ["fallback", "figure", 4],

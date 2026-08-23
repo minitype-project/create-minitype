@@ -3,6 +3,7 @@ node_modules
 package-lock.json
 *.db
 .claude
+TODO.md
 
 /test-*
 /tmp
