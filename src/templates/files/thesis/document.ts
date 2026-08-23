@@ -193,7 +193,6 @@ const chapter1: Body = [
   li2`詳細：〜`,
   li1`目的2：〜`,
   li1`目的3：〜`,
-  vspace(4),
 
   H2("本論文の構成", "s1-3"),
   p`本論文の構成を示す．`,
@@ -232,7 +231,6 @@ const chapter3: Body = [
   li2`詳細：〜の形式に変換する`,
   li1`ステップ2：特徴抽出`,
   li1`ステップ3：推論と後処理`,
-  vspace(4),
 
   H2("詳細", "s3-2"),
   H3("定式化", "s3-2-1"),
@@ -263,16 +261,13 @@ const chapter4: Body = [
   li2`CPU：〜，GPU：〜，メモリ：〜`,
   li1`データセット：〜データセット（学習：〜件，評価：〜件）`,
   li1`評価指標：精度（Accuracy），F1 スコア（マクロ平均）`,
-  vspace(4),
 
   H2("実験結果", "s4-2"),
-  float("top", [
-    figure("src/sample.png", "実験結果のグラフ", {
-      width: ratio(0.9),
-      align: "center",
-      label: "fig-result",
-    }),
-  ]),
+  figure("src/sample.png", "実験結果のグラフ", {
+    width: ratio(0.9),
+    align: "center",
+    label: "fig-result",
+  }),
   p`${autoref("fig-result")}に実験結果を示す．${autoref("table:results")}に各手法の定量的比較を示す．`,
   easytable(
     [

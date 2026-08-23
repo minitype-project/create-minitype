@@ -185,16 +185,18 @@ export const body: Body = [
       ]),
     ],
     {
-      columnWidths: [fr(1), 20, 20, 35, 40],
-      cellPadding: physical(2, 3),
-      horizontalBorders: (rowIndex: number, rowCount: number) => {
-        if (rowIndex === 0 || rowIndex === rowCount) {
-          return solid(0.4, cmyk(0, 0, 0, 100));
-        }
-        return solid(0.2, cmyk(0, 0, 0, 100));
+      style: {
+        columnWidths: [fr(1), 20, 20, 35, 40],
+        cellPadding: physical(2, 3),
+        horizontalBorders: (rowIndex: number, rowCount: number) => {
+          if (rowIndex === 0 || rowIndex === rowCount) {
+            return solid(0.4, cmyk(0, 0, 0, 100));
+          }
+          return solid(0.2, cmyk(0, 0, 0, 100));
+        },
+        background: (rowIndex: number) =>
+          rowIndex === 0 ? cmyk(0, 0, 0, 15) : cmyk(0, 0, 0, 0),
       },
-      background: (rowIndex: number) =>
-        rowIndex === 0 ? cmyk(0, 0, 0, 15) : cmyk(0, 0, 0, 0),
     },
   ),
   vspace(6),
@@ -225,13 +227,15 @@ export const body: Body = [
             ],
           ],
           {
-            columnWidths: [fr(1), 50],
-            cellPadding: physical(2, 3),
-            horizontalBorders: (rowIndex: number, rowCount: number) => {
-              if (rowIndex === 0 || rowIndex === rowCount) {
-                return solid(0.4, cmyk(0, 0, 0, 100));
-              }
-              return solid(0.2, cmyk(0, 0, 0, 100));
+            style: {
+              columnWidths: [fr(1), 50],
+              cellPadding: physical(2, 3),
+              horizontalBorders: (rowIndex: number, rowCount: number) => {
+                if (rowIndex === 0 || rowIndex === rowCount) {
+                  return solid(0.4, cmyk(0, 0, 0, 100));
+                }
+                return solid(0.2, cmyk(0, 0, 0, 100));
+              },
             },
           },
         ),

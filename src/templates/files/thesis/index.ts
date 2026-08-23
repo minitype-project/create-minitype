@@ -81,43 +81,41 @@ const commandStyles: CommandStyleRecord = {
 
 const gaps: Gap[] = [
   // 見出し
-  ["h1", "fallback", 6],
+  ["h1", "fallback", 8],
   ["h2", "fallback", 4],
   ["h3", "fallback", 3],
   ["fallback", "h2", 10],
   ["fallback", "h3", 6],
+
+  // 段落
+  ["paragraph", "paragraph", 2],
 
   // リスト
   ["li1", "li1", 0],
   ["li1", "li2", 0],
   ["li2", "li1", 0],
   ["li2", "li2", 0],
-  ["fallback", "li1", 2],
+  ["fallback", "li1", 4],
   ["li1", "fallback", 4],
   ["li2", "fallback", 4],
 
-  // 図（box）↔ 周辺ブロック
-  ["paragraph", "box", 6],
-  ["box", "paragraph", 6],
-  ["box", "h2", 8],
-  ["box", "h3", 6],
-
-  // 数式
-  ["figure", "paragraph", 6],
-  ["figure", "caption", 4],
-  ["figure", "h2", 8],
-  ["figure", "h3", 6],
-  ["paragraph", "figure", 4],
-  ["figure", "fallback", 6],
-  ["fallback", "figure", 4],
+  // 画像
+  ["fallback", "figure", 8],
+  ["figure", "fallback", 8],
+  ["image", "caption", 4],
 
   // 表
-  ["fallback", "easytable", 6],
-  ["easytable", "fallback", 6],
+  ["fallback", "easytable", 8],
+  ["easytable", "fallback", 8],
+  ["caption", "table", 4],
+
+  // 数式
+  ["fallback", "math", 8],
+  ["math", "fallback", 8],
 
   // ソースコード
-  ["fallback", "lstlisting", 4],
-  ["lstlisting", "fallback", 4],
+  ["fallback", "lstlisting", 8],
+  ["lstlisting", "fallback", 8],
 ];
 
 // ------
