@@ -6,7 +6,6 @@ import {
   em,
   type Flow,
   figure,
-  float,
   fn,
   footnote,
   type Group,

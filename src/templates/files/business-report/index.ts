@@ -126,6 +126,9 @@ const gaps: Gap[] = [
   ["metric", "fallback", 4],
   ["panel", "fallback", 4],
   ["disclaimer", "fallback", 4],
+
+  // 脚注
+  ["footnote", "fallback", 4],
 ];
 
 const commandStyles = {

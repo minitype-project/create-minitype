@@ -110,6 +110,9 @@ const gaps: Gap[] = [
   // ソースコード
   ["fallback", "lstlisting", 4],
   ["lstlisting", "fallback", 4],
+
+  // 脚注
+  ["footnote", "fallback", 4],
 ];
 
 // フッタ（ノンブル）

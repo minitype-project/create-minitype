@@ -44,7 +44,7 @@ const blockToText = (block: Block): string => {
 };
 
 // ------
-// カスタムマッパー
+// カスタムマッパ
 // ------
 
 interface MetricData {
