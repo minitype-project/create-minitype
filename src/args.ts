@@ -52,7 +52,7 @@ export const parseArgs = (): ParsedArgs => {
   return {
     projectName: positionals[0],
     templateId: values.template,
-    yes: values.yes ?? false,
+    yes: (values.yes ?? false) || (values.json ?? false),
     jsonOutput: values.json ?? false,
     markdown: values.markdown,
     yaml: values.yaml,

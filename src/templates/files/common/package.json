@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsx src/index.ts",
     "dev": "vite",
-    "watch": "tsx watch index.ts"
+    "watch": "tsx watch src/index.ts"
   },
   "dependencies": {
     "@minitype/minitype": "link:{{minitypePath}}"

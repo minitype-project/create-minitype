@@ -179,7 +179,7 @@ const report: Template = {
       };
     }
     return {
-      ...allProjectFiles(vars, "report"),
+      ...commonFiles,
       "src/document.ts": renderFile("report/document.ts", vars),
       "src/helper.ts": renderFile("report/helper.ts", vars),
       "src/refs.ts": renderFile("report/refs.ts", vars),

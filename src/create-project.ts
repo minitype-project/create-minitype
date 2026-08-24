@@ -35,6 +35,7 @@ export interface ProjectConfig {
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const MINITYPE_ABS = path.resolve(SCRIPT_DIR, "../../minitype");
 const MINITYPE_VITE_PLUGIN_ABS = path.resolve(SCRIPT_DIR, "../../vite-plugin");
+const PROJECT_NAME_PATTERN = /^[a-z0-9][a-z0-9._-]*$/;
 
 export interface CreateProjectResult {
   /** プロジェクト名． */
@@ -55,6 +56,15 @@ export class ProjectCreator {
     private readonly config: ProjectConfig,
     private readonly jsonOutput: boolean,
   ) {
+    if (
+      this.config.projectName.length > 214 ||
+      !PROJECT_NAME_PATTERN.test(this.config.projectName)
+    ) {
+      throw new Error(
+        `Invalid project name: ${this.config.projectName}
+Use a lowercase npm package name without path separators.`,
+      );
+    }
     this.targetDir = path.resolve(
       this.config.outputDir ?? process.cwd(),
       this.config.projectName,
@@ -106,8 +116,26 @@ export class ProjectCreator {
       this.config.templateOptions,
     );
 
-    for (const [filePath, content] of Object.entries(files)) {
-      const fullPath = path.join(this.targetDir, filePath);
+    // ファイルを書き込む前にすべての出力先を解決
+    const resolvedFiles = Object.entries(files).map(([filePath, content]) => {
+      const fullPath = path.resolve(this.targetDir, filePath);
+      const relativePath = path.relative(this.targetDir, fullPath);
+
+      // 空のパス，絶対パス，プロジェクト外を指す相対パスを拒否
+      if (
+        !filePath ||
+        path.isAbsolute(filePath) ||
+        relativePath === ".." ||
+        relativePath.startsWith(`..${path.sep}`)
+      ) {
+        throw new Error(
+          `Template file path is outside the project: ${filePath}`,
+        );
+      }
+      return { content, filePath, fullPath };
+    });
+
+    for (const { content, filePath, fullPath } of resolvedFiles) {
       const dir = path.dirname(fullPath);
 
       if (!fs.existsSync(dir)) {
@@ -157,6 +185,7 @@ export class ProjectCreator {
       path.join(fontsDir, "LICENSE.txt"),
       path.join(targetFontsDir, "LICENSE.txt"),
     );
+    this.createdFiles.push("fonts/LICENSE.txt");
   }
 
   /**
@@ -194,6 +223,14 @@ export class ProjectCreator {
     const cdPath = this.config.outputDir
       ? this.targetDir
       : this.config.projectName;
+    const contentFile = [
+      "src/document.md",
+      "src/document.yaml",
+      "src/document.ts",
+    ].find((file) => this.createdFiles.includes(file));
+    const contentMessage = contentFile
+      ? `  - You can edit ${pc.cyan(contentFile)} for the content or\n`
+      : "";
     console.log(`
 ${pc.bold(`Project created: ${this.config.projectName}`)}
 ${this.createdFiles.map((file) => `  ${pc.dim("- ")} ${file}`).join("\n")}
@@ -202,8 +239,7 @@ ${pc.bold("Next steps:")}
   ${pc.dim("$")} ${pc.green(`cd ${cdPath}`)}
 ${installStep}  ${pc.dim("$")} ${pc.green(`${pm ?? "npm"} run build`)}
 
-  - You can edit ${pc.cyan("src/document.ts")} for the content or
-    edit ${pc.cyan("src/index.ts")} for the style.
+${contentMessage}    edit ${pc.cyan("src/index.ts")} for the style.
   - Output will be saved as ${pc.cyan("output.pdf")}.`);
   }
 }

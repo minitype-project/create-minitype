@@ -5,6 +5,7 @@
  */
 
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -27,23 +28,34 @@ const hasGitUrlScheme = (id: string): boolean => {
  * git テンプレートのキャッシュディレクトリを返す．
  */
 const getGitCacheDir = (url: string): string => {
-  // ファイルシステム上，安全な文字のみにする
-  const escaped = url.replace(/[^a-zA-Z0-9@._-]/g, "_");
-  return path.join(CACHE_DIR, escaped);
+  const hash = createHash("sha256").update(url).digest("hex");
+  return path.join(CACHE_DIR, hash);
 };
 
 /**
- * git リポジトリをキャッシュディレクトリにクローンする．
- * キャッシュが既に存在する場合はスキップする．
+ * git リポジトリをキャッシュディレクトリにクローンまたは更新する．
  */
-const cloneGitTemplate = (url: string, cacheDir: string): void => {
+const syncGitTemplate = (url: string, cacheDir: string): void => {
   if (fs.existsSync(cacheDir)) {
+    const result = spawnSync("git", ["-C", cacheDir, "pull", "--ff-only"], {
+      stdio: ["ignore", "ignore", "inherit"],
+    });
+    if (result.error) {
+      throw new Error(
+        `Failed to update git repository: ${url}\n${result.error.message}`,
+      );
+    }
+    if (result.status !== 0) {
+      throw new Error(
+        `Failed to update git repository: ${url} (exit code: ${String(result.status)})`,
+      );
+    }
     return;
   }
   fs.mkdirSync(path.dirname(cacheDir), { recursive: true });
 
   const result = spawnSync("git", ["clone", "--depth", "1", url, cacheDir], {
-    stdio: "inherit",
+    stdio: ["ignore", "ignore", "inherit"],
   });
   if (result.error) {
     throw new Error(
@@ -135,7 +147,7 @@ export const resolveTemplate = async (id: string): Promise<Template> => {
   // git URL
   if (hasGitUrlScheme(id)) {
     const cacheDir = getGitCacheDir(id);
-    cloneGitTemplate(id, cacheDir);
+    syncGitTemplate(id, cacheDir);
     return { ...(await loadTemplateFromDir(cacheDir)), id };
   }
 

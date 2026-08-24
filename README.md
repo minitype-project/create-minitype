@@ -4,7 +4,7 @@
 コマンドラインまたは API 経由でテンプレートを選択して，必要なソースファイル一式を自動生成します．
 
 **create-minitype** is a tool to set up the documentation project for [minitype](https://typeset.jp).
-Users can select a template via the command line or API to automatically generates all the necessary source files.
+Users can select a template via the command line or API to automatically generate all the necessary source files.
 
 [テンプレート](./docs/template.md) – [開発ガイド](./docs/development.md)
 
@@ -14,10 +14,10 @@ Users can select a template via the command line or API to automatically generat
 
 ```bash
 # npm
-npm create minitype [project-name] [options]
+npm create minitype@latest [project-name] -- [options]
 
 # Yarn
-yarn create minitype
+yarn create minitype [project-name] [options]
 ```
 
 ### オプション
@@ -33,20 +33,23 @@ yarn create minitype
 | `--list-templates` | | 使用可能なテンプレート一覧を表示 |
 | `--help` | `-h` | ヘルプを表示 |
 
+`--json` を指定した場合には対話プロンプトが省略され，生成結果だけが JSON として標準出力に出力されます．
+診断情報や git 等の外部コマンドの出力は，標準エラー出力へ送られます．
+
 ### 使用例
 
 ```bash
 # プロジェクト名を指定して対話形式で実行
-npm create minitype my-report
+npm create minitype@latest my-report
 
 # テンプレートを指定して非対話で実行
-npm create minitype my-report --template report --yes
+npm create minitype@latest my-report -- --template report --yes
 
 # Markdown モードで report テンプレートを生成し，依存関係もインストール
-npm create minitype my-report --template report --markdown --pm npm
+npm create minitype@latest my-report -- --template report --markdown --pm npm
 
 # JSON 出力（CI，AIエージェント向け）
-npm create minitype my-report --template report --json
+npm create minitype@latest my-report -- --template report --json
 ```
 
 ## API 経由で使用する

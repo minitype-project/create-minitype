@@ -27,7 +27,7 @@ const BUILTIN_OPTION_CONFIG: Record<
   keyof TemplateBuiltInOptions,
   { message: string; initial: boolean }
 > = {
-  markdown: { message: "Use Markdown?", initial: true },
+  markdown: { message: "Use Markdown?", initial: false },
   yaml: { message: "Use YAML?", initial: false },
 };
 
@@ -97,7 +97,7 @@ export const promptUser = async (args: ParsedArgs): Promise<ProjectConfig> => {
   if (args.yes) {
     const projectName = args.projectName ?? DEFAULT_PROJECT_NAME;
     if (!args.templateId) {
-      throw new Error("Template is must be specified.");
+      throw new Error("A template must be specified.");
     }
     const template = await resolveTemplate(args.templateId);
     const templateOptions = await resolveTemplateOptions(

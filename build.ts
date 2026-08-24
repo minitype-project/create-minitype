@@ -1,5 +1,7 @@
-import { chmodSync, cpSync } from "node:fs";
+import { chmodSync, cpSync, rmSync } from "node:fs";
 import { build } from "esbuild";
+
+rmSync("./dist", { force: true, recursive: true });
 
 const baseSettings = {
   bundle: true,

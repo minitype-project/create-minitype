@@ -18,7 +18,7 @@ const options = [
   ],
   ["-y, --yes", "Skip prompts (template must be specified)"],
   ["-j, --json", "Output JSON (implies --yes, for agent use)"],
-  ["--markdown", "Generate document from Markdown (report only)"],
+  ["--markdown", "Generate a Markdown-based document when supported"],
   ["--yaml", "Generate document from YAML (cv or invoice only)"],
   ["--pm", "Install dependencies with npm or yarn"],
   ["-h, --help", "Show this help"],
@@ -33,7 +33,7 @@ const showHelp = () => {
 ${pc.bold("create-minitype")} – creating a minitype document
 
 ${pc.bold("Usage:")}
-  npx create minitype [project-name] [options]
+  npm create minitype@latest [project-name] -- [options]
 
 ${pc.bold("Options:")}
 ${options
@@ -52,16 +52,16 @@ ${Object.entries(templates)
 
 ${pc.bold("Examples:")}
   ${pc.dim("# Interactive")}
-  npx create minitype
+  npm create minitype@latest
 
   ${pc.dim("# Specify project name")}
-  npx create minitype my-report
+  npm create minitype@latest my-report
 
   ${pc.dim("# Non-interactive (for agents)")}
-  npx create minitype my-report --template report --yes
+  npm create minitype@latest my-report -- --template report --yes
 
   ${pc.dim("# JSON output (for agents)")}
-  npx create minitype my-report --template report --json
+  npm create minitype@latest my-report -- --template report --json
 `);
 };
 
