@@ -23,7 +23,7 @@
   "ts-node": {
     "esm": true
   },
-  "include": ["src/**/*", "sample/**/*"],
+  "include": ["build.ts", "src/**/*", "sample/**/*"],
   "exclude": ["dist", "node_modules"],
   "compileOnSave": false
 }
