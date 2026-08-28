@@ -59,8 +59,6 @@ export type CustomTemplate = Omit<Template, "id">;
  */
 export interface TemplateVars {
   projectName: string;
-  minitypePath: string;
-  minitypeVitePluginPath: string;
 }
 
 /**
@@ -137,8 +135,6 @@ const allProjectFiles = (
 ): Record<string, string> => {
   const renderVars = {
     projectName: vars.projectName,
-    minitypePath: vars.minitypePath,
-    minitypeVitePluginPath: vars.minitypeVitePluginPath,
     templateName,
   };
   const filenames = [

@@ -32,9 +32,6 @@ export interface ProjectConfig {
   outputDir?: string;
 }
 
-const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
-const MINITYPE_ABS = path.resolve(SCRIPT_DIR, "../../minitype");
-const MINITYPE_VITE_PLUGIN_ABS = path.resolve(SCRIPT_DIR, "../../vite-plugin");
 const PROJECT_NAME_PATTERN = /^[a-z0-9][a-z0-9._-]*$/;
 
 export interface CreateProjectResult {
@@ -105,11 +102,6 @@ Use a lowercase npm package name without path separators.`,
   private async createTemplateFiles() {
     const vars: TemplateVars = {
       projectName: this.config.projectName,
-      minitypePath: path.relative(this.targetDir, MINITYPE_ABS),
-      minitypeVitePluginPath: path.relative(
-        this.targetDir,
-        MINITYPE_VITE_PLUGIN_ABS,
-      ),
     };
     const files = await this.config.template.files(
       vars,

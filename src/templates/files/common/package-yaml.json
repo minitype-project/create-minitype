@@ -8,11 +8,11 @@
     "watch": "tsx watch src/index.ts"
   },
   "dependencies": {
-    "@minitype/minitype": "link:{{minitypePath}}",
+    "@minitype/minitype": "^0.1.0",
     "yaml": "^2.0.0"
   },
   "devDependencies": {
-    "@minitype/vite-plugin": "link:{{minitypeVitePluginPath}}",
+    "@minitype/vite-plugin": "^0.1.0",
     "@types/pdfkit": "^0.17.0",
     "tsx": "^4.20.0",
     "typescript": "^5.0.0",
