@@ -138,13 +138,14 @@ const allProjectFiles = (
     templateName,
   };
   const filenames = [
-    ".gitignore",
     "README.md",
     "package.json",
     "tsconfig.json",
     "vite.config.ts",
   ];
   const objs: Record<string, string> = {};
+  // npm publish は .gitignore を自動除外するため、ソースは "gitignore" で保存
+  objs[".gitignore"] = renderFile("common/gitignore", renderVars);
   for (const filename of filenames) {
     objs[filename] = renderFile(`common/${filename}`, renderVars);
   }
