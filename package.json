@@ -1,6 +1,6 @@
 {
   "name": "create-minitype",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Create a minitype document project",
   "author": "Yuto Wada",
   "license": "MIT",
@@ -47,17 +47,26 @@
     "license:check": "addlicense -check -f .license-header.txt -ignore \"src/templates/**\" src/",
     "sample": "tsx scripts/generate-sample.ts",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "changelog": "conventional-changelog -p conventionalcommits -i CHANGELOG.md -s -r 2",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.10",
+    "@commitlint/cli": "^21.2.2",
+    "@commitlint/config-conventional": "^21.2.2",
     "@minitype/vite-plugin": "^0.1.0",
     "@types/node": "^26.1.1",
+    "conventional-changelog-cli": "^5.0.0",
     "esbuild": "^0.25.0",
+    "husky": "^9.1.7",
     "typescript": "^6.0.2",
     "vite": "^8.0.3",
     "vitest": "^2.1.9",
     "yaml": "^2.8.2"
+  },
+  "resolutions": {
+    "conventional-changelog-conventionalcommits": "^8.0.0"
   },
   "dependencies": {
     "@minitype/minitype": "^0.1.0",

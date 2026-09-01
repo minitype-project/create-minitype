@@ -62,6 +62,9 @@ ${pc.bold("Examples:")}
 
   ${pc.dim("# JSON output (for agents)")}
   npm create minitype@latest my-report -- --template report --json
+
+  ${pc.dim("# Create in current directory")}
+  npm create minitype@latest .
 `);
 };
 

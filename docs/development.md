@@ -25,6 +25,37 @@ yarn sample report       # 特定テンプレートのみ
 yarn sample slide novel  # 複数指定
 ```
 
+## 開発・リリース手順
+
+### コミットメッセージ
+
+[Conventional Commits](https://www.conventionalcommits.org/) に従ってコミットメッセージを記述する．
+husky によって `git commit` 時に commitlint が実行される．フォーマットが違反している場合はコミットが拒否される．
+
+```
+<type>: <description>
+```
+
+主な type：
+
+| type | 用途 |
+| --- | --- |
+| `feat` | 新機能 |
+| `fix` | バグ修正 |
+| `docs` | ドキュメント |
+| `chore` | ビルド・設定・依存関係 |
+| `refactor` | リファクタリング |
+| `test` | テスト |
+
+### リリースフロー
+
+バージョンの更新，CHANGELOG 更新，GitHub Release 作成，npm publish はCI を通じて行う．
+
+1. 変更を `main` にマージ
+2. GitHub Actions の `Release Please` ワークフローを手動実行
+3. 自動作成された Release PR をレビューおよびマージ
+4. GitHub Release が作成され，npm publish が自動実行される
+
 ## アーキテクチャ
 
 ### モジュールの依存関係
