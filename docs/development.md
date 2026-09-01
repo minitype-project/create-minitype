@@ -25,7 +25,7 @@ yarn sample report       # 特定テンプレートのみ
 yarn sample slide novel  # 複数指定
 ```
 
-## リリース手順
+## 開発・リリース手順
 
 ### コミットメッセージ
 
@@ -47,21 +47,14 @@ husky によって `git commit` 時に commitlint が実行される．フォー
 | `refactor` | リファクタリング |
 | `test` | テスト |
 
-### CHANGELOG の生成
+### リリースフロー
 
-```bash
-# 1. バージョンを上げる
-# patch，minor，major のいずれか
-npm version patch
+バージョンの更新，CHANGELOG 更新，GitHub Release 作成，npm publish はCI を通じて行う．
 
-# 2. 前回タグからの差分を CHANGELOG.md の先頭に追記
-yarn changelog
-
-# 3. コミット & タグを push
-git add CHANGELOG.md
-git commit -m "chore: release x.x.x"
-git push && git push --tags
-```
+1. 変更を `main` にマージ
+2. GitHub Actions の `Release Please` ワークフローを手動実行
+3. 自動作成された Release PR をレビューおよびマージ
+4. GitHub Release が作成され，npm publish が自動実行される
 
 ## アーキテクチャ
 

@@ -1515,14 +1515,7 @@ conventional-changelog-codemirror@^5.0.0:
   resolved "https://registry.yarnpkg.com/conventional-changelog-codemirror/-/conventional-changelog-codemirror-5.1.0.tgz#ea4f5483a29089f3afcc03823aecae0dbf330032"
   integrity sha512-iXhy63YczB+yWA9DrsYbquSYLvWKsK9M3WC+xQPEm8cOn4oXzKpmTp2uH3qi7+i10oTcGJTvq9lsBpZmMADaNg==
 
-conventional-changelog-conventionalcommits@^10.0.0:
-  version "10.4.0"
-  resolved "https://registry.yarnpkg.com/conventional-changelog-conventionalcommits/-/conventional-changelog-conventionalcommits-10.4.0.tgz#a75bb40f10731d66e0b4209dc1dd3ee0cf2925f3"
-  integrity sha512-Rriac6ZrAlVm6cy9Bz4NSp+WMHpwNXoPIYex+HjCgduAVUSbnew29DQjQw0C4g9u3HtSYzGiGY+pdBXAZo+4aA==
-  dependencies:
-    "@conventional-changelog/template" "^1.4.0"
-
-conventional-changelog-conventionalcommits@^8.0.0:
+conventional-changelog-conventionalcommits@^10.0.0, conventional-changelog-conventionalcommits@^8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/conventional-changelog-conventionalcommits/-/conventional-changelog-conventionalcommits-8.0.0.tgz#3fa2857c878701e7f0329db5a1257cb218f166fe"
   integrity sha512-eOvlTO6OcySPyyyk8pKz2dP4jjElYunj9hn9/s0OB+gapTO8zwS9UQWrZ1pmF2hFs3vw1xhonOLGcGjy/zgsuA==
