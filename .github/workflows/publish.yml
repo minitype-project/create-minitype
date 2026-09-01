@@ -13,6 +13,7 @@ jobs:
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
+          cache: 'yarn'
       - run: yarn install --frozen-lockfile
       - run: yarn build
       - run: yarn publish --access public
