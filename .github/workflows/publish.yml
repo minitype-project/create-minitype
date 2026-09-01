@@ -16,8 +16,8 @@ jobs:
         with:
           node-version: "24"
           registry-url: "https://registry.npmjs.org"
-          cache: "npm"
-      - run: npm ci
-      - run: npm test
-      - run: npm run build
+          cache: "yarn"
+      - run: yarn install --frozen-lockfile
+      - run: yarn test
+      - run: yarn build
       - run: npm publish --provenance
