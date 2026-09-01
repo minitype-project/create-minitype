@@ -13,7 +13,10 @@ permissions:
 
 jobs:
   release-please:
-    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'autorelease: pending'))
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.merged == true &&
+      contains(toJSON(github.event.pull_request.labels), 'autorelease: pending'))
     runs-on: ubuntu-latest
     steps:
       - uses: googleapis/release-please-action@v4
