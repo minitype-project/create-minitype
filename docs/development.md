@@ -25,6 +25,44 @@ yarn sample report       # 特定テンプレートのみ
 yarn sample slide novel  # 複数指定
 ```
 
+## リリース手順
+
+### コミットメッセージ
+
+[Conventional Commits](https://www.conventionalcommits.org/) に従ってコミットメッセージを記述する．
+husky によって `git commit` 時に commitlint が実行される．フォーマットが違反している場合はコミットが拒否される．
+
+```
+<type>: <description>
+```
+
+主な type：
+
+| type | 用途 |
+| --- | --- |
+| `feat` | 新機能 |
+| `fix` | バグ修正 |
+| `docs` | ドキュメント |
+| `chore` | ビルド・設定・依存関係 |
+| `refactor` | リファクタリング |
+| `test` | テスト |
+
+### CHANGELOG の生成
+
+```bash
+# 1. バージョンを上げる
+# patch，minor，major のいずれか
+npm version patch
+
+# 2. 前回タグからの差分を CHANGELOG.md の先頭に追記
+yarn changelog
+
+# 3. コミット & タグを push
+git add CHANGELOG.md
+git commit -m "chore: release x.x.x"
+git push && git push --tags
+```
+
 ## アーキテクチャ
 
 ### モジュールの依存関係

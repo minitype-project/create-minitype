@@ -17,7 +17,7 @@ import type {
 } from "./templates/index.js";
 
 export interface ProjectConfig {
-  /** プロジェクト名． */
+  /** プロジェクト名．npm パッケージ名として使用される． */
   projectName: string;
   /** 解決済みのテンプレート． */
   template: Template;
@@ -30,6 +30,11 @@ export interface ProjectConfig {
    * @default カレントディレクトリ
    */
   outputDir?: string;
+  /**
+   * カレントディレクトリにプロジェクトを作成するか．
+   * @default false
+   */
+  useCurrentDir?: boolean;
 }
 
 const PROJECT_NAME_PATTERN = /^[a-z0-9][a-z0-9._-]*$/;
@@ -62,15 +67,16 @@ export class ProjectCreator {
 Use a lowercase npm package name without path separators.`,
       );
     }
-    this.targetDir = path.resolve(
-      this.config.outputDir ?? process.cwd(),
-      this.config.projectName,
-    );
+    this.targetDir = this.config.useCurrentDir
+      ? process.cwd()
+      : path.resolve(
+          this.config.outputDir ?? process.cwd(),
+          this.config.projectName,
+        );
   }
 
   async create() {
-    // ディレクトリが既に存在する場合はエラー
-    if (fs.existsSync(this.targetDir)) {
+    if (!this.config.useCurrentDir && fs.existsSync(this.targetDir)) {
       throw new Error(
         `Directory already exists: ${this.config.projectName}\nRemove it or choose a different project name.`,
       );
@@ -126,6 +132,18 @@ Use a lowercase npm package name without path separators.`,
       }
       return { content, filePath, fullPath };
     });
+
+    // カレントディレクトリの場合は競合チェックを実施
+    if (this.config.useCurrentDir) {
+      const conflicts = resolvedFiles
+        .filter(({ fullPath }) => fs.existsSync(fullPath))
+        .map(({ filePath }) => filePath);
+      if (conflicts.length > 0) {
+        throw new Error(
+          `The following files already exist in the current directory:\n${conflicts.map((f) => `  ${f}`).join("\n")}\nRemove them or choose a different directory.`,
+        );
+      }
+    }
 
     for (const { content, filePath, fullPath } of resolvedFiles) {
       const dir = path.dirname(fullPath);
@@ -215,6 +233,9 @@ Use a lowercase npm package name without path separators.`,
     const cdPath = this.config.outputDir
       ? this.targetDir
       : this.config.projectName;
+    const cdStep = this.config.useCurrentDir
+      ? ""
+      : `  ${pc.dim("$")} ${pc.green(`cd ${cdPath}`)}\n`;
     const contentFile = [
       "src/document.md",
       "src/document.yaml",
@@ -228,8 +249,7 @@ ${pc.bold(`Project created: ${this.config.projectName}`)}
 ${this.createdFiles.map((file) => `  ${pc.dim("- ")} ${file}`).join("\n")}
 
 ${pc.bold("Next steps:")}
-  ${pc.dim("$")} ${pc.green(`cd ${cdPath}`)}
-${installStep}  ${pc.dim("$")} ${pc.green(`${pm ?? "npm"} run build`)}
+${cdStep}${installStep}  ${pc.dim("$")} ${pc.green(`${pm ?? "npm"} run build`)}
 
 ${contentMessage}    edit ${pc.cyan("src/index.ts")} for the style.
   - Output will be saved as ${pc.cyan("output.pdf")}.`);

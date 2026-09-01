@@ -4,6 +4,7 @@
  * https://opensource.org/licenses/MIT
  */
 
+import path from "node:path";
 import Enquirer from "enquirer";
 import pc from "picocolors";
 
@@ -19,6 +20,23 @@ import type {
 import { templates } from "./templates/index.js";
 
 const DEFAULT_PROJECT_NAME = "my-document";
+
+const CURRENT_DIRECTORY_SENTINEL = ".";
+
+/**
+ * ディレクトリ名を npm パッケージ名として使用できるようにサニタイズする．
+ * 変換後も無効な場合は {@link DEFAULT_PROJECT_NAME} を返す．
+ */
+export const sanitizePackageName = (name: string): string => {
+  const sanitized = name
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]/g, "-")
+    .replace(/^[^a-z0-9]+/, "")
+    .replace(/[^a-z0-9]+$/, "");
+  return /^[a-z0-9][a-z0-9._-]*$/.test(sanitized)
+    ? sanitized
+    : DEFAULT_PROJECT_NAME;
+};
 
 /**
  * 組込みオプションに対するプロンプト．
@@ -92,13 +110,33 @@ const resolveTemplateOptions = async (
   return options;
 };
 
+/**
+ * プロジェクト名の入力からプロジェクト名およびカレントディレクトリのフラグを解決する．
+ * `.` が入力された場合，カレントディレクトリのベース名をサニタイズしてパッケージ名として使用する．
+ */
+const resolveProjectName = (
+  input: string,
+): { projectName: string; useCurrentDir: boolean } => {
+  if (input === CURRENT_DIRECTORY_SENTINEL) {
+    const derived = sanitizePackageName(path.basename(process.cwd()));
+    if (derived !== path.basename(process.cwd()).toLowerCase()) {
+      console.log(
+        pc.yellow(`Package name derived from directory: ${pc.cyan(derived)}`),
+      );
+    }
+    return { projectName: derived, useCurrentDir: true };
+  }
+  return { projectName: input, useCurrentDir: false };
+};
+
 export const promptUser = async (args: ParsedArgs): Promise<ProjectConfig> => {
   // --yes
   if (args.yes) {
-    const projectName = args.projectName ?? DEFAULT_PROJECT_NAME;
+    const rawName = args.projectName ?? DEFAULT_PROJECT_NAME;
     if (!args.templateId) {
       throw new Error("A template must be specified.");
     }
+    const { projectName, useCurrentDir } = resolveProjectName(rawName);
     const template = await resolveTemplate(args.templateId);
     const templateOptions = await resolveTemplateOptions(
       template,
@@ -111,22 +149,27 @@ export const promptUser = async (args: ParsedArgs): Promise<ProjectConfig> => {
       template,
       templateOptions,
       packageManager: args.packageManager,
+      useCurrentDir,
     };
   }
 
   // プロジェクト名
   let projectName: string;
+  let useCurrentDir: boolean;
   if (args.projectName) {
-    projectName = args.projectName;
-    displayAlreadySpecified("Project name", projectName);
+    ({ projectName, useCurrentDir } = resolveProjectName(args.projectName));
+    displayAlreadySpecified(
+      "Project name",
+      useCurrentDir ? `. (${projectName})` : projectName,
+    );
   } else {
     const answer = await Enquirer.prompt<{ projectName: string }>({
       type: "input",
       name: "projectName",
-      message: "Project name",
+      message: 'Project name (or "." for current directory)',
       initial: DEFAULT_PROJECT_NAME,
     });
-    projectName = answer.projectName;
+    ({ projectName, useCurrentDir } = resolveProjectName(answer.projectName));
   }
 
   // テンプレート
@@ -184,6 +227,7 @@ export const promptUser = async (args: ParsedArgs): Promise<ProjectConfig> => {
     template,
     templateOptions,
     packageManager,
+    useCurrentDir,
   };
 };
 
