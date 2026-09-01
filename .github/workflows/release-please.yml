@@ -19,6 +19,6 @@ jobs:
       contains(toJSON(github.event.pull_request.labels), 'autorelease: pending'))
     runs-on: ubuntu-latest
     steps:
-      - uses: googleapis/release-please-action@v4
+      - uses: googleapis/release-please-action@v5
         with:
           release-type: node
