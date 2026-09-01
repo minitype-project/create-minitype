@@ -19,6 +19,9 @@ yarn license:check  # ライセンスヘッダの付与状況を確認
 yarn test        # 一回実行
 yarn test:watch  # ウォッチモード
 
+# GitHub Actions ワークフローの検証（actionlint）
+actionlint .github/workflows/<file>.yml
+
 # サンプル PDF の生成
 yarn sample              # 全テンプレート
 yarn sample report       # 特定テンプレートのみ
@@ -54,7 +57,8 @@ husky によって `git commit` 時に commitlint が実行される．フォー
 1. 変更を `main` にマージ
 2. GitHub Actions の `Release Please` ワークフローを手動実行
 3. 自動作成された Release PR をレビューおよびマージ
-4. GitHub Release が作成され，npm publish が自動実行される
+4. Release PR のマージを検知して `Release Please` が再度実行され，GitHub Release が作成される
+5. GitHub Release の作成を検知して npm publish が自動実行される
 
 ## アーキテクチャ
 
