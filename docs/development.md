@@ -33,7 +33,8 @@ yarn sample slide novel  # 複数指定
 ### コミットメッセージ
 
 [Conventional Commits](https://www.conventionalcommits.org/) に従ってコミットメッセージを記述する．
-husky によって `git commit` 時に commitlint が実行される．フォーマットが違反している場合はコミットが拒否される．
+husky によって `git commit` 時に commitlint が実行される．
+フォーマットが違反している場合はコミットが拒否される．
 
 ```
 <type>: <description>
